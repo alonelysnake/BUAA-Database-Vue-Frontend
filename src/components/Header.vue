@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar header">
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" href="/" style="margin-left: 3.5%">
       <n-avatar class="picture"
           size="small"
           :src="logoUrl"
@@ -39,12 +39,18 @@
         <li class="nav-item1">
           <a class="nav-link" href="/">
             <n-button text>
+              订单
+            </n-button>
+          </a>
+        </li>
+        <li class="nav-item1">
+          <a class="nav-link" href="/">
+            <n-button text>
               关于
             </n-button>
           </a>
         </li>
       </ul>
-
       <ul class="navbar-nav" style="margin-left: 25%;left: 10%">
         <li class="nav-item2">
           <n-space id="avatar">
@@ -81,7 +87,7 @@ import { h } from "vue";
 import { NIcon } from "naive-ui";
 
 import {
-  FlashOutline,
+  SearchSharp,
   TrashBinOutline,
   PersonCircleOutline as UserIcon,
   LogOutOutline as LogoutIcon
@@ -127,7 +133,7 @@ export default {
       ],
       headUrl:headUrl,
       logoUrl:logoUrl,
-      FlashOutline,
+      FlashOutline: SearchSharp,
       TrashBinOutline
     };
   }
