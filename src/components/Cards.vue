@@ -1,37 +1,37 @@
 <template>
-<!--  todo 从Card.vue引入-->
-  <n-scrollbar x-scrollable trigger="none" style="width: 300px">
-    <div style="white-space: nowrap; padding: 12px; width: 1000px">
+  <n-scrollbar x-scrollable trigger="none" style="width: 500px">
+    <div style="white-space: nowrap; padding: 12px; width: 1100px">
       <ul style="position:relative;">
-        <li>
-          <n-card title="卡片">
-            卡片内容
-          </n-card>
-        </li>
-        <li>
-          <n-card title="卡片">
-            卡片内容
-          </n-card>
-        </li>
-        <li>
-          <n-card title="卡片">
-            卡片内容
-          </n-card>
-        </li>
+        <Card class="card"/>
+        <Card class="card"/>
+        <Card class="card"/>
+        <Card class="card"/>
+        <Card class="card"/>
       </ul>
     </div>
   </n-scrollbar>
 </template>
 
 <script>
+import Card from './Card'
+
 export default {
-  name: "Cards"
+  name: "Cards",
+  components: {Card},
+  setup() {
+    return [
+      Card,
+    ]
+  }
 }
+
+
+
 </script>
 
 <style scoped>
 
-li {
+.card {
   list-style: none;
   float: left;
   margin-right: 15px;

@@ -1,22 +1,14 @@
 <template>
-<!--  <div style="width: 30%;">-->
-<!--    <Carousel></Carousel>-->
-<!--  </div>-->
-<!--<Header></Header>-->
-  <Card></Card>
+  <Home/>
 </template>
 
 <script>
-import Carousel from "@/components/Carousel";
-import Header from "@/components/Header";
-import Cards from "@/components/Cards";
-import Card from "@/components/Card"
+import Home from "@/view/Home";
+
 export default {
   name: 'App',
   components: {
-    //Carousel,
-    //Header,
-    Card,
+    Home,
   }
 }
 </script>

@@ -1,7 +1,8 @@
 import { createStore } from 'vuex'
 
 export default createStore({
-
+    // state,提供唯一的公共数据源，所有共享数据统一放到store的state中进行存储
+    // 访问方式: this.$store.state.数据名
     state: {
         loggedIn: false,
         searchItem: "",
@@ -14,7 +15,9 @@ export default createStore({
         }
     },
 
+    // mutation用于修改store中的数据
     mutations: {
+        // 触发mutation的方法：this.$store.commit('方法名')
         login(state,data) {
             state.loggedIn = true;
             state.user.username = data.username;
@@ -32,6 +35,8 @@ export default createStore({
             state.user.nickname = data.nickname;
         }
     },
+    // 处理异步任务，在action中调用mutation的函数(commit)
+    // 使用this.$store.dispatch('方法名')调用
     actions: {
     },
     modules: {

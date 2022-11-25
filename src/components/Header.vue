@@ -65,7 +65,7 @@
           <div style="width: 100px">
             <n-dropdown :options="options">
 
-              <n-button>
+              <n-button round>
                 <n-ellipsis style="max-width: 60px">
                   <!--            {{ userName }}-->
                   Kazeya
