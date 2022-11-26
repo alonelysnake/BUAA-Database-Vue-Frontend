@@ -23,7 +23,7 @@
             :width="240"
         >
           <!--        TODO 设置保持顶端-->
-          <n-affix :top="0" :trigger-top="0" :listen-to="() => headerRef" class="sidebar">
+<!--          <n-affix :top="0" :trigger-top="0" :listen-to="() => headerRef" class="sidebar">-->
             <n-menu
                 :collapsed-width="10"
                 :collapsed-icon-size="22"
@@ -33,15 +33,16 @@
                 children-field="whateverChildren"
                 class="sidebar"
             />
-          </n-affix>
+<!--          </n-affix>-->
         </n-layout-sider>
 
         <!--详细信息-->
-        <n-layout>
+        <n-layout class="detail">
           <div class="detail">
             根据侧边栏选择展示的的右侧内容
             <!--            TODO 实际内容切换-->
-            <CountryPriceTable/>
+<!--            <CountryPriceTable/>-->
+            <Charts style="background-color: white"/>
           </div>
         </n-layout>
 
@@ -55,6 +56,7 @@
 import {ref} from 'vue'
 import Header from "@/components/Header";
 import CountryPriceTable from "@/components/CountryPriceTable";
+import Charts from "@/components/Charts";
 
 const menuOptions = [
   {
@@ -82,7 +84,9 @@ export default {
   name: "DetailPage",
   components: {
     Header,
-    CountryPriceTable
+    // eslint-disable-next-line vue/no-unused-components
+    CountryPriceTable,
+    Charts
   },
   setup() {
     const containerRef = ref(void 0);
@@ -133,7 +137,7 @@ export default {
 .sidebar {
   background-color: antiquewhite;
   height: 100%;
-  z-index: 99;
+  /*z-index: 99;*/
   /*width: 240px;*/
 }
 
