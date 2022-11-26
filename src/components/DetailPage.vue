@@ -18,29 +18,30 @@
       <n-layout has-sider style="height: 100%;">
 
         <!--        选择查看不同详细信息的侧边栏-->
-            <n-layout-sider
-                bordered
-                :width="240"
-            >
-              <!--        TODO 设置保持顶端-->
-              <n-affix :top="0" :trigger-top="0" :listen-to="() => headerRef" class="sidebar">
-              <n-menu
-                  :collapsed-width="10"
-                  :collapsed-icon-size="22"
-                  :options="menuOptions"
-                  key-field="whateverKey"
-                  label-field="whateverLabel"
-                  children-field="whateverChildren"
-                  class="sidebar"
-              />
-              </n-affix>
-            </n-layout-sider>
+        <n-layout-sider
+            bordered
+            :width="240"
+        >
+          <!--        TODO 设置保持顶端-->
+          <n-affix :top="0" :trigger-top="0" :listen-to="() => headerRef" class="sidebar">
+            <n-menu
+                :collapsed-width="10"
+                :collapsed-icon-size="22"
+                :options="menuOptions"
+                key-field="whateverKey"
+                label-field="whateverLabel"
+                children-field="whateverChildren"
+                class="sidebar"
+            />
+          </n-affix>
+        </n-layout-sider>
 
         <!--详细信息-->
         <n-layout>
           <div class="detail">
             根据侧边栏选择展示的的右侧内容
-<!--            TODO 实际内容切换-->
+            <!--            TODO 实际内容切换-->
+            <CountryPriceTable/>
           </div>
         </n-layout>
 
@@ -53,6 +54,7 @@
 <script>
 import {ref} from 'vue'
 import Header from "@/components/Header";
+import CountryPriceTable from "@/components/CountryPriceTable";
 
 const menuOptions = [
   {
@@ -79,7 +81,8 @@ const menuOptions = [
 export default {
   name: "DetailPage",
   components: {
-    Header
+    Header,
+    CountryPriceTable
   },
   setup() {
     const containerRef = ref(void 0);
