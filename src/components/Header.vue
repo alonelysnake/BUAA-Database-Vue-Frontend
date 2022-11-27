@@ -17,7 +17,7 @@
                 <n-icon :component="FlashOutline" />
               </template>
               <template #clear-icon>
-                  <n-icon :component="TrashBinOutline" />
+                  <n-icon :component="CloseCircleOutline" />
               </template>
             </n-input>
           </n-space>
@@ -64,7 +64,6 @@
         <li class="nav-item2">
           <div style="width: 100px">
             <n-dropdown :options="options">
-
               <n-button round>
                 <n-ellipsis style="max-width: 60px">
                   <!--            {{ userName }}-->
@@ -88,9 +87,10 @@ import { NIcon } from "naive-ui";
 
 import {
   SearchSharp,
-  TrashBinOutline,
+  CloseCircleOutline,
   PersonCircleOutline as UserIcon,
-  LogOutOutline as LogoutIcon
+  LogOutOutline as LogoutIcon,
+  TrainOutline as TrainIcon
 } from "@vicons/ionicons5";
 
 import headUrl from "../static/img/head.jpg"
@@ -134,7 +134,8 @@ export default {
       headUrl:headUrl,
       logoUrl:logoUrl,
       FlashOutline: SearchSharp,
-      TrashBinOutline
+      CloseCircleOutline,
+      TrainIcon
     };
   }
 }

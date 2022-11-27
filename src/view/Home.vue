@@ -1,15 +1,27 @@
 <template>
   <Header/>
-  <div id="bg">
-  <div></div>
-  </div>
-  <div id="carousel"  style="width: 300px">
-    <h2 style="float: left;margin-right: 150px">热门游戏</h2>
-    <n-button round>更多</n-button>
+  <div id="bg"></div>
+  <div id="carousel">
+    <h2 style="float: left;margin-right: 428px">热门游戏</h2>
+    <n-button round style="margin-bottom: 10px">
+      <template #icon>
+        <n-icon :component="DotIcon"></n-icon>
+      </template>
+      更多
+    </n-button>
     <Carousel />
   </div>
+  <div id="cards">
+    <h2 style="float: left;margin-right: 428px">最新资讯</h2>
+    <n-button round style="margin-bottom: 10px">
+      <template #icon>
+        <n-icon :component="DotIcon"></n-icon>
+      </template>
+      更多
+    </n-button>
+    <Cards/>
+  </div>
 
-  <Cards id="cards"/>
 
 </template>
 
@@ -18,12 +30,20 @@ import Header from "@/components/Header";
 import Cards from "@/components/Cards";
 import Carousel from "@/components/Carousel";
 
+import {
+  EllipsisHorizontalOutline as DotIcon
+} from "@vicons/ionicons5";
+
+
 export default {
   name: "Home",
   components: {Header,Carousel,Cards},
 
 
   setup() {
+    return {
+      DotIcon
+    }
   }
 
 }
@@ -32,11 +52,12 @@ export default {
 <style scoped>
   #bg {
     /*TODO 背景图片地址*/
-    background-image: url("../assets/logo.png");
+    background-image: url("../static/img/home_bgp.jpeg");
     background-size: cover;
-    opacity: 50%;
+    opacity: 90%;
     width: 100%;
     height: 300px;
+    margin-bottom: 30px;
 
     display: flex;
     justify-content: center;
@@ -45,9 +66,14 @@ export default {
 
   #carousel {
     float: left;
-    margin-left: 10%;
+    margin-left: 6%;
+    width: 600px;
+    height: 250px;
   }
   #cards {
-
+    float: left;
+    margin-left: 10%;
+    width: 600px;
+    height: 260px;
   }
 </style>

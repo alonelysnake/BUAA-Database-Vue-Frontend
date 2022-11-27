@@ -4,7 +4,7 @@
   <n-carousel
       autoplay interval="2500"
       show-arrow
-      style="width: 100%; height: 240px"
+      style="width: 100%;"
   >
     <img
         class="carousel-img"
@@ -44,7 +44,7 @@ export default {
 <style scoped>
 .carousel-img {
   width: 100%;
-  height: 240px;
+  height: 248px;
   object-fit: cover;
 }
 
@@ -71,5 +71,9 @@ export default {
 .custom-dots li.is-active {
   width: 40px;
   background: #fff;
+}
+
+img {
+  border-radius: 0.6em;
 }
 </style>

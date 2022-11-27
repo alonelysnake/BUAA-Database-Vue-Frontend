@@ -1,12 +1,12 @@
 <template>
-  <n-scrollbar x-scrollable trigger="none" style="width: 500px">
-    <div style="white-space: nowrap; padding: 12px; width: 1100px">
+  <n-scrollbar x-scrollable trigger="hover" style="width: 600px">
+    <div style="white-space: nowrap; width: 1310px">
       <ul style="position:relative;">
         <Card class="card"/>
         <Card class="card"/>
         <Card class="card"/>
         <Card class="card"/>
-        <Card class="card"/>
+        <Card style="list-style: none;float: left;"/>
       </ul>
     </div>
   </n-scrollbar>
@@ -18,6 +18,7 @@ import Card from './Card'
 export default {
   name: "Cards",
   components: {Card},
+
   setup() {
     return [
       Card,
@@ -34,7 +35,7 @@ export default {
 .card {
   list-style: none;
   float: left;
-  margin-right: 15px;
+  margin-right: 20px;
 }
 
 </style>
