@@ -1,18 +1,14 @@
 <template>
-  <User></User>
+  <Buyer></Buyer>
 </template>
 
 <script>
-import Home from "@/view/Home";
-import NavMenu from "@/components/Aside";
-import User from "@/components/User";
+import Buyer from "@/components/Buyer";
 
 export default {
   name: 'App',
   components: {
-    Home,
-    NavMenu,
-    User
+    Buyer,
   }
 }
 </script>

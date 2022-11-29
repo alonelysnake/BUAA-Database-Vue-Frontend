@@ -11,8 +11,8 @@
       maxWidth: '640px'
     }"
   >
-<!--  todo 还没搞清楚path、v-model、检查上传文件  -->
-    <n-form-item label="用户头像" path="inputValue">
+<!--  todo 还没搞清楚path、v-model、检查上传文件、增加保存  -->
+    <n-form-item label="用户头像" path="avatarValue">
       <n-avatar
           round
           src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
@@ -23,11 +23,11 @@
         <n-button>上传头像</n-button>
       </n-upload>
     </n-form-item>
-    <n-form-item label="用户名" path="inputValue">
-      <n-input v-model:value="model.inputValue" placeholder="用户名" disabled/>
+    <n-form-item label="用户名" path="userIdValue">
+      <n-input v-model:value="model.userIdValue" placeholder="用户名" disabled/>
     </n-form-item>
-    <n-form-item label="昵称" path="inputValue">
-      <n-input v-model:value="model.inputValue" placeholder="昵称"/>
+    <n-form-item label="昵称" path="nickNameValue">
+      <n-input v-model:value="model.nickNameValue" placeholder="昵称"/>
     </n-form-item>
     <n-form-item label="性别" path="radioGroupValue">
       <n-radio-group v-model:value="model.radioGroupValue" name="radiogroup1">
@@ -84,7 +84,8 @@ export default ({
       },
       model: ref({
         avatarPath: null,
-        inputValue: null,
+        userIdValue: null,
+        nickNameValue:null,
         textareaValue: null,
         radioGroupValue: null,
       }),
@@ -95,20 +96,23 @@ export default ({
           })
       ),
       rules: {
-        inputValue: {
+        userIdValue: {
           required: false,
           trigger: ["blur", "input"],
           message: "请输入 inputValue"
         },
+        nickNameValue: {
+          required: true,
+          trigger: ["blur", "input"],
+          message: "请输入昵称"
+        },
         textareaValue: {
           required: false,
           trigger: ["blur", "input"],
-          message: "请输入 textareaValue"
         },
         radioGroupValue: {
           required: false,
           trigger: "change",
-          message: "请选择 radioGroupValue"
         },
       }
     };
