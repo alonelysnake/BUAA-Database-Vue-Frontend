@@ -10,7 +10,8 @@
 
     <!--    顶层基础信息-->
     <div class="basic-info">
-      这里是游戏的基础信息
+<!--      这里是游戏的基础信息-->
+      <BasicInfo style="width: 100%"/>
     </div>
 
     <div class="content">
@@ -57,6 +58,7 @@ import {ref} from 'vue'
 import Header from "@/components/Header";
 import CountryPriceTable from "@/components/CountryPriceTable";
 import Charts from "@/components/Charts";
+import BasicInfo from "@/components/BasicInfo";
 
 const menuOptions = [
   {
@@ -64,7 +66,7 @@ const menuOptions = [
     whateverKey: 'price'
   },
   {
-    whateverLabel: "活跃度",
+    whateverLabel: "图表展示",
     whateverKey: "heat",
     disabled: false
   },
@@ -86,7 +88,8 @@ export default {
     Header,
     // eslint-disable-next-line vue/no-unused-components
     CountryPriceTable,
-    Charts
+    Charts,
+    BasicInfo
   },
   setup() {
     const containerRef = ref(void 0);
@@ -96,7 +99,7 @@ export default {
       collapsed: ref(true),
       containerRef,
       headerRef,
-      menuOptions
+      menuOptions,
     };
   }
 };
@@ -123,9 +126,9 @@ export default {
 
 /*基础信息*/
 .basic-info {
-  height: 150px;
+  height: 200px;
   width: 100%;
-  background-color: blue;
+  background-color: white;
 }
 
 /*详细信息*/
