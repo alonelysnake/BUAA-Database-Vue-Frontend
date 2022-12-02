@@ -1,4 +1,6 @@
 <template>
+  <router-link to="/Login">aaa</router-link>
+  <router-link to="/Register">bbb</router-link>
 
   <div class="container">
 
@@ -6,7 +8,7 @@
 
     <div class="form2">
 
-      <Login/>
+      <router-view></router-view>
 
     </div>
 
@@ -15,14 +17,10 @@
 </template>
 
 <script>
-import Register from "@/components/Register";
-import Login from "@/components/Login";
 
 export default {
   name: "RegisterLoginPage",
   components: {
-    Register,
-    Login
   }
 }
 </script>
