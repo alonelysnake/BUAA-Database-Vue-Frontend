@@ -1,21 +1,42 @@
-import {createRouter, createWebHistory} from "vue-router";
-import Register from "@/components/Register";
-import Login from "@/components/Login";
+import {createRouter, createWebHistory} from 'vue-router'
 
+import Home from "@/view/Home";
+import User from "@/view/User";
+import UserInfo from "@/components/UserInfo";
+import Buyer from "@/components/Buyer";
+import SellerGoods from "@/components/SellerGoods";
 const routes = [
-    //TODO 考虑登录界面与主界面的父子关系
-    {
-        path: '/Register',
-        component: Register
-    },
-    {
-        path: '/Login',
-        component: Login
-    },
     {
         path: '/',
-        component: Login,
-        redirect: '/Login'//重定向，设置默认路由
+        redirect: '/home'
+    },
+    {
+        path: '/home',
+        name: 'Home',
+        component: Home
+    },
+    {
+        path: '/user/:username/',
+        name: 'User',
+        component: User,
+        children: [
+            {
+                path: '/user/:username/info',
+                name: 'Info',
+                component: UserInfo,
+            },
+            {
+                path: '/user/:username/buyer',
+                name: 'Buyer',
+                component: Buyer,
+            },
+            {
+                path: '/user/:username/sellerGoods',
+                name: 'SellerGoods',
+                component: SellerGoods,
+            },
+
+        ]
     }
 ]
 

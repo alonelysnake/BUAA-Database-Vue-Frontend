@@ -6,9 +6,9 @@
 import { defineComponent, h, ref } from "vue";
 import { NIcon } from "naive-ui";
 import {
-  BookOutline as BookIcon,
   PersonOutline as PersonIcon,
-  WineOutline as WineIcon
+  WineOutline as WineIcon,
+    RibbonOutline as RibbonIcon,
 } from "@vicons/ionicons5";
 
 function renderIcon(icon) {
@@ -17,37 +17,18 @@ function renderIcon(icon) {
 
 const menuOptions = [
   {
-    label: () => h(
-        "a",
-        {
-          href: "https://baike.baidu.com/item/%E4%B8%94%E5%90%AC%E9%A3%8E%E5%90%9F",
-          target: "_blank",
-          rel: "noopenner noreferrer"
-        },
-        "且听风吟"
-    ),
-    key: "hear-the-wind-sing",
-    icon: renderIcon(BookIcon)
+    label: "个人信息",
+    key: "userInfo",
+    icon: renderIcon(PersonIcon),
   },
   {
-    label: "1973年的弹珠玩具",
-    key: "pinball-1973",
-    icon: renderIcon(BookIcon),
-    children: [
-      {
-        label: "鼠",
-        key: "rat"
-      }
-    ]
+    label: "买家中心",
+    key: "buyer",
+    icon: renderIcon(RibbonIcon),
   },
   {
-    label: "寻羊冒险记",
-    key: "a-wild-sheep-chase",
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: "舞，舞，舞",
-    key: "dance-dance-dance",
+    label: "卖家中心",
+    key: "seller",
     icon: renderIcon(BookIcon),
     children: [
       {
