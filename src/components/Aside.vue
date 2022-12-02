@@ -1,5 +1,14 @@
 <template>
-  <n-menu v-model:value="activeKey" mode="vertical" :options="menuOptions" />
+  <div class="aside-container">
+    <n-menu
+            class="aside"
+            v-model:value="activeKey"
+            mode="vertical"
+            :options="menuOptions"
+            @update:value="handleSelect"
+    />
+  </div>
+
 </template>
 
 <script>
@@ -7,9 +16,13 @@ import { defineComponent, h, ref } from "vue";
 import { NIcon } from "naive-ui";
 import {
   PersonOutline as PersonIcon,
-  WineOutline as WineIcon,
-    RibbonOutline as RibbonIcon,
+  RocketOutline as RibbonIcon,
+  DocumentOutline as DocIcon,
+  CardOutline as CardIcon,
+  CartOutline as CartIcon,
 } from "@vicons/ionicons5";
+import router from "@/router";
+import store from "@/store";
 
 function renderIcon(icon) {
   return () => h(NIcon, null, { default: () => h(icon) });
@@ -24,69 +37,66 @@ const menuOptions = [
   {
     label: "买家中心",
     key: "buyer",
-    icon: renderIcon(RibbonIcon),
+    icon: renderIcon(CartIcon),
   },
   {
     label: "卖家中心",
     key: "seller",
-    icon: renderIcon(BookIcon),
+    icon: renderIcon(RibbonIcon),
     children: [
       {
-        type: "group",
-        label: "人物",
-        key: "people",
-        children: [
-          {
-            label: "叙事者",
-            key: "narrator",
-            icon: renderIcon(PersonIcon)
-          },
-          {
-            label: "羊男",
-            key: "sheep-man",
-            icon: renderIcon(PersonIcon)
-          }
-        ]
+        label: "商品",
+        key: "goods",
+        icon: renderIcon(CardIcon),
       },
       {
-        label: "饮品",
-        key: "beverage",
-        icon: renderIcon(WineIcon),
-        children: [
-          {
-            label: "威士忌",
-            key: "whisky"
-          }
-        ]
+        label: "订单",
+        key: "order",
+        icon: renderIcon(DocIcon),
       },
-      {
-        label: "食物",
-        key: "food",
-        children: [
-          {
-            label: "三明治",
-            key: "sandwich"
-          }
-        ]
-      },
-      {
-        label: "过去增多，未来减少",
-        key: "the-past-increases-the-future-recedes"
-      }
     ]
   }
 ];
 
 export default defineComponent({
+  name: "Aside",
   setup() {
     return {
       activeKey: ref(null),
-      menuOptions
+      menuOptions,
+
+      handleSelect(key, item) {
+        // console.log(key);
+        switch (key) {
+          case "userInfo":
+            router.push("/user/" + store.state.user.userID + "/info");
+            break;
+          case "buyer":
+            router.push("/user/" + store.state.user.userID + "/buyer");
+            break;
+          case "goods":
+            router.push("/user/" + store.state.user.userID + "/sellerGoods");
+            break;
+          case "order":
+            router.push("/user/" + store.state.user.userID + "/sellerOrder");
+            break;
+        }
+      }
     };
   }
 });
 </script>
 
 <style scoped>
+  .aside-container {
+    height: 700px;
+    border-right: 1px solid rgb(204, 204, 204);
+    float: left;
+    margin-right: 30px;
+  }
 
+ .aside {
+   width: 200px;
+   height: 100%;
+ }
 </style>

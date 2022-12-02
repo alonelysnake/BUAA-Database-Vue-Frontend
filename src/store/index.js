@@ -7,8 +7,8 @@ export default createStore({
         loggedIn: false,
         searchItem: "",
         user: {
-            nickname: "DefaultNickname",
-            userID: 'DefaultUsername',
+            nickname: "Veronica",
+            userID: 'VeronicaID',
             type:1,
             // 头像Url
             avatar: "",

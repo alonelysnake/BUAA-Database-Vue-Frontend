@@ -1,10 +1,13 @@
 import {createRouter, createWebHistory} from 'vue-router'
 
 import Home from "@/view/Home";
-import User from "@/view/User";
+import UserPage from "@/view/User";
 import UserInfo from "@/components/UserInfo";
 import Buyer from "@/components/Buyer";
 import SellerGoods from "@/components/SellerGoods";
+import SellerOrder from "@/components/SellerOrder";
+import Register from "@/components/Register";
+import Login from "@/components/Login";
 const routes = [
     {
         path: '/',
@@ -16,9 +19,9 @@ const routes = [
         component: Home
     },
     {
-        path: '/user/:username/',
+        path: '/user/:username',
         name: 'User',
-        component: User,
+        component: UserPage,
         children: [
             {
                 path: '/user/:username/info',
@@ -35,9 +38,26 @@ const routes = [
                 name: 'SellerGoods',
                 component: SellerGoods,
             },
-
+            {
+                path: '/user/:username/sellerOrder',
+                name: 'SellerOrder',
+                component: SellerOrder,
+            }
         ]
-    }
+    },
+    {
+        path: '/logReg',
+        name: 'LogReg',
+        component: () => import('@/view/RegisterLoginPage')
+    },
+    {
+        path: '/register',
+        component: Register
+    },
+    {
+        path: '/login',
+        component: Login
+    },
 ]
 
 const router = createRouter({

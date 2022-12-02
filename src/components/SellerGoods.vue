@@ -1,22 +1,22 @@
 <template>
-  <div style="margin: 10px 0;">
-    <div style="position: absolute;left: 200px">
-      <n-button type="primary" ghost style="margin-right: 10px;">批量删除</n-button>
+  <div class="header">
+    <div class="operate">
+      <n-button type="primary" ghost style="height: 35px">批量删除</n-button>
     </div>
-    <div style="position:absolute;left: 100px">
+    <div class="operate">
       <n-upload
           action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
           @before-upload="beforeUpload"
           style="display: inline"
       >
-        <n-button type="primary" ghost style="margin-right: 10px;">批量导入</n-button>
+        <n-button type="primary" ghost style="height: 35px">批量导入</n-button>
       </n-upload>
     </div>
-    <div>
-      <n-button type="primary" ghost >添加商品</n-button>
+    <div class="operate">
+      <n-button type="primary" ghost style="height: 35px">添加商品</n-button>
     </div>
   </div>
-  <n-space vertical :size="12" >
+  <n-space vertical :size="12" style="width: 83%">
     <n-input v-model:value="search" placeholder="输入商品号或游戏名查询" style="width: 400px;"/>
     <n-data-table
         ref="table"
@@ -25,9 +25,12 @@
         :pagination="pagination"
         striped
         @update:sorter="handleSorterChange"
+        :row-key="rowKey"
+        @update:checked-row-keys="handleCheck"
     >
     </n-data-table>
   </n-space>
+
 </template>
 
 <!--todo 编辑/删除操作、从后端获得数据、测试数据上传-->
@@ -51,7 +54,7 @@ const filterTableData = computed(() =>
 
 const tableData = [
   {
-    goodId: '1233',
+    goodId: '1253',
     name: 'Sekiro',
     CDKey: '123456',
     value: 20.5,
@@ -80,6 +83,12 @@ const createColumns = ({
                          edit,del
                        }) => {
   return [
+    {
+      type: "selection",
+      disabled(row) {
+        return false;
+      }
+    },
     {
       title: "商品号",
       key: "goodId"
@@ -136,6 +145,7 @@ export default {
 
   setup () {
     const tableRef = ref(null)
+    const checkedRowKeysRef = ref([]);
     const columnsRef = ref(createColumns(
         {
           edit(rowData) {
@@ -147,6 +157,11 @@ export default {
         }
     ))
     return {
+      rowKey: (row) => row.goodId,
+      checkedRowKeys: checkedRowKeysRef,
+      handleCheck(rowKeys) {
+        checkedRowKeysRef.value = rowKeys;
+      },
       table: tableRef,
       columns: columnsRef,
       filterTableData,
@@ -185,5 +200,16 @@ export default {
 </script>
 
 <style scoped>
+.operate {
+  float: left;
+  margin-right: 10px;
+}
 
+
+
+.header {
+  margin-top: 31px;
+  margin-bottom: 9px;
+  min-height: 40px
+}
 </style>

@@ -1,6 +1,9 @@
 <template>
-  <Header></Header>
-  <TestStore></TestStore>
+  <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
+    <Header></Header>
+    <router-view></router-view>
+  </n-config-provider>
+
 <!--  <div style="display: block; height: 100%">-->
 <!--    <div v-if="headerVisiable" class="header-container">-->
 <!--      <Header-->
@@ -13,15 +16,20 @@
 </template>
 
 <script>
-
+import { NConfigProvider } from 'naive-ui'
+import { zhCN, dateZhCN } from 'naive-ui'
 import Header from "@/components/Header";
-import TestStore from "@/components/testStore";
-
 export default {
   name: 'App',
   components: {
-    TestStore,
     Header,
+    NConfigProvider,
+  },
+  setup() {
+    return {
+      zhCN,
+      dateZhCN
+    }
   }
 }
 </script>

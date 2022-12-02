@@ -12,8 +12,12 @@ import store from "../store"
 export default {
   name: "testStore",
   setup() {
+
     function add() {
-      store.commit('test')
+      //store.commit('test')
+      console.log(this.name)
+      this.$store.state.count++
+      //this.$store.commit('test')
     }
     return {
       add,

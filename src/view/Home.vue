@@ -1,5 +1,4 @@
 <template>
-  <Header/>
   <div id="bg"></div>
   <div id="carousel">
     <h2 style="float: left;margin-right: 428px">热门游戏</h2>
@@ -26,7 +25,6 @@
 </template>
 
 <script>
-import Header from "@/components/Header";
 import Cards from "@/components/Cards";
 import Carousel from "@/components/Carousel";
 
@@ -37,7 +35,7 @@ import {
 
 export default {
   name: "Home",
-  components: {Header,Carousel,Cards},
+  components: {Carousel,Cards},
 
 
   setup() {

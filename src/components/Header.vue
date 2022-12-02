@@ -24,6 +24,13 @@
         <li class="nav-item1">
           <a class="nav-link" href="/">
             <n-button text>
+              首页
+            </n-button>
+          </a>
+        </li>
+        <li class="nav-item1">
+          <a class="nav-link" href="/">
+            <n-button text>
               优惠
             </n-button>
           </a>
@@ -38,19 +45,12 @@
         <li class="nav-item1">
           <a class="nav-link" href="/">
             <n-button text>
-              订单
-            </n-button>
-          </a>
-        </li>
-        <li class="nav-item1">
-          <a class="nav-link" href="/">
-            <n-button text>
               关于
             </n-button>
           </a>
         </li>
       </ul>
-      <ul class="navbar-nav" style="margin-left: 25%;left: 10%">
+      <ul v-if=store.state.loggedIn class="navbar-nav" style="margin-left: 25%;left: 10%">
         <li class="nav-item2">
           <n-space id="avatar">
             <n-avatar class="picture"
@@ -64,14 +64,16 @@
           <div style="width: 100px">
             <n-dropdown :options="options">
               <n-button round>
-                <n-ellipsis style="max-width: 60px">
-                  <!--            {{ userName }}-->
-                  {{userId}}
+                <n-ellipsis style="max-width: 70px">
+                  {{nickname}}
                 </n-ellipsis>
               </n-button>
             </n-dropdown>
           </div>
         </li>
+      </ul>
+      <ul v-else class="navbar-nav" style="margin-left: 25%;left: 10%">
+        <n-button round @click="handleLog">登陆/注册</n-button>
       </ul>
     </div>
 
@@ -89,13 +91,15 @@ import {
   CloseCircleOutline,
   PersonCircleOutline as UserIcon,
   LogOutOutline as LogoutIcon,
-  TrainOutline as TrainIcon
+  TrainOutline as TrainIcon,
+  CartOutline as CartIcon,
 } from "@vicons/ionicons5";
 
 import headUrl from "../static/img/head.jpg"
 import logoUrl from "../assets/logo.png"
 import { RouterLink } from "vue-router";
 import store from "../store"
+import router from "@/router";
 
 const renderIcon = (icon) => {
   return () => {
@@ -113,20 +117,21 @@ export default {
   },
 
   setup() {
-    let userId = computed(()=>{
-      return store.state.user.userID
+    let nickname = computed(()=>{
+      return store.state.user.nickname
     })
     return {
-      userId,
+      store,
+      nickname,
       options: [
         {
           label: () => h(
               RouterLink,
               {
                 to: {
-                  name: 'User',
+                  name: 'Info',
                   params: {
-                    username: userId.value
+                    username: nickname.value
                   }
                 }
               },
@@ -136,6 +141,24 @@ export default {
           ),
           key: "profile",
           icon: renderIcon(UserIcon),
+        },
+        {
+          label: () => h(
+              RouterLink,
+              {
+                to: {
+                  name: 'Buyer',
+                  params: {
+                    username: nickname.value
+                  }
+                }
+              },
+              {
+                default: () => "我的订单"
+              }
+          ),
+          key: "order",
+          icon: renderIcon(CartIcon),
         },
         {
           label: "退出登录",
@@ -148,7 +171,10 @@ export default {
       logoUrl:logoUrl,
       FlashOutline: SearchSharp,
       CloseCircleOutline,
-      TrainIcon
+      TrainIcon,
+      handleLog() {
+        router.push("/logReg")
+      }
     };
   }
 }

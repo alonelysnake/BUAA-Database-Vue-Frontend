@@ -4,7 +4,7 @@
       <n-button type="primary" ghost style="margin-right: 20px">批量删除</n-button>
       <n-input v-model:value="search" placeholder="输入订单号或游戏名查询" style="width: 400px;"/>
     </div>
-    <n-data-table
+        <n-data-table
         ref="table"
         :columns="columns"
         :data="filterTableData"
@@ -37,12 +37,12 @@ import { h,ref,nextTick,computed } from "vue";
 
 const options = [
   {
-    label: () => h("span", { style: { color: "black" } }, "确定收货"),
-    key: "edit"
+    label: () => h("span", { style: { color: "black" } }, "确定发货"),
+    key: "deliver"
   },
   {
-    label: () => h("span", { style: { color: "black" } }, "评价"),
-    key: "appraise"
+    label: () => h("span", { style: { color: "black" } }, "确定退款"),
+    key: "refund"
   },
   {
     label: () => h("span", { style: { color: "red" } }, "删除订单"),
@@ -68,7 +68,7 @@ const columns = [
     sorter: 'default'
   },
   {
-    title: "购买时间",
+    title: "用户购买时间",
     key: "date",
     sortOrder: 'descend',
     sorter: 'default'
@@ -78,13 +78,13 @@ const columns = [
     key: "value"
   },
   {
-    title: "卖家ID",
+    title: "买家ID",
     key: "sellerId"
   },
   {
     title: "交易状态",
     key: "status",
-    defaultFilterOptionValues: ['待付款', '已付款','已发货','交易成功','已取消','待退款'],
+    defaultFilterOptionValues: ['已付款','待退款'],
     filterOptions: [
       {
         label: '待付款',
@@ -164,7 +164,7 @@ const filterTableData = computed(() =>
 )
 
 export default ({
-  name:"Buyer",
+  name:"SellerOrder",
 
   setup () {
     const checkedRowKeysRef = ref([]);
