@@ -12,7 +12,8 @@ export default createStore({
             type:1,
             // 头像Url
             avatar: "",
-        }
+        },
+        count:1
     },
 
     // mutation用于修改store中的数据
@@ -33,6 +34,9 @@ export default createStore({
         },
         setInfo(state, data) {
             state.user.nickname = data.nickname;
+        },
+        test(state) {
+            state.count++;
         }
     },
     // 处理异步任务，在action中调用mutation的函数(commit)

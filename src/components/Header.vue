@@ -1,13 +1,12 @@
 <template>
   <nav class="navbar header">
-    <a class="navbar-brand" href="/" style="margin-left: 3.5%">
+    <router-link class="navbar-brand" to="/" style="margin-left: 3.5%">
       <n-avatar class="picture"
           size="small"
           :src="logoUrl"
           color="white"
       />
-    </a>
-
+    </router-link>
     <div class="collapse" id="top-menu">
       <ul class="navbar-nav" style="margin-right: 25%">
         <li class="nav-item1">
@@ -67,7 +66,7 @@
               <n-button round>
                 <n-ellipsis style="max-width: 60px">
                   <!--            {{ userName }}-->
-                  Kazeya
+                  {{userId}}
                 </n-ellipsis>
               </n-button>
             </n-dropdown>
@@ -82,7 +81,7 @@
 
 <script>
 
-import { h } from "vue";
+import { h,computed } from "vue";
 import { NIcon } from "naive-ui";
 
 import {
@@ -95,7 +94,8 @@ import {
 
 import headUrl from "../static/img/head.jpg"
 import logoUrl from "../assets/logo.png"
-
+import { RouterLink } from "vue-router";
+import store from "../store"
 
 const renderIcon = (icon) => {
   return () => {
@@ -108,21 +108,34 @@ const renderIcon = (icon) => {
 export default {
   name: "Header",
   // todo 实现跳转登陆注册页面，登出，搜索等功能
-  logout() {
-    this.$store.commit('logout');
-    this.$router.push('/home');
-    window.localStorage.removeItem('token');
-    this.$message.success("退出成功");
+  props: {
+    headIndex: String,
   },
 
   setup() {
-
+    let userId = computed(()=>{
+      return store.state.user.userID
+    })
     return {
+      userId,
       options: [
         {
-          label: "个人中心",
+          label: () => h(
+              RouterLink,
+              {
+                to: {
+                  name: 'User',
+                  params: {
+                    username: userId.value
+                  }
+                }
+              },
+              {
+                default: () => "个人中心"
+              }
+          ),
           key: "profile",
-          icon: renderIcon(UserIcon)
+          icon: renderIcon(UserIcon),
         },
         {
           label: "退出登录",
