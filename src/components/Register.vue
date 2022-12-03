@@ -42,13 +42,15 @@
           size="small"
       />
 
-      <div style="text-align: right">
+      <n-space style="text-align: right">
 
-        <n-button type="success" :loading="loading" @click="handleLogin">
+        <n-button v-text="'已有账户？点此登录'" @click="handleLogin" text-color="green"/>
+
+        <n-button type="success" :loading="loading" @click="handleRegister">
           完成注册
         </n-button>
 
-      </div>
+      </n-space>
 
     </n-space>
 
@@ -71,11 +73,15 @@ export default {
       loading: loading,
 
       // TODO 处理登录按钮事件
-      handleLogin() {
+      handleRegister() {
         loading.value = true;
         setTimeout(() => {
           loading.value = false;
         }, 2e3);
+      },
+
+      handleLogin() {
+        //TODO 跳转到登录界面
       },
 
       options: computed(() => {
@@ -95,7 +101,7 @@ export default {
 </script>
 
 <style scoped>
-.global{
+.global {
   background: white;
   padding: 30px;
   border-radius: 10px;

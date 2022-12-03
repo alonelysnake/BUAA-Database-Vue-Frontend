@@ -70,7 +70,7 @@ export default {
       },
 
       handleRegister(){
-        //TODO 处理注册事件
+        //TODO 处理注册事件（跳转到注册页面）
       },
 
       options: computed(() => {
