@@ -61,12 +61,14 @@
 <script>
 import {ref, computed} from "vue";
 import {GlassesOutline, Glasses} from '@vicons/ionicons5'
+import { useRouter } from 'vue-router'
 
 export default {
   name: "Register",
   setup() {
     const mail = ref("");
     const loading = ref(false);
+    const router = useRouter();
 
     return {
       mail: mail,
@@ -82,6 +84,7 @@ export default {
 
       handleLogin() {
         //TODO 跳转到登录界面
+        router.push({name:'login'})
       },
 
       options: computed(() => {
