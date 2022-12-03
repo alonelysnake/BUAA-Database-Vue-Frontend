@@ -49,6 +49,7 @@
 
 <script>
 import {ref, computed} from "vue";
+import { useRouter } from 'vue-router'
 import {GlassesOutline, Glasses} from '@vicons/ionicons5'
 
 export default {
@@ -56,6 +57,7 @@ export default {
   setup() {
     const mail = ref("");
     const loading = ref(false);
+    const router = useRouter();
 
     return {
       mail: mail,
@@ -69,8 +71,10 @@ export default {
         }, 2e3);
       },
 
-      handleRegister(){
+      handleRegister() {
         //TODO 处理注册事件（跳转到注册页面）
+        console.log("gg")
+        router.push({name: 'register'})
       },
 
       options: computed(() => {
@@ -90,7 +94,7 @@ export default {
 </script>
 
 <style scoped>
-.global{
+.global {
   background: white;
   padding: 30px;
   border-radius: 10px;

@@ -1,6 +1,4 @@
 <template>
-  <router-link to="/Login">aaa</router-link>
-  <router-link to="/Register">bbb</router-link>
 
   <div class="container">
 
@@ -27,12 +25,12 @@ export default {
 
 <style scoped>
 .container .bg2 {
-  /*TODO 背景图片地址*/
-  background-image: url("../assets/logo.png");
+  background-image: url("../static/img/login_bgp.jpg");
   background-size: cover;
   opacity: 50%;
   width: 100%;
-  height: 800px;
+  /*TODO 应该增加一个父容器然后设置height为100%*/
+  height: 690px;
 
   display: flex;
   justify-content: center;
