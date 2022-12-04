@@ -1,5 +1,5 @@
 <template>
-  <n-card title="添加商品" closable @close="handleClose" hoverable>
+  <n-card title="修改商品信息" closable @close="handleClose" hoverable>
     <n-form
         ref="formRef"
         :model="model"
@@ -12,12 +12,9 @@
       maxWidth: '640px'
     }"
     >
-      <n-form-item label="选择游戏" path="nameValue">
+      <n-form-item label="游戏" path="nameValue">
         <n-space id="search">
-          <n-input v-model:value="model.nameValue" placeholder="按ID或游戏名搜索" clearable>
-            <template #clear-icon>
-              <n-icon :component="CloseCircleOutline" />
-            </template>
+          <n-input v-model:value="model.nameValue" placeholder="按ID或游戏名搜索" disabled>
           </n-input>
         </n-space>
       </n-form-item>
@@ -52,25 +49,25 @@
 
 <script>
 import { ref } from "vue";
-import {
-  CloseCircleOutline,
-} from "@vicons/ionicons5";
 import store from "../store"
 
+let name,CDKey,steam,intro;
 export default ({
-  name: "AddGood",
+  name: "EditGood",
+  props: {
+    name,CDKey,steam,intro,
+  },
 
   setup() {
     const formRef = ref(null);
     return {
       formRef,
-      CloseCircleOutline,
       size: ref("medium"),
       model: ref({
-        nameValue: null,
-        keyValue: null,
-        steamValue:null,
-        introValue: null,
+        nameValue: name,
+        keyValue: CDKey,
+        steamValue: steam,
+        introValue: intro,
       }),
       rules: {
         nameValue: {
@@ -95,17 +92,17 @@ export default ({
 
       },
       handleClose() {
-        store.state.addGoodsVisible = false;
+        store.state.editGoodsVisible = false;
         // this.$emit(visible);
-        console.log("取消添加游戏");
+        console.log("取消修改游戏");
       },
 
       handleConfirm(e) {
         e.preventDefault();
-        store.state.addGoodsVisible = false;
+        store.state.editGoodsVisible = false;
         // todo 向后端发送数据
         // this.$emit(visible);
-        console.log("确定添加游戏");
+        console.log("确定修改游戏");
       }
     };
   }

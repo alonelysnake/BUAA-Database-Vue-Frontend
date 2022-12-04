@@ -4,7 +4,7 @@ export default createStore({
     // state,提供唯一的公共数据源，所有共享数据统一放到store的state中进行存储
     // 访问方式: this.$store.state.数据名
     state: {
-        loggedIn: false,
+        loggedIn: true,
         searchItem: "",
         user: {
             nickname: "Veronica",
@@ -13,7 +13,8 @@ export default createStore({
             // 头像Url
             avatar: "",
         },
-        count:1
+        addGoodsVisible: false,
+        editGoodsVisible: false,
     },
 
     // mutation用于修改store中的数据

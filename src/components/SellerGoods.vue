@@ -1,5 +1,6 @@
 <template>
   <div class="header">
+
     <div class="operate">
       <n-button type="primary" ghost style="height: 35px">批量删除</n-button>
     </div>
@@ -13,10 +14,10 @@
       </n-upload>
     </div>
     <div class="operate">
-      <n-button type="primary" ghost style="height: 35px">添加商品</n-button>
+      <n-button type="primary" ghost style="height: 35px" @click="handleAdd">添加商品</n-button>
     </div>
   </div>
-  <n-space vertical :size="12" style="width: 83%">
+  <n-space vertical :size="12" style="width: 83%;position:relative;">
     <n-input v-model:value="search" placeholder="输入商品号或游戏名查询" style="width: 400px;"/>
     <n-data-table
         ref="table"
@@ -29,6 +30,8 @@
         @update:checked-row-keys="handleCheck"
     >
     </n-data-table>
+    <AddGood class="goodCard" v-if="store.state.addGoodsVisible"></AddGood>
+    <EditGood class="goodCard" v-if="store.state.editGoodsVisible"></EditGood>
   </n-space>
 
 </template>
@@ -38,6 +41,13 @@
 <script>
 import { h,ref,computed } from "vue";
 import { NButton } from "naive-ui";
+import store from "../store"
+import AddGood from "@/components/AddGood";
+import EditGood from "@/components/EditGood";
+
+import {
+  CloseCircleOutline,
+} from "@vicons/ionicons5";
 
 const search = ref('')
 const filterTableData = computed(() =>
@@ -142,21 +152,27 @@ const createColumns = ({
 
 export default {
   name: "SellerGoods",
+  components:{AddGood,EditGood},
 
   setup () {
+    const formRef = ref(null);
     const tableRef = ref(null)
     const checkedRowKeysRef = ref([]);
     const columnsRef = ref(createColumns(
         {
           edit(rowData) {
+            // todo 根据行的信息传递参数
+            store.state.editGoodsVisible = true;
             console.log("edit data " + rowData.name)
           },
           del(rowData) {
+            // todo 向后端回传
             console.log("delete data " + rowData.name)
           }
         }
     ))
     return {
+      store,
       rowKey: (row) => row.goodId,
       checkedRowKeys: checkedRowKeysRef,
       handleCheck(rowKeys) {
@@ -193,9 +209,46 @@ export default {
           this.$message.warning('文件大小不得超过10M')
         }
       },
-    }
-  }
+      handleAdd() {
+        store.state.addGoodsVisible = true
+      },
 
+
+
+      formRef,
+      CloseCircleOutline,
+      size: ref("medium"),
+      model: ref({
+        nameValue: null,
+        keyValue: null,
+        steamValue:null,
+        introValue: null,
+      }),
+      rules: {
+        nameValue: {
+          required: true,
+          trigger: ["blur", "input"],
+          message: "请选择商品所属游戏"
+        },
+        keyValue: {
+          required: false,
+          trigger: ["blur", "input"],
+        },
+        steamValue: {
+          required: true,
+          trigger: ["blur", "input"],
+          message: "请输入您的steamID"
+        },
+        introValue: {
+          required: true,
+          trigger: ["blur", "input"],
+          message: "请输入商品详情"
+        },
+
+      },
+
+    }
+  },
 }
 </script>
 
@@ -205,7 +258,14 @@ export default {
   margin-right: 10px;
 }
 
-
+.goodCard {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
 
 .header {
   margin-top: 31px;
