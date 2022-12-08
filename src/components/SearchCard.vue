@@ -51,13 +51,10 @@
 </template>
 
 <script>
-import {
-  SearchSharp,
-  CloseCircleOutline,
-} from "@vicons/ionicons5";
+import {CloseCircleOutline, SearchSharp,} from "@vicons/ionicons5";
 import store from "../store";
 import Local from "../utils/local"
-import {ref,computed} from "vue"
+import {computed, ref} from "vue"
 
 // todo 从后端进行模糊搜索，标签加路由/超链接
 
@@ -72,16 +69,19 @@ export default {
     let searchList = ref(["暂无数据"]) //搜索返回数据,
     let history = ref(false)
 
+    // 显示历史
     const isHistorySearch = computed(()=>{
-      console.log(isFocus.value && search.value === "")
+      // console.log(isFocus.value && search.value === "")
       return isFocus.value && search.value === "" && historySearchList.value.length !== 0;
     })
+    // 显示候选
     const isSearchList = computed(()=>{
-      console.log(search.value)
+      // console.log(search.value)
       return isFocus.value && search.value !== "";
     })
+    // 显示搜索卡片
     const isSearch = computed(()=>{
-      // console.log(isFocus.value)
+      console.log(historySearchList.value)
       return isFocus.value && (historySearchList.value.length !== 0 || search.value !== "");
     })
 
@@ -100,9 +100,11 @@ export default {
       history,
       focus() {
         isFocus.value = true
-        // historySearchList.value = Local.loadHistory() == null ? [] : Local.loadHistory()
+        let tmp = Local.loadHistory()
+        let type = Object.prototype.toString.call(tmp);
+        historySearchList.value = type === "[object Array]" ? Local.loadHistory():[]
         // historySearchList.value = [{id:1,name:"sekiro"}]
-        historySearchList.value = []
+        // historySearchList.value = []
         history.value = historySearchList.value.length !== 0
       },
       blur() {
