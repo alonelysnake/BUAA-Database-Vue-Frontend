@@ -34,6 +34,7 @@
 
 <script>
 import { h,ref,nextTick,computed } from "vue";
+import {NImage} from "naive-ui";
 
 const options = [
   {
@@ -55,6 +56,21 @@ const columns = [
     type: "selection",
     disabled(row) {
       return row.status !== "交易成功" && row.status !== "已取消";
+    }
+  },
+  {
+    title: "",
+    key: "icon",
+    width: 140,
+    render: (value) => {
+      return h(
+          NImage,
+          {
+            width: 140,
+            // height: 40,
+            src: value.img
+          }
+      )
     }
   },
   {
@@ -120,6 +136,8 @@ const columns = [
 
 const tableData = [
   {
+    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
+
     orderId: 1,
     name: 'Sekiro',
     date: '2016-05-02',
@@ -128,6 +146,8 @@ const tableData = [
     status: '已发货',
   },
   {
+    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp4.itc.cn%2Fq_70%2Fimages03%2F20210622%2F3254befcfb29402297aefdd8a8944b95.jpeg&refer=http%3A%2F%2Fp4.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109495&t=872a11a71436ae2fa168921b78396785',
+
     orderId: 2,
     name: 'NieR',
     date: '2016-05-03',
@@ -136,6 +156,8 @@ const tableData = [
     status: '已发货'
   },
   {
+    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
+
     orderId: 3,
     name: 'Sekiro',
     date: '2016-04-05',
@@ -144,6 +166,8 @@ const tableData = [
     status: '交易成功'
   },
   {
+    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
+
     orderId: 4,
     name: 'Sekiro',
     date: '2016-02-02',

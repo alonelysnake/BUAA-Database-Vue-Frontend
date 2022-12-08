@@ -1,0 +1,167 @@
+<template>
+  <div>
+    <div>
+      <n-input
+          v-model:value="search"
+          round
+          placeholder="搜索"
+          clearable
+          @focus="focus"
+          @blur="blur"
+          @keyup.enter="searchHandler"
+          style="min-width: 300px">
+        <template #suffix>
+          <n-icon @click="searchHandler" :component="SearchSharp" />
+        </template>
+        <template #clear-icon>
+          <n-icon :component="CloseCircleOutline" />
+        </template>
+      </n-input>
+    </div>
+
+    <n-card
+        v-if="isSearch"
+        class="box-card"
+        @mouseenter="enterSearchBoxHandler"
+        style="max-width:300px; position: absolute"
+    >
+      <dl v-if="isHistorySearch">
+        <dt class="search-title" v-show="history">历史搜索</dt>
+        <dt class="remove-history" v-show="history" @click="removeAllHistory">
+          清空历史记录
+        </dt>
+        <n-tag
+            v-for="search in historySearchList"
+            :key="search.id"
+            closable
+            type="success"
+            :bordered="false"
+            @close="closeHandler(search)"
+            style="margin-right:5px; margin-bottom:5px;"
+        >
+          {{search.name}}
+        </n-tag>
+      </dl>
+      <dl v-if="isSearchList">
+        <dd v-for="search in searchList" :key="search.id">{{search}}</dd>
+      </dl>
+    </n-card>
+  </div>
+
+</template>
+
+<script>
+import {
+  SearchSharp,
+  CloseCircleOutline,
+} from "@vicons/ionicons5";
+import store from "../store";
+import Local from "../utils/local"
+import {ref,computed} from "vue"
+
+// todo 从后端进行模糊搜索，标签加路由/超链接
+
+export default {
+  name: "SearchCard",
+
+  setup() {
+
+    let isFocus = ref(false) //是否聚焦
+    let search = ref("") //当前输入框的值
+    let historySearchList = ref([]) //历史搜索数据
+    let searchList = ref(["暂无数据"]) //搜索返回数据,
+    let history = ref(false)
+
+    const isHistorySearch = computed(()=>{
+      console.log(isFocus.value && search.value === "")
+      return isFocus.value && search.value === "" && historySearchList.value.length !== 0;
+    })
+    const isSearchList = computed(()=>{
+      console.log(search.value)
+      return isFocus.value && search.value !== "";
+    })
+    const isSearch = computed(()=>{
+      // console.log(isFocus.value)
+      return isFocus.value && (historySearchList.value.length !== 0 || search.value !== "");
+    })
+
+    let searchBoxTimeout = ref()
+    return {
+      store,
+      isHistorySearch,
+      isSearch,
+      isSearchList,
+      SearchSharp,
+      search,
+      CloseCircleOutline,
+      // hotSearchList: ["暂无热门搜索"], //热门搜索数据
+      historySearchList,
+      searchList,
+      history,
+      focus() {
+        isFocus.value = true
+        // historySearchList.value = Local.loadHistory() == null ? [] : Local.loadHistory()
+        // historySearchList.value = [{id:1,name:"sekiro"}]
+        historySearchList.value = []
+        history.value = historySearchList.value.length !== 0
+      },
+      blur() {
+        searchBoxTimeout.value = setTimeout(function() {
+          isFocus.value = false;
+        }, 100);
+      },
+      enterSearchBoxHandler() {
+        clearTimeout(searchBoxTimeout.value);
+      },
+      searchHandler() {
+        let exist =
+            historySearchList.value.filter(value => {
+              return value.name === search.value;
+            }).length !== 0;
+        if (!exist) {
+          historySearchList.value.push({name: search.value});
+          Local.saveHistory(historySearchList.value);
+        }
+        history.value = historySearchList.value.length !== 0;
+      },
+      closeHandler(search) {
+        historySearchList.value.splice(historySearchList.value.indexOf(search), 1);
+        Local.saveHistory(historySearchList);
+        clearTimeout(searchBoxTimeout.value);
+        if (historySearchList.value.length === 0) {
+          history.value = false;
+        }
+      },
+      removeAllHistory() {
+        // console.log("删除所有历史")
+        Local.removeAllHistory();
+      },
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+#search {
+  background-color: #ffc300;
+  border-radius: 0%;
+}
+.search-title {
+  color: #bdbaba;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+.remove-history {
+  color: #bdbaba;
+  font-size: 15px;
+  float: right;
+  margin-top: -29px;
+}
+#search-box {
+  width: 555px;
+  height: 300px;
+  margin-top: 0px;
+  padding-bottom: 20px;
+}
+</style>

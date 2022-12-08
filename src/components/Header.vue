@@ -10,16 +10,18 @@
     <div class="collapse" id="top-menu">
       <ul class="navbar-nav" style="margin-right: 25%">
         <li class="nav-item1">
-          <n-space id="search">
-            <n-input round placeholder="搜索" clearable style="min-width: 200px">
-              <template #suffix>
-                <n-icon :component="FlashOutline" />
-              </template>
-              <template #clear-icon>
-                  <n-icon :component="CloseCircleOutline" />
-              </template>
-            </n-input>
-          </n-space>
+          <SearchCard></SearchCard>
+<!--          <n-space id="search">-->
+<!--            <n-input round placeholder="搜索" clearable style="min-width: 300px">-->
+<!--              <template #suffix>-->
+<!--                <n-icon :component="FlashOutline" />-->
+<!--              </template>-->
+<!--              <template #clear-icon>-->
+<!--                  <n-icon :component="CloseCircleOutline" />-->
+<!--              </template>-->
+<!--            </n-input>-->
+
+<!--          </n-space>-->
         </li>
         <li class="nav-item1">
           <a class="nav-link" href="/">
@@ -50,7 +52,7 @@
           </a>
         </li>
       </ul>
-      <ul v-if=store.state.loggedIn class="navbar-nav" style="margin-left: 25%;left: 10%">
+      <ul v-if=store.state.loggedIn class="navbar-nav" style="margin-left: 20%;left: 10%">
         <li class="nav-item2">
           <n-space id="avatar">
             <n-avatar class="picture"
@@ -72,7 +74,7 @@
           </div>
         </li>
       </ul>
-      <ul v-else class="navbar-nav" style="margin-left: 25%;left: 10%">
+      <ul v-else class="navbar-nav" style="margin-left: 20%;left: 10%">
         <n-button round @click="handleLog">登陆/注册</n-button>
       </ul>
     </div>
@@ -100,6 +102,7 @@ import logoUrl from "../assets/logo.png"
 import { RouterLink } from "vue-router";
 import store from "../store"
 import router from "@/router";
+import SearchCard from "@/components/SearchCard";
 
 const renderIcon = (icon) => {
   return () => {
@@ -115,6 +118,8 @@ export default {
   props: {
     headIndex: String,
   },
+
+  components: {SearchCard},
 
   setup() {
     let nickname = computed(()=>{

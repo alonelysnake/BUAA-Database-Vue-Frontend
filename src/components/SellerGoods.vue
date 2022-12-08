@@ -40,7 +40,7 @@
 
 <script>
 import { h,ref,computed } from "vue";
-import { NButton } from "naive-ui";
+import {NButton, NImage} from "naive-ui";
 import store from "../store"
 import AddGood from "@/components/AddGood";
 import EditGood from "@/components/EditGood";
@@ -64,24 +64,28 @@ const filterTableData = computed(() =>
 
 const tableData = [
   {
+    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
     goodId: '1253',
     name: 'Sekiro',
     CDKey: '123456',
     value: 20.5,
   },
   {
+    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
     goodId: '1233',
     name: 'Sekiro',
     CDKey: '1234156',
     value: 20.5,
   },
   {
+    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
     goodId: '1213',
     name: 'Sekiro',
     CDKey: '12123456',
     value: 20.5,
   },
   {
+    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
     goodId: '1423',
     name: 'Sekiro',
     CDKey: '12413456',
@@ -97,6 +101,21 @@ const createColumns = ({
       type: "selection",
       disabled(row) {
         return false;
+      }
+    },
+    {
+      title: "",
+      key: "icon",
+      width: 140,
+      render: (value) => {
+        return h(
+            NImage,
+            {
+              width: 140,
+              // height: 40,
+              src: value.img
+            }
+        )
       }
     },
     {
