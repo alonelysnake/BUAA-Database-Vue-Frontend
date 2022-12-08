@@ -4,24 +4,16 @@
       :data="data"
       :pagination="pagination"
       @update:sorter="handleSorterChange"
+      :bordered="false"
   />
 </template>
 
 <script>
-import {defineComponent, h, reactive, ref} from "vue";
+import {h, reactive, ref} from "vue";
 import {NButton, NImage} from "naive-ui";
-
 
 const createColumns = ({clickGameName: clickGameName}) => {
   return [
-    {
-      title: "排名",
-      key: "no",
-      width: 120,
-      render: (_, index) => {
-        return index + 1;
-      }
-    },
     {
       title: "",//游戏图标
       key: "icon",//图片
@@ -55,58 +47,82 @@ const createColumns = ({clickGameName: clickGameName}) => {
       }
     },
     {
-      title: "当前热度",
-      key: "cur",
-      width: 160,
+      title: "%",
+      key: "rating",
+      width: 60,
       sortOrder: false,
       sorter(rowA, rowB) {
-        return rowA.cur - rowB.cur
+        return rowA.rating - rowB.rating
+      },
+      //TODO 按照不同的减免比例渲染不同的底色
+      render: (value) => {
+        const dc = Math.floor(value.rating / 5) * 5;
+        return '-' + dc + '%';
       }
     },
     {
-      title: "最高热度",
-      key: "max",
-      width: 160,
+      title: "当前价格",
+      key: "curPrice",
       sortOrder: false,
       sorter(rowA, rowB) {
-        return rowA.max - rowB.max
+        return rowA.curPrice - rowB.curPrice
+      },
+      render: (value) => {
+        return '￥' + value.curPrice;
       }
+    },
+    {
+      title: "rating",
+      key: "rating",
+      render: (value) => {
+        return value.rating + "%";
+      }
+    },
+    {
+      title: "起始时间",
+      key: "start"
+    },
+    {
+      title: "结束时间",
+      key: "end"
     }
-    //TODO 增加对比
   ];
 };
 
 /*
-* cur:当前热度（在线人数）
-* max:最大热度
 * */
 const data = [
   {
     id: 3,
     img: "https://cdn.cloudflare.steamstatic.com/steam/apps/1599340/header.jpg?t=1670026493",
     name: "Houkai 3rd",
-    cur: 99,
-    max: 999
+    rating: 84.75,
+    curPrice: 12.5,//TODO 全部按照人民币显示
+    start: "2020-3-5",
+    end: "2023-2-2"
   },
   {
-    id: 9,
-    img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg",
-    name: "Genshin Impact",
-    cur: 2999,
-    max: 19990
+    id: 3,
+    img: "https://cdn.cloudflare.steamstatic.com/steam/apps/33230/header.jpg?t=1667609065",
+    name: "Assassin's Creed 2",
+    rating: 60,
+    curPrice: 18.32,
+    start: "2022-12-1",
+    end: "2022-12-29"
   },
-  {id: 8, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 2, max: 160},
-  {id: 2, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 21, max: 150},
-  {id: 4, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 22, max: 110},
-  {id: 6, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 32, max: 130},
-  {id: 8, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 2, max: 160},
-  {id: 2, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 21, max: 150},
-  {id: 4, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 22, max: 110},
-  {id: 6, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 32, max: 130}
+  {
+    id: 8,
+    img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg",
+    name: "aa",
+    rating: 60,
+    curPrice: 18.32,
+    start: "2022-12-1",
+    end: "2022-12-29"
+  },
 ];
 
-export default defineComponent({
-  name: 'HeatTable',
+export default {
+  name: "FilterShowTable",
   setup() {
     const columnsRef = ref(
         createColumns({
@@ -117,7 +133,7 @@ export default defineComponent({
         })
     )
 
-    // 分页
+    //分页
     const paginationReactive = reactive({
       page: 1,
       showSizePicker: true,
@@ -164,7 +180,7 @@ export default defineComponent({
       }
     }
   }
-});
+}
 </script>
 
 <style scoped>

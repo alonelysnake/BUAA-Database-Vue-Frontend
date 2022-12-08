@@ -8,6 +8,12 @@
       <n-select placeholder="国家/地区" v-model:value="districtValue" :options="districtOptions"/>
     </n-grid-item>
 
+    <!--  优惠比例-->
+    <n-grid-item>
+      <n-text>折扣比例：≥{{discountThreshold}}%</n-text>
+      <n-slider v-model:value="discountThreshold" :step="5"/>
+    </n-grid-item>
+
     <!--    发行商-->
     <n-grid-item>
       <!--      开发商-->
@@ -20,13 +26,6 @@
         发售时间
         <n-date-picker v-model:value="timeRange" type="daterange" clearable/>
       </n-space>
-
-    </n-grid-item>
-
-    <!--  优惠比例-->
-    <n-grid-item>
-      <n-text>折扣比例：≥{{discountThreshold}}%</n-text>
-      <n-slider v-model:value="discountThreshold" :step="5"/>
     </n-grid-item>
 
   </n-grid>
