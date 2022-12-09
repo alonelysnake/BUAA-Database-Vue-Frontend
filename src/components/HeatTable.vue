@@ -1,4 +1,15 @@
 <template>
+  <n-space justify="space-between">
+    <n-text>
+      最受欢迎
+    </n-text>
+    <n-button
+        :type="compareRef.type"
+        :disabled="compareRef.flag"
+        @click="handleCompare">
+      {{ compareRef.text }}
+    </n-button>
+  </n-space>
   <n-data-table
       :columns="columns"
       :data="data"
@@ -10,9 +21,9 @@
 <script>
 import {defineComponent, h, reactive, ref} from "vue";
 import {NButton, NImage} from "naive-ui";
+import {Add as AddIcon, Remove as RemoveIcon} from "@vicons/ionicons5";
 
-
-const createColumns = ({clickGameName: clickGameName}) => {
+const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) => {
   return [
     {
       title: "排名",
@@ -71,10 +82,50 @@ const createColumns = ({clickGameName: clickGameName}) => {
       sorter(rowA, rowB) {
         return rowA.max - rowB.max
       }
-    }
-    //TODO 增加对比
+    },
+    // 对比按钮
+    {
+      title: "",
+      key: "",
+      width: 60,
+      render: () => {
+        const flag = ref(false);
+        return h(
+            NButton,
+            {
+              //TODO 添加/删除
+              onClick: () => {
+                if (flag.value) {
+                  //TODO 取消选择
+                  selects.pop();
+                  if (selects.length < 2) {
+                    compareRef.value.flag = true;
+                  }
+                } else {
+                  //TODO 选择
+                  selects.push(1);
+                  if (selects.length > 1) {
+                    compareRef.value.flag = false;
+                  }
+                }
+                flag.value = !flag.value;
+              },
+              renderIcon: () => {
+                if (!flag.value) {
+                  return h(AddIcon);
+                } else {
+                  return h(RemoveIcon);
+                }
+              },
+            },
+        )
+      }
+    },
   ];
 };
+
+//TODO 改成字典? 选择进行比较的游戏
+const selects = [];
 
 /*
 * cur:当前热度（在线人数）
@@ -108,12 +159,22 @@ const data = [
 export default defineComponent({
   name: 'HeatTable',
   setup() {
+    //对比
+    const compareRef = ref({
+      flag: ref(true),
+      text: ref("选择至少两个进行比较"),
+      type: ref("default"),
+    })
+
+    console.log(compareRef.value);
+
     const columnsRef = ref(
         createColumns({
           clickGameName(value) {
             //TODO 跳转到游戏详情页，路由为 'gameinfo/游戏id'的样子？
             console.log(value.id)
-          }
+          },
+          compareRef
         })
     )
 
@@ -149,7 +210,7 @@ export default defineComponent({
       data,
       columns: columnsRef,
       pagination: paginationReactive,
-
+      compareRef,
       handleSorterChange(sorter) {
         columnsRef.value.forEach((column) => {
           /** column.sortOrder !== undefined means it is uncontrolled */
@@ -161,7 +222,11 @@ export default defineComponent({
           if (column.key === sorter.columnKey) column.sortOrder = sorter.order
           else column.sortOrder = false
         })
-      }
+      },
+      //TODO 对比函数（跳转到对比界面）
+      handleCompare() {
+
+      },
     }
   }
 });
