@@ -23,7 +23,7 @@
         v-if="isSearch"
         class="box-card"
         @mouseenter="enterSearchBoxHandler"
-        style="max-width:300px; position: absolute"
+        style="max-width:300px; position: absolute;z-index:15"
     >
       <dl v-if="isHistorySearch">
         <dt class="search-title" v-show="history">历史搜索</dt>
