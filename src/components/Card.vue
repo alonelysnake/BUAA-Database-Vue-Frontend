@@ -1,11 +1,14 @@
 <template>
-  <a href="/">
+  <a :href="target">
 <!--    todo 将标题、封面、内容、跳转页面修改为属性-->
-    <n-card title="带封面的卡片" hoverable>
+    <n-card :title="title" hoverable>
       <template #cover>
-        <img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.yunspe.com%2Fwp-content%2Fuploads%2F2020%2F07%2F1585752363927035.jpg&refer=http%3A%2F%2Fwww.yunspe.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671712904&t=688e2cc763ea6ffcfb359e5fb1b9b3da">
+        <img :src="imgUrl">
       </template>
-      卡片内容
+      <n-ellipsis style="max-width: 200px">
+        {{text}}
+      </n-ellipsis>
+
     </n-card>
   </a>
 </template>
@@ -13,6 +16,16 @@
 <script>
 export default {
   name: "Card",
+  props:{
+    // 超链接地址
+    target:String,
+    // 卡片标题
+    title:String,
+    // 卡片内容
+    text:String,
+    // 图片url
+    imgUrl:String
+  }
 }
 </script>
 
