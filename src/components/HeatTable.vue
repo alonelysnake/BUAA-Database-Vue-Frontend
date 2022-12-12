@@ -22,6 +22,7 @@
 import {defineComponent, h, reactive, ref} from "vue";
 import {NButton, NImage} from "naive-ui";
 import {Add as AddIcon, Remove as RemoveIcon} from "@vicons/ionicons5";
+import {useRouter} from "vue-router";
 
 const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) => {
   return [
@@ -89,7 +90,8 @@ const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) =
       key: "",
       width: 60,
       render: (rowValue) => {
-        const flag = ref(selects.find(rowValue.id) !== undefined);
+        console.log(selects.indexOf(rowValue.id)!==-1);
+        const flag = ref(selects.indexOf(rowValue.id)!==-1);
         return h(
             NButton,
             {
@@ -169,11 +171,13 @@ export default defineComponent({
       type: ref("default"),
     })
 
+    const router = useRouter();
     const columnsRef = ref(
         createColumns({
           clickGameName(value) {
             //TODO 跳转到游戏详情页，路由为 'gameinfo/游戏id'的样子？
             console.log(value.id)
+            router.push("/detail/"+value.id.toString()+"/price");
           },
           compareRef
         })

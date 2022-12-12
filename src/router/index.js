@@ -6,8 +6,18 @@ import UserInfo from "@/components/UserInfo";
 import Buyer from "@/components/Buyer";
 import SellerGoods from "@/components/SellerGoods";
 import SellerOrder from "@/components/SellerOrder";
+
+import RegisterLoginPage from "@/view/RegisterLoginPage";
 import Register from "@/components/Register";
 import Login from "@/components/Login";
+
+import HeatPage from "@/view/HeatPage";
+import FilterPage from "@/view/FilterPage";
+
+import DetailPage from "@/components/DetailPage";
+import CountryPriceTable from "@/components/CountryPriceTable";
+import Charts from "@/components/Charts";
+
 const routes = [
     {
         path: '/',
@@ -46,10 +56,43 @@ const routes = [
         ]
     },
     {
+        path: '/detail/:gameid',
+        name: 'Detail',
+        redirect: '/detail/:gameid/price',
+        component: DetailPage,
+        children: [
+            {
+                path: 'price',
+                name: 'CountryPrice',
+                component: CountryPriceTable
+            },
+            {
+                path: 'graph',
+                name: 'Chart',
+                component: Charts
+            },
+            {
+                path: 'screenshot',
+                name: 'ScreenShot',
+                //TODO
+            },
+        ]
+    },
+    {
+        path: '/heat',
+        name: 'Heat',
+        component: HeatPage,
+    },
+    {
+        path: '/filter',
+        name: 'Filter',
+        component: FilterPage,
+    },
+    {
         path: '/logReg',
         name: 'LogReg',
         redirect: '/logReg/login',
-        component: () => import('@/view/RegisterLoginPage'),
+        component: RegisterLoginPage,
         children: [
             {
                 path: 'register',

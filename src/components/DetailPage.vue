@@ -10,7 +10,7 @@
 
     <!--    顶层基础信息-->
     <div class="basic-info">
-<!--      这里是游戏的基础信息-->
+      <!--      这里是游戏的基础信息-->
       <BasicInfo style="width: 100%"/>
     </div>
 
@@ -24,26 +24,23 @@
             :width="240"
         >
           <!--        TODO 设置保持顶端-->
-<!--          <n-affix :top="0" :trigger-top="0" :listen-to="() => headerRef" class="sidebar">-->
-            <n-menu
-                :collapsed-width="10"
-                :collapsed-icon-size="22"
-                :options="menuOptions"
-                key-field="whateverKey"
-                label-field="whateverLabel"
-                children-field="whateverChildren"
-                class="sidebar"
-            />
-<!--          </n-affix>-->
+          <!--          <n-affix :top="0" :trigger-top="0" :listen-to="() => headerRef" class="sidebar">-->
+          <n-menu
+              :collapsed-width="10"
+              :collapsed-icon-size="22"
+              :options="menuOptions"
+              children-field="whateverChildren"
+              class="sidebar"
+              @update:value="handleUpdateValue"
+          />
+          <!--          </n-affix>-->
         </n-layout-sider>
 
         <!--详细信息-->
         <n-layout class="detail">
           <div class="detail">
-            根据侧边栏选择展示的的右侧内容
             <!--            TODO 实际内容切换-->
-<!--            <CountryPriceTable/>-->
-            <Charts style="background-color: white"/>
+            <router-view></router-view>
           </div>
         </n-layout>
 
@@ -59,31 +56,37 @@ import Header from "@/components/Header";
 import CountryPriceTable from "@/components/CountryPriceTable";
 import Charts from "@/components/Charts";
 import BasicInfo from "@/components/BasicInfo";
+import {useRouter} from "vue-router";
 
 const menuOptions = [
   {
-    whateverLabel: '价格',
-    whateverKey: 'price'
+    label: '价格',
+    key: 'price',
   },
   {
-    whateverLabel: "图表展示",
-    whateverKey: "heat",
+    label: "图表展示",
+    key: "graph",
     disabled: false
   },
   {
-    whateverLabel: "详细信息",
-    whateverKey: "information",
+    label: "评论",
+    key: "comment",
     disabled: false
   },
   {
-    whateverLabel: "游戏截图",
-    whateverKey: "screenshots",
+    label: "游戏截图",
+    key: "screenshot",
     disabled: false
   }
 ]
 
 export default {
   name: "DetailPage",
+  props: {
+    id: {
+      default: "3",
+    },
+  },
   components: {
     Header,
     // eslint-disable-next-line vue/no-unused-components
@@ -94,12 +97,35 @@ export default {
   setup() {
     const containerRef = ref(void 0);
     const headerRef = ref(void 0);
+    const router = useRouter();
+
+    const gameId = parseInt(router.currentRoute.value.params.gameid);//游戏id
 
     return {
       collapsed: ref(true),
       containerRef,
       headerRef,
       menuOptions,
+
+      //路由跳转
+      handleUpdateValue(key, item) {
+        console.log("详情页侧边切换");
+        switch (key) {
+          case "price":
+            router.push({name: "CountryPrice"});
+            break;
+          case "graph":
+            router.push({name: "Chart"});
+            break;
+          case "comment":
+            console.log("comment跳转未实现");
+            break;
+          case "screenshot":
+            console.log("screenshot跳转未实现");
+            //router.push({name: "ScreenShots"});
+            break;
+        }
+      },
     };
   }
 };
