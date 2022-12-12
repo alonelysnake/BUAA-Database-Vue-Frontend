@@ -61,7 +61,7 @@ const createColumns = ({clickGameName: clickGameName}) => {
       }
     },
     {
-      title: "当前价格",
+      title: "优惠价",
       key: "curPrice",
       sortOrder: false,
       sorter(rowA, rowB) {

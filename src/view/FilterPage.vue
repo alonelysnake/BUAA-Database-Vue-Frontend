@@ -31,7 +31,7 @@ export default {
 <style scoped>
 .filter {
   padding: 100px 100px 0 100px;
-  width: 600px;
+  width: 800px;
 }
 
 .table {

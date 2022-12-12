@@ -88,8 +88,8 @@ const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) =
       title: "",
       key: "",
       width: 60,
-      render: () => {
-        const flag = ref(false);
+      render: (rowValue) => {
+        const flag = ref(selects.find(rowValue.id) !== undefined);
         return h(
             NButton,
             {
@@ -103,7 +103,9 @@ const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) =
                   }
                 } else {
                   //TODO 选择
-                  selects.push(1);
+                  if (!flag.value) {
+                    selects.push(rowValue.id);
+                  }
                   if (selects.length > 1) {
                     compareRef.value.flag = false;
                   }
@@ -158,15 +160,14 @@ const data = [
 
 export default defineComponent({
   name: 'HeatTable',
-  setup() {
+  props: ['searchMsg'],//如果搜索，搜索的内容
+  setup(props, {emit}) {
     //对比
     const compareRef = ref({
       flag: ref(true),
       text: ref("选择至少两个进行比较"),
       type: ref("default"),
     })
-
-    console.log(compareRef.value);
 
     const columnsRef = ref(
         createColumns({
@@ -223,9 +224,9 @@ export default defineComponent({
           else column.sortOrder = false
         })
       },
-      //TODO 对比函数（跳转到对比界面）
+      // 点击对比按钮，把选择的游戏id发送给父组件
       handleCompare() {
-
+        emit("changeChart", selects);
       },
     }
   }

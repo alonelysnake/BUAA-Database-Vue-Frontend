@@ -28,6 +28,11 @@
       </n-space>
     </n-grid-item>
 
+    <!--  优惠类型-->
+    <n-grid-item>
+      <n-select placeholder="优惠类型" v-model:value="discountValue" :options="discountOptions"/>
+    </n-grid-item>
+
   </n-grid>
 
   <n-button type="success" :loading="loading" @click="handleFilter">
@@ -86,6 +91,30 @@ export default {
         {
           label: "育碧",
           value: "Ubisoft"
+        }
+      ],
+
+      discountValue: ref("default"),
+      discountOptions: [
+        {
+          label: "最新优惠",
+          value: "default"
+        },
+        {
+          label: "冬促",
+          value: "winter"
+        },
+        {
+          label: "春促",
+          value: "spring"
+        },
+        {
+          label: "夏促",
+          value: "summer"
+        },
+        {
+          label: "秋促",
+          value: "autumn"
         }
       ],
 
