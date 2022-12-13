@@ -21,7 +21,7 @@ export default createStore({
           goodId: -1,
           name: "nier",
           CDKey: "123",
-            money: 20.5,
+          money: 20.5,
           steamId: "kazeya9",
           intro: "CDKey",
         },

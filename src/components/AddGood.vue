@@ -14,7 +14,11 @@
     >
       <n-form-item label="选择游戏" path="nameValue">
         <n-space id="search">
-          <n-input v-model:value="model.nameValue" placeholder="按ID或游戏名搜索" clearable>
+          <n-input v-model:value="model.nameValue"
+                   placeholder="按ID或游戏名搜索"
+                   clearable
+                   :disabled="regular"
+          >
             <template #clear-icon>
               <n-icon :component="CloseCircleOutline" />
             </template>
@@ -53,8 +57,10 @@
   </n-card>
 </template>
 
+
+
 <script>
-import { ref } from "vue";
+import { ref,defineProps} from "vue";
 import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
@@ -64,6 +70,7 @@ export default ({
   name: "AddGood",
 
   setup() {
+    const props = defineProps(['regular']);
     const formRef = ref(null);
     return {
       formRef,
@@ -80,7 +87,8 @@ export default ({
         nameValue: {
           required: true,
           trigger: ["blur", "input"],
-          message: "请选择商品所属游戏"
+          message: "请选择商品所属游戏",
+
         },
         keyValue: {
           required: false,

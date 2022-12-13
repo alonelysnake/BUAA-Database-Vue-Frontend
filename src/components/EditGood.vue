@@ -1,5 +1,5 @@
 <template>
-  <n-card title="修改商品信息" closable @close="handleClose" hoverable>
+  <n-card :title="title" closable @close="handleClose" hoverable>
     <n-form
         ref="formRef"
         :model="model"
@@ -7,6 +7,7 @@
         label-placement="left"
         label-width="auto"
         require-mark-placement="right-hanging"
+        :disabled="edit"
         :size="size"
         :style="{
       maxWidth: '640px'
@@ -51,7 +52,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref,defineProps } from "vue";
 import store from "../store"
 
 
@@ -59,10 +60,13 @@ export default ({
   name: "EditGood",
 
   setup() {
+    // vue3 父组件向子组件传值
+    const props = defineProps(['title','edit']);
     const formRef = ref(null);
     const goodId = ref(store.state.good.goodId);
     return {
       formRef,
+      props,
       size: ref("medium"),
       model: ref({
         nameValue:  store.state.good.name,
