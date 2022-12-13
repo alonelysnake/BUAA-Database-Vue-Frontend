@@ -1,12 +1,12 @@
 <template>
   <!--  筛选器-->
   <div class="filter">
-    <Filter/>
+    <Filter @handleFilter="handleFilter"/>
   </div>
 
   <!--经过筛选后的展示-->
   <div class="table">
-    <FilterShowTable/>
+    <FilterShowTable ref="tableRef"/>
   </div>
 
 </template>
@@ -14,6 +14,7 @@
 <script>
 import Filter from "@/components/Filter";
 import FilterShowTable from "@/components/FilterShowTable";
+import {ref} from "vue";
 
 export default {
   name: "FilterPage",
@@ -22,8 +23,16 @@ export default {
     FilterShowTable
   },
   setup() {
+    const tableRef = ref(null)
 
-    return {}
+    function handleFilter(cond) {
+      tableRef.value.handleFilter(cond);
+    }
+
+    return {
+      tableRef,
+      handleFilter,
+    }
   }
 }
 </script>

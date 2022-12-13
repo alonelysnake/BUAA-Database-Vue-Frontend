@@ -11,6 +11,7 @@
 <script>
 import {h, reactive, ref} from "vue";
 import {NButton, NImage} from "naive-ui";
+import {useRouter} from "vue-router";
 
 const createColumns = ({clickGameName: clickGameName}) => {
   return [
@@ -124,11 +125,13 @@ const data = [
 export default {
   name: "FilterShowTable",
   setup() {
+    const router = useRouter();
     const columnsRef = ref(
         createColumns({
           clickGameName(value) {
             //TODO 跳转到游戏详情页，路由为 'gameinfo/游戏id'的样子？
             console.log(value.id)
+            router.push("/detail/" + value.id.toString() + "/price");
           }
         })
     )
@@ -161,10 +164,18 @@ export default {
       }
     })
 
+    //TODO 改变data
+    const handleFilter = (conds) => {
+      console.log("向后端查找满足cond的数据");
+      console.log(conds);
+    }
+
     return {
       data,
       columns: columnsRef,
       pagination: paginationReactive,
+
+      handleFilter,
 
       handleSorterChange(sorter) {
         columnsRef.value.forEach((column) => {

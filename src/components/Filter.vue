@@ -5,19 +5,27 @@
     <!--  国家地区-->
     <n-grid-item>
       <!--      国家/地区-->
-      <n-select placeholder="国家/地区" v-model:value="districtValue" :options="districtOptions"/>
+      <n-select
+          placeholder="国家/地区"
+          v-model:value="districtValue"
+          :options="districtOptions"
+          clearable/>
     </n-grid-item>
 
     <!--  优惠比例-->
     <n-grid-item>
-      <n-text>折扣比例：≥{{discountThreshold}}%</n-text>
+      <n-text>折扣比例：≥{{ discountThreshold }}%</n-text>
       <n-slider v-model:value="discountThreshold" :step="5"/>
     </n-grid-item>
 
     <!--    发行商-->
     <n-grid-item>
       <!--      开发商-->
-      <n-select placeholder="开发商" v-model:value="publishValue" :options="publishOptions"/>
+      <n-select
+          placeholder="开发商"
+          v-model:value="publishValue"
+          :options="publishOptions"
+          clearable/>
     </n-grid-item>
 
     <!--  发售时间-->
@@ -30,7 +38,10 @@
 
     <!--  优惠类型-->
     <n-grid-item>
-      <n-select placeholder="优惠类型" v-model:value="discountValue" :options="discountOptions"/>
+      <n-select
+          placeholder="优惠类型"
+          v-model:value="discountValue"
+          :options="discountOptions"/>
     </n-grid-item>
 
   </n-grid>
@@ -46,88 +57,113 @@ import {ref} from "vue";
 
 export default {
   name: "Filter",
-  setup() {
+  setup(props, {emit}) {
     const loading = ref(false);
+
+    const districtValue = ref(null);
+    const districtOptions = ref([
+      {
+        label: "中国",
+        value: "China"
+      },
+      {
+        label: "日本",
+        value: "Japan"
+      },
+      {
+        label: "韩国",
+        value: "Korea"
+      },
+      {
+        label: "美国",
+        value: "America"
+      },
+    ]);
+
+    const publishValue = ref(null);
+    const publishOptions = ref([
+      {
+        label: "米哈游",
+        value: "mihoyo"
+      },
+      {
+        label: "卡普空",
+        value: "Japan"
+      },
+      {
+        label: "暴雪",
+        value: "Blizzard"
+      },
+      {
+        label: "EA",
+        value: "EA"
+      },
+      {
+        label: "育碧",
+        value: "Ubisoft"
+      }
+    ]);
+
+    const discountValue = ref("default");
+    const discountOptions = ref([
+      {
+        label: "最新优惠",
+        value: "default"
+      },
+      {
+        label: "冬促",
+        value: "winter"
+      },
+      {
+        label: "春促",
+        value: "spring"
+      },
+      {
+        label: "夏促",
+        value: "summer"
+      },
+      {
+        label: "秋促",
+        value: "autumn"
+      }
+    ]);
+
+    const timeRange = ref(null);
+    const discountThreshold = ref(50);
+
     return {
       //可选择的国家地区
-      districtValue: ref(null),
-      districtOptions: [
-        {
-          label: "中国",
-          value: "China"
-        },
-        {
-          label: "日本",
-          value: "Japan"
-        },
-        {
-          label: "韩国",
-          value: "Korea"
-        },
-        {
-          label: "美国",
-          value: "America"
-        }
-      ],
+      districtValue,
+      districtOptions,
 
-      publishValue: ref(null),
-      publishOptions: [
-        {
-          label: "米哈游",
-          value: "mihoyo"
-        },
-        {
-          label: "卡普空",
-          value: "Japan"
-        },
-        {
-          label: "暴雪",
-          value: "Blizzard"
-        },
-        {
-          label: "EA",
-          value: "EA"
-        },
-        {
-          label: "育碧",
-          value: "Ubisoft"
-        }
-      ],
+      //开发商
+      publishValue,
+      publishOptions,
 
-      discountValue: ref("default"),
-      discountOptions: [
-        {
-          label: "最新优惠",
-          value: "default"
-        },
-        {
-          label: "冬促",
-          value: "winter"
-        },
-        {
-          label: "春促",
-          value: "spring"
-        },
-        {
-          label: "夏促",
-          value: "summer"
-        },
-        {
-          label: "秋促",
-          value: "autumn"
-        }
-      ],
+      //优惠类型
+      discountValue,
+      discountOptions,
 
-      timeRange: ref([118313526e4, Date.now()]),
-      discountThreshold: ref(50),
+      timeRange,//优惠时间
+      discountThreshold,//优惠比例
 
-      loading:loading,
-      handleFilter(){
+      loading: loading,
+
+      handleFilter() {
         //TODO 筛选后重新搜索
         loading.value = true;
         setTimeout(() => {
           loading.value = false;
         }, 2e3);
+        const conds = {
+          district: districtValue.value,
+          publisher: publishValue.value,
+          discountKind: discountValue.value,
+          discountThreshold: discountThreshold.value,
+          timeRange: timeRange.value,
+        }
+        console.log(conds);
+        emit("handleFilter", conds);
       }
     }
   }
