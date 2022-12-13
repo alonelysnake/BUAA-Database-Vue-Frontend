@@ -1,5 +1,6 @@
 <template>
-  <div class="header">
+  <div class="header"
+       v-if="isSelf.valueOf()">
 
     <div class="operate">
       <n-button type="primary" ghost style="height: 35px">批量删除</n-button>
@@ -17,6 +18,11 @@
       <n-button type="primary" ghost style="height: 35px" @click="handleAdd">添加商品</n-button>
     </div>
   </div>
+  <div
+      v-if="notSelf.valueOf()"
+      style="min-height: 50px"
+  >
+  </div>
   <n-space vertical :size="12" style="width: 83%;position:relative;">
     <n-input v-model:value="search" placeholder="输入商品号或游戏名查询" style="width: 400px;"/>
     <n-data-table
@@ -31,7 +37,10 @@
     >
     </n-data-table>
     <AddGood class="goodCard" v-if="store.state.addGoodsVisible"></AddGood>
-    <EditGood class="goodCard" v-if="store.state.editGoodsVisible"></EditGood>
+    <EditGood
+        class="goodCard"
+        v-if="store.state.editGoodsVisible"
+    />
   </n-space>
 
 </template>
@@ -40,11 +49,11 @@
 
 <script>
 import { h,ref,computed } from "vue";
-import {NButton, NImage} from "naive-ui";
+import {NButton, NImage, useDialog,useMessage,NEllipsis} from "naive-ui";
 import store from "../store"
 import AddGood from "@/components/AddGood";
 import EditGood from "@/components/EditGood";
-
+import {useRouter} from "vue-router";
 import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
@@ -65,34 +74,43 @@ const filterTableData = computed(() =>
 const tableData = [
   {
     img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: '1253',
+    goodId: 1253,
     name: 'Sekiro',
     CDKey: '123456',
     value: 20.5,
+    steamId: 'kazeya',
+    intro: '一个CDKEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY'
   },
   {
     img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: '1233',
+    goodId: 1233,
     name: 'Sekiro',
     CDKey: '1234156',
     value: 20.5,
+    steamId: 'kazeya',
+    intro: '一个CDKEY'
   },
   {
     img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: '1213',
+    goodId: 1213,
     name: 'Sekiro',
     CDKey: '12123456',
     value: 20.5,
+    steamId: 'kazeya',
+    intro: '一个CDKEY'
   },
   {
     img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: '1423',
+    goodId: 1423,
     name: 'Sekiro',
     CDKey: '12413456',
     value: 20.5,
+    steamId: 'kazeya',
+    intro: '一个CDKEY'
   },
 ]
 
+// 用户本人的列表
 const createColumns = ({
                          edit,del
                        }) => {
@@ -137,6 +155,21 @@ const createColumns = ({
       key: "value"
     },
     {
+      title: "商品详情",
+      key: "intro",
+      render(row) {
+        return h(
+            NEllipsis,
+            {
+              style:{
+                maxWidth:"200px"
+              }
+            },
+            {default:()=>row.intro}
+        )
+      }
+    },
+    {
       title: "操作",
       key: "actions",
 
@@ -168,6 +201,80 @@ const createColumns = ({
   ];
 };
 
+// 展示给访客的列表
+const createColumnsForVistor = ({
+                         purchase
+                       }) => {
+  return [
+    {
+      title: "",
+      key: "icon",
+      width: 140,
+      render: (value) => {
+        return h(
+            NImage,
+            {
+              width: 140,
+              // height: 40,
+              src: value.img
+            }
+        )
+      }
+    },
+    {
+      title: "商品号",
+      key: "goodId"
+    },
+    {
+      title: "游戏名称",
+      key: "name",
+      sortOrder: false,
+      sorter: 'default',
+    },
+    {
+      title: "CDKey",
+      key: "CDKey"
+    },
+    {
+      title: "价格",
+      key: "value"
+    },
+    {
+      title: "商品详情",
+      key: "intro",
+      render(row) {
+        return h(
+          NEllipsis,
+            {
+              style:{
+                maxWidth:"200px"
+              }
+            },
+            {default:()=>row.intro}
+        )
+      }
+    },
+    {
+      title: "购买",
+      key: "actions",
+
+      render(row) {
+        return h("div", [
+              h(
+                  NButton,
+                  {
+                    size: "small",
+                    onClick: () => purchase(row),
+                    style: "margin-right:20px"
+                  },
+                  { default: () => "购买" },
+              )
+            ]
+        )
+      }
+    }
+  ];
+};
 
 export default {
   name: "SellerGoods",
@@ -177,12 +284,18 @@ export default {
     const formRef = ref(null);
     const tableRef = ref(null)
     const checkedRowKeysRef = ref([]);
-    const columnsRef = ref(createColumns(
+    let columnsRef = ref(createColumns(
         {
           edit(rowData) {
             // todo 根据行的信息传递参数
             store.state.editGoodsVisible = true;
-            console.log("edit data " + rowData.name)
+            store.state.good.goodId = rowData.goodId;
+            store.state.good.intro = rowData.intro;
+            store.state.good.CDKey = rowData.CDKey;
+            store.state.good.name = rowData.name;
+            store.state.good.steamId = rowData.steamId;
+            store.state.good.money = rowData.value
+            // console.log("edit data " + rowData.name)
           },
           del(rowData) {
             // todo 向后端回传
@@ -190,8 +303,39 @@ export default {
           }
         }
     ))
+    const router = useRouter();
+    const isSelf = ref(true);
+    const notSelf = ref(false);
+    const dialog = useDialog();
+    const message = useMessage();
+    if (router.currentRoute.value.params.username !== store.state.user.userID) {
+      isSelf.value = false;
+      notSelf.value = true;
+      columnsRef = ref(createColumnsForVistor({
+        purchase(rowData) {
+          dialog.warning({
+            title: "确认购买",
+            content: () => "是否确定购买该商品",
+            positiveText: "确定",
+            onPositiveClick: () => {
+              // todo 向后端申请更改订单状态
+              console.log(rowData.goodId);
+              if (/* 成功删除 */true) {
+                message.success("购买成功");
+              }
+              else {
+                message.error("购买失败");
+              }
+            },
+            negativeText: "取消"
+          });
+        }
+      }))
+    }
     return {
       store,
+      isSelf,
+      notSelf,
       rowKey: (row) => row.goodId,
       checkedRowKeys: checkedRowKeysRef,
       handleCheck(rowKeys) {
@@ -230,42 +374,11 @@ export default {
       },
       handleAdd() {
         store.state.addGoodsVisible = true
+
       },
-
-
-
       formRef,
       CloseCircleOutline,
       size: ref("medium"),
-      model: ref({
-        nameValue: null,
-        keyValue: null,
-        steamValue:null,
-        introValue: null,
-      }),
-      rules: {
-        nameValue: {
-          required: true,
-          trigger: ["blur", "input"],
-          message: "请选择商品所属游戏"
-        },
-        keyValue: {
-          required: false,
-          trigger: ["blur", "input"],
-        },
-        steamValue: {
-          required: true,
-          trigger: ["blur", "input"],
-          message: "请输入您的steamID"
-        },
-        introValue: {
-          required: true,
-          trigger: ["blur", "input"],
-          message: "请输入商品详情"
-        },
-
-      },
-
     }
   },
 }
