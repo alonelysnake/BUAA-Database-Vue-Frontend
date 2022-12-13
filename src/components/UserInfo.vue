@@ -22,8 +22,18 @@
             />
           </div>
 
+<!--        <n-upload-->
+<!--            accept=".jpg,.png"-->
+<!--            directory-dnd-->
+<!--            action="http://127.0.0.1:1234/upload/ava"-->
+<!--            v-if="isSelf.valueOf()"-->
+<!--        >-->
           <n-upload
+              accept=".jpg,.png"
               directory-dnd
+              :file-list="fileList"
+              :custom-request="uploadFile"
+              :on-change="handleChange"
               v-if="isSelf.valueOf()"
           >
             <n-button style="height: 40px;margin-left: 20px">上传头像</n-button>
@@ -136,8 +146,11 @@ export default ({
   name: "UserInfo",
 
   setup() {
+    let fileList = [];
+    const formData = ref({
+      file:null
+    });
     const router = useRouter();
-
     const formRef = ref(null);
     const message = useMessage();
     const numberAnimationInstRef = ref(null);
@@ -162,15 +175,24 @@ export default ({
       formRef,
       numberAnimationInstRef,
       ArchiveIcon,
-      async beforeUpload(data) {
-        if (data.file.file?.type !== "image/jpg") {
-          return false;
-        }
-        return true;
-      },
+
       model,
 
+      handleChange(file,files) {
+        fileList = files
+      },
+
+      uploadFile (file) {
+        console.log(file.file, "sb2");
+        formData.value.file = file.file;
+      },
+
       handleSave() {
+        let formData = new FormData();
+        formData.append("file",fileList)
+        console.log(formData)
+        request.post("/api/upload",formData,
+            {"Content-Type": "multipart/form-data;charset=utf-8"})
         // request.post("/user/editInfo",JSON.stringify(this.model)).then(res=>{
         //
         // })
@@ -178,7 +200,7 @@ export default ({
           message.success("修改成功");
         }
         else {
-          message.error("退款失败");
+          message.error("修改失败");
         }
       },
       generalOptions: ["groode", "veli good", "emazing", "lidiculous"].map(
