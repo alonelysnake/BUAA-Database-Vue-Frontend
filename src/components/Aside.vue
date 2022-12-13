@@ -83,19 +83,34 @@ export default defineComponent({
 
       handleSelect(key, item) {
         // console.log(key);
-        switch (key) {
-          case "userInfo":
-            router.push("/user/" + store.state.user.userID + "/info");
-            break;
-          case "buyer":
-            router.push("/user/" + store.state.user.userID + "/buyer");
-            break;
-          case "goods":
-            router.push("/user/" + store.state.user.userID + "/sellerGoods");
-            break;
-          case "order":
-            router.push("/user/" + store.state.user.userID + "/sellerOrder");
-            break;
+        if (route.currentRoute.value.params.username !== store.state.user.userID) {
+          console.log(route.currentRoute.value.params.username,store.state.user.userID)
+          console.log("访客进入")
+          switch (key) {
+            case "userInfo":
+              router.push("/user_v/" + route.currentRoute.value.params.username + "/info");
+              break;
+            case "goods":
+              router.push("/user_v/" + route.currentRoute.value.params.username + "/sellerGoods");
+              break;
+          }
+        }
+        else {
+          console.log("用户进入")
+          switch (key) {
+            case "userInfo":
+              router.push("/user/" + store.state.user.userID + "/info");
+              break;
+            case "buyer":
+              router.push("/user/" + store.state.user.userID + "/buyer");
+              break;
+            case "goods":
+              router.push("/user/" + store.state.user.userID + "/sellerGoods");
+              break;
+            case "order":
+              router.push("/user/" + store.state.user.userID + "/sellerOrder");
+              break;
+          }
         }
       }
     };
