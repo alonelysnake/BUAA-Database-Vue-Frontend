@@ -23,12 +23,13 @@ import {
 } from "@vicons/ionicons5";
 import router from "@/router";
 import store from "@/store";
+import {useRouter} from "vue-router";
 
 function renderIcon(icon) {
   return () => h(NIcon, null, { default: () => h(icon) });
 }
 
-const menuOptions = [
+let menuOptions = [
   {
     label: "个人信息",
     key: "userInfo",
@@ -61,6 +62,21 @@ const menuOptions = [
 export default defineComponent({
   name: "Aside",
   setup() {
+    const route = useRouter();
+    if (route.currentRoute.value.params.username !== store.state.user.userID) {
+      menuOptions = [
+        {
+          label: "个人信息",
+          key: "userInfo",
+          icon: renderIcon(PersonIcon),
+        },
+        {
+          label: "商品",
+          key: "goods",
+          icon: renderIcon(CardIcon),
+        },
+      ];
+    }
     return {
       activeKey: ref(null),
       menuOptions,

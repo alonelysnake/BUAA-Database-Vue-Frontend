@@ -24,6 +24,9 @@
       <n-form-item label="CDKey" path="keyValue">
         <n-input v-model:value="model.keyValue" placeholder="游戏CDKey" />
       </n-form-item>
+      <n-form-item label="商品价格" path="moneyValue">
+        <n-input-number v-model:value="model.moneyValue" placeholder="商品价格" />
+      </n-form-item>
       <n-form-item label="steamID" path="steamValue">
         <n-input v-model:value="model.steamValue" placeholder="您的steam账号" />
       </n-form-item>
@@ -71,6 +74,7 @@ export default ({
         keyValue: null,
         steamValue:null,
         introValue: null,
+        moneyValue:null,
       }),
       rules: {
         nameValue: {
@@ -92,7 +96,12 @@ export default ({
           trigger: ["blur", "input"],
           message: "请输入商品详情"
         },
-
+        moneyValue: {
+          type: 'number',
+          required: true,
+          trigger: ["blur", "change"],
+          message: "请输入商品价格"
+        }
       },
       handleClose() {
         store.state.addGoodsVisible = false;

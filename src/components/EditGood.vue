@@ -21,6 +21,9 @@
       <n-form-item label="CDKey" path="keyValue">
         <n-input v-model:value="model.keyValue" placeholder="游戏CDKey" />
       </n-form-item>
+      <n-form-item label="商品价格" path="moneyValue">
+        <n-input-number v-model:value="model.moneyValue" placeholder="商品价格" />
+      </n-form-item>
       <n-form-item label="steamID" path="steamValue">
         <n-input v-model:value="model.steamValue" placeholder="您的steam账号" />
       </n-form-item>
@@ -51,23 +54,22 @@
 import { ref } from "vue";
 import store from "../store"
 
-let name,CDKey,steam,intro;
+
 export default ({
   name: "EditGood",
-  props: {
-    name,CDKey,steam,intro,
-  },
 
   setup() {
     const formRef = ref(null);
+    const goodId = ref(store.state.good.goodId);
     return {
       formRef,
       size: ref("medium"),
       model: ref({
-        nameValue: name,
-        keyValue: CDKey,
-        steamValue: steam,
-        introValue: intro,
+        nameValue:  store.state.good.name,
+        keyValue:   store.state.good.CDKey,
+        steamValue: store.state.good.steamId,
+        introValue: store.state.good.intro,
+        moneyValue: store.state.good.money
       }),
       rules: {
         nameValue: {
@@ -78,6 +80,12 @@ export default ({
         keyValue: {
           required: false,
           trigger: ["blur", "input"],
+        },
+        moneyValue: {
+          type: 'number',
+          required: true,
+          trigger: ["blur", "change"],
+          message: "请输入商品价格"
         },
         steamValue: {
           required: true,
@@ -103,8 +111,8 @@ export default ({
         // todo 向后端发送数据
         // this.$emit(visible);
         console.log("确定修改游戏");
-      }
-    };
+      },
+    }
   }
 })
 </script>

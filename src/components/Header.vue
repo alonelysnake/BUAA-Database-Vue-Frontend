@@ -168,7 +168,13 @@ export default {
         {
           label: "退出登录",
           key: "logout",
-          icon: renderIcon(LogoutIcon)
+          icon: renderIcon(LogoutIcon),
+          props: {
+            onClick:() => {
+              store.state.loggedIn = false;
+              // console.log(store.state.loggedIn)
+            }
+          }
         }
 
       ],
