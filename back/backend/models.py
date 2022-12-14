@@ -19,11 +19,11 @@ class User(models.Model):
     password = models.CharField(max_length=15)
     profile = models.CharField(max_length=300, default='')
     sales = models.IntegerField(default=0)
-    good = models.IntegerField(default=0)
-    bad = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
+    dislikes = models.IntegerField(default=0)
     photo = models.CharField(max_length=2560, default='')
     def to_dict(self):
-        return {'id': self.id, 'email': self.email, 'username': self.name, 'password': self.password, 'gender': self.gender, 'profile': self.profile, 'sales': self.sales, 'good': self.good, 'bad': self.bad, 'photo': self.photo}
+        return {'id': self.id, 'email': self.email, 'username': self.name, 'password': self.password, 'gender': self.gender, 'profile': self.profile, 'sales': self.sales, 'likes': self.likes, 'dislikes': self.dislikes, 'photo': self.photo}
 
 """
 1. 热度 新建实体 DONE
@@ -83,11 +83,13 @@ class Goods(models.Model):
     seller = models.ForeignKey("User", on_delete=models.CASCADE, related_name='seller')
     buyer = models.ForeignKey("User", on_delete=models.CASCADE, null=True, related_name='buyer')
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
-    steam_id = models.CharField(max_length=30, default='')
+    decription = models.CharField(max_length=2560, default='')
+    cd_key = models.CharField(max_length=256, default='')
+    steam_id = models.CharField(max_length=256, default='')
     comment = models.CharField(max_length=30, default='')
     status = models.CharField(max_length=11, default='已上架')
     def to_dict(self):
-        return {'id': self.id, 'price': self.price, 'seller_id': self.seller_id, 'buyer_id': self.buyer_id, 'game_id': self.game_id, 'steam_id': self.steam_id, 'comment': self.comment, 'status': self.status}
+        return {'id': self.id, 'price': self.price, 'seller_id': self.seller_id, 'buyer_id': self.buyer_id, 'game_id': self.game_id, 'steam_id': self.steam_id, 'cd_key': self.cd_key, 'decription': self.decription, 'comment': self.comment, 'status': self.status}
 
 """
 合并合并合并 DONE
