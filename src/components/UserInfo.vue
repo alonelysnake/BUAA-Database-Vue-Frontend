@@ -87,17 +87,17 @@
           </template>
         </n-statistic>
       </div>
-      <n-form-item label="用户名" path="userIdValue">
-        <n-input v-model:value="model.userIdValue" placeholder="用户名" disabled/>
+      <n-form-item label="用户名" path="id">
+        <n-input v-model:value="model.id" placeholder="用户名" disabled/>
       </n-form-item>
-      <n-form-item v-if="isSelf.valueOf()" label="用户邮箱" path="emailValue">
-        <n-input v-model:value="model.emailValue" placeholder="用户邮箱" disabled/>
+      <n-form-item v-if="isSelf.valueOf()" label="用户邮箱" path="email">
+        <n-input v-model:value="model.email" placeholder="用户邮箱" disabled/>
       </n-form-item>
-      <n-form-item label="昵称" path="nickNameValue">
-        <n-input v-model:value="model.nickNameValue" placeholder="昵称"/>
+      <n-form-item label="昵称" path="name">
+        <n-input v-model:value="model.name" placeholder="昵称"/>
       </n-form-item>
-      <n-form-item label="性别" path="sexValue">
-        <n-radio-group v-model:value="model.sexValue" name="radiogroup1">
+      <n-form-item label="性别" path="gender">
+        <n-radio-group v-model:value="model.gender" name="radiogroup1">
           <n-space>
             <n-radio value="male">
               男
@@ -111,9 +111,9 @@
           </n-space>
         </n-radio-group>
       </n-form-item>
-      <n-form-item label="个人简介" path="introValue">
+      <n-form-item label="个人简介" path="profile">
         <n-input
-            v-model:value="model.introValue"
+            v-model:value="model.profile"
             placeholder="个人简介"
             type="textarea"
             :autosize="{
@@ -157,18 +157,29 @@ export default ({
     const targetUserId = ref(router.currentRoute.value.params.username);
     const model = ref({
           avatarPath: store.state.user.avatar,
-          emailValue: store.state.user.email,
-          userIdValue: store.state.user.userID,
-          nickNameValue:store.state.user.nickname,
-          introValue: store.state.user.intro,
-          sexValue: store.state.user.sex,
+          email: store.state.user.email,
+          id: store.state.user.userID,
+          name:store.state.user.nickname,
+          profile: store.state.user.intro,
+          gender: store.state.user.sex,
           likeValue: store.state.user.like,
           dislikeValue: store.state.user.dislike,
         });
-    const isSelf = ref(targetUserId.value === model.value.userIdValue);
-    console.log(isSelf.value)
+    const isSelf = ref(targetUserId.value === model.value.id);
+    const load = () => {
+      request.post("/getSlide/",JSON.stringify({})).then(res=>{
+        model.value.avatarPath = res.data.avatar
+        model.value.email = res.data.email
+        model.value.id = res.data.id
+        model.value.name = res.data.name
+        model.value.profile = res.data.profile
+        model.value.gender = res.data.gender
+        model.value.likeValue = res.data.likes
+        model.value.dislikeValue = res.data.dislikes
+      })
+    }
     if (!isSelf.value) {
-      // 从后台加载
+      load()
     }
     return {
       isSelf,
@@ -188,14 +199,16 @@ export default ({
       },
 
       handleSave() {
-        let formData = new FormData();
-        formData.append("file",fileList)
-        console.log(formData)
-        request.post("/api/upload",formData,
-            {"Content-Type": "multipart/form-data;charset=utf-8"})
+        // todo 上传头像
+        // let formData = new FormData();
+        // formData.append("file",fileList)
+        // console.log(formData)
+        // request.post("/api/upload",formData,
+        //     {"Content-Type": "multipart/form-data;charset=utf-8"})
         // request.post("/user/editInfo",JSON.stringify(this.model)).then(res=>{
         //
         // })
+        request().post("/updateUser/",JSON.stringify({}))
         if (/* 成功退款 */true) {
           message.success("修改成功");
         }
@@ -210,26 +223,26 @@ export default ({
           })
       ),
       rules: {
-        userIdValue: {
+        id: {
           required: false,
           trigger: ["blur", "input"],
           message: "请输入 inputValue"
         },
-        emailValue: {
+        email: {
           required: false,
           trigger: ["blur", "input"],
           message: "请输入 inputValue"
         },
-        nickNameValue: {
+        name: {
           required: true,
           trigger: ["blur", "input"],
           message: "请输入昵称"
         },
-        introValue: {
+        profile: {
           required: false,
           trigger: ["blur", "input"],
         },
-        sexValue: {
+        gender: {
           required: false,
           trigger: "change",
         },

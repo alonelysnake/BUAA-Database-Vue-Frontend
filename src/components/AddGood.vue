@@ -77,6 +77,7 @@ export default ({
       CloseCircleOutline,
       size: ref("medium"),
       model: ref({
+        gameId: null,
         nameValue: null,
         keyValue: null,
         steamValue:null,

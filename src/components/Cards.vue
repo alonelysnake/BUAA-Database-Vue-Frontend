@@ -1,12 +1,12 @@
 <template>
   <n-scrollbar x-scrollable trigger="hover" style="width: 600px">
     <div style="white-space: nowrap; width: 1310px">
-      <ul v-for="item in items" :key="item.id" style="position:relative;">
+      <ul v-for="item in items.value" :key="item.id" style="position:relative;">
         <Card class="card"
               :target="item.target"
               :title="item.title"
-              :img-url="item.imgUrl"
-              :text="item.text"/>
+              :img-url="item.url"
+              :text="item.test"/>
 <!--        <Card class="card"/>-->
 <!--        <Card class="card"/>-->
 <!--        <Card class="card"/>-->
@@ -35,9 +35,9 @@ export default {
     // 从后端获取数据
     let items = reactive([])
     const load = () => {
-      request.post("/news/",JSON.stringify({})).then(res=>{
+      request.post("/getNews/",JSON.stringify({})).then(res=>{
         items.value = res.data
-        // console.log(items.value)
+        console.log(items.value)
       })
     }
     load()
