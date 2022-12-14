@@ -19,9 +19,11 @@ class User(models.Model):
     password = models.CharField(max_length=15)
     profile = models.CharField(max_length=300, default='')
     sales = models.IntegerField(default=0)
-    rate = models.DecimalField(max_digits=4, decimal_places=2, default=5.0)
+    good = models.IntegerField(default=0)
+    bad = models.IntegerField(default=0)
+    photo = models.CharField(max_length=2560, default='')
     def to_dict(self):
-        return {'id': self.id, 'email': self.email, 'username': self.name, 'password': self.password, 'gender': self.gender, 'profile': self.profile, 'sales': self.sales, 'rate': self.rate}
+        return {'id': self.id, 'email': self.email, 'username': self.name, 'password': self.password, 'gender': self.gender, 'profile': self.profile, 'sales': self.sales, 'good': self.good, 'bad': self.bad, 'photo': self.photo}
 
 """
 1. 热度 新建实体 DONE

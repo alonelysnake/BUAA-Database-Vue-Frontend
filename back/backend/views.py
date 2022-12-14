@@ -61,6 +61,8 @@ def updateUser(request):
         user.profile = update_content
     elif update_type == 'gender':
         user.gender = update_content
+    elif update_type == 'photo':
+        user.photo = update_content
     user.save()
     data = {'messsag': '修改用户信息成功'}
     result = JsonResponse(dict(data))
