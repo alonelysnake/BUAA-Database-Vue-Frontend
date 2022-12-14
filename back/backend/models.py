@@ -168,7 +168,7 @@ class News(models.Model):
     id = models.AutoField(primary_key=True)
     target = models.CharField(max_length=256)
     title = models.CharField(max_length=256)
-    url = models.CharField(max_length=256)
+    url = models.CharField(max_length=2560)
     test = models.CharField(max_length=256)
     def to_dict(self):
         return {'id': self.id, 'target': self.target, 'title': self.title, 'url': self.url, 'test': self.test}
@@ -176,7 +176,7 @@ class News(models.Model):
 class Slide(models.Model):
     id = models.AutoField(primary_key=True)
     game = models.ForeignKey("Game", on_delete=models.CASCADE) 
-    url = models.CharField(max_length=256)
+    url = models.CharField(max_length=2560)
     def to_dict(self):
         return {'id': self.id, 'game_id': self.game_id, 'url': self.url}
 

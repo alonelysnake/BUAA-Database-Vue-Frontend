@@ -83,6 +83,20 @@ def addGameFromFile(request):
     result = JsonResponse(dict(data))
     return result
 
+def addGame(request):
+    content = request.body.decode()
+    content_dict = json.loads(content)
+    print(content_dict)
+    name = content_dict['name']
+    rating = content_dict['rating']
+    date = content_dict['date']
+    platform = content_dict['platform']
+    if not Game.objects.filter(Q(name=name) & Q(date=date) & Q(rating=rating) & Q(platform=platform)):
+        Game.objects.create(name=name, date=date, rating=rating, platform=platform)
+    data = {'messsage': '成功添加'}
+    result = JsonResponse(dict(data))
+    return result
+
 def getGame(request):
     content = request.body.decode()
     content_dict = json.loads(content)
@@ -391,11 +405,21 @@ def updateComment(request):
     return result
 
 def getSlide(request):
-    content = request.body.decode()
-    content_dict = json.loads(content)
-    print(content_dict)
-    data = list(Tag.objects.all())
+    # content = request.body.decode()
+    # content_dict = json.loads(content)
+    # print(content_dict)
+    data = list(Slide.objects.all())
     data = [i.to_dict() for i in data]
     data = {'messsage': '成功导出所有轮播图', "data": data}
+    result = JsonResponse(dict(data))
+    return result
+
+def getNews(request):
+    # content = request.body.decode()
+    # content_dict = json.loads(content)
+    # print(content_dict)
+    data = list(News.objects.all())
+    data = [i.to_dict() for i in data]
+    data = {'messsage': '成功导出所有新闻', "data": data}
     result = JsonResponse(dict(data))
     return result
