@@ -49,18 +49,17 @@ def updateUser(request):
     content = request.body.decode()
     content_dict = json.loads(content)
     print(content_dict)
-    update_type = content_dict.get('type')
-    email = content_dict.get('email')
     update_content = content_dict.get('content')
-    user = User.objects.get(email=email)
-    if update_type == 'name':
-        user.name = update_content
-    elif update_type == 'password':
-        user.password = update_content
-    elif update_type == 'profile':
-        user.profile = update_content
-    elif update_type == 'gender':
-        user.gender = update_content
+    id = update_content.id
+    user = User.objects.get(id=id)
+    user.name = update_content.name
+    user.password = update_content.password
+    user.profile = update_content.profile
+    user.gender = update_content.gender
+    user.email = update_content.email
+    user.likes = update_content.likeValue
+    user.dislikes = update_content.dislikeValue
+    user.photo = update_content.avatarPath
     user.save()
     data = {'messsag': '修改用户信息成功'}
     result = JsonResponse(dict(data))
@@ -139,7 +138,7 @@ def searchGame(request):
         game_dist = {}
         for game in games:
             game_dist[game] = fuzz.partial_ratio(keyword, game.name)
-        game_list = game_dist.items()
+        game_list = list(game_dist.items())
         game_list.sort(key=lambda x:x[1], reverse=False)
         game_list = game_list[:10]
         games = [i[0] for i in game_list]
@@ -271,14 +270,16 @@ def getGoods(request):
 
 def addGoods(request):
     content = request.body.decode()
-    content_dict = json.loads(content)
+    content_dict = json.loads(content).get('goods')
     print(content_dict)
-    price = content_dict.get('price')
-    game_id = content_dict.get('game_id')
-    seller_id = content_dict.get('seller_id')
-    steam_id = content_dict.get('steam_id')
+    price = content_dict.moneyValue
+    game_id = content_dict.game_id
+    seller_id = content_dict.seller_id
+    steam_id = content_dict.steamValue
+    decription = content_dict.introValue
+    cd_key = content_dict.keyValue
     status = '已上架'
-    Goods.objects.create(seller_id=seller_id, game_id=game_id, price=price, steam_id=steam_id, status=status)
+    Goods.objects.create(seller_id=seller_id, game_id=game_id, price=price, steam_id=steam_id, status=status, decription=decription, cd_key=cd_key)
     data = {'message': '上架商品成功'}
     result = JsonResponse(dict(data))
     return result
