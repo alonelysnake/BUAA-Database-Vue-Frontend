@@ -14,7 +14,11 @@
     >
       <n-form-item label="选择游戏" path="nameValue">
         <n-space id="search">
-          <n-input v-model:value="model.nameValue" placeholder="按ID或游戏名搜索" clearable>
+          <n-input v-model:value="model.nameValue"
+                   placeholder="按ID或游戏名搜索"
+                   clearable
+                   :disabled="regular"
+          >
             <template #clear-icon>
               <n-icon :component="CloseCircleOutline" />
             </template>
@@ -23,6 +27,9 @@
       </n-form-item>
       <n-form-item label="CDKey" path="keyValue">
         <n-input v-model:value="model.keyValue" placeholder="游戏CDKey" />
+      </n-form-item>
+      <n-form-item label="商品价格" path="moneyValue">
+        <n-input-number v-model:value="model.moneyValue" placeholder="商品价格" />
       </n-form-item>
       <n-form-item label="steamID" path="steamValue">
         <n-input v-model:value="model.steamValue" placeholder="您的steam账号" />
@@ -50,8 +57,10 @@
   </n-card>
 </template>
 
+
+
 <script>
-import { ref } from "vue";
+import { ref,defineProps} from "vue";
 import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
@@ -61,6 +70,7 @@ export default ({
   name: "AddGood",
 
   setup() {
+    const props = defineProps(['regular']);
     const formRef = ref(null);
     return {
       formRef,
@@ -71,12 +81,14 @@ export default ({
         keyValue: null,
         steamValue:null,
         introValue: null,
+        moneyValue:null,
       }),
       rules: {
         nameValue: {
           required: true,
           trigger: ["blur", "input"],
-          message: "请选择商品所属游戏"
+          message: "请选择商品所属游戏",
+
         },
         keyValue: {
           required: false,
@@ -92,7 +104,12 @@ export default ({
           trigger: ["blur", "input"],
           message: "请输入商品详情"
         },
-
+        moneyValue: {
+          type: 'number',
+          required: true,
+          trigger: ["blur", "change"],
+          message: "请输入商品价格"
+        }
       },
       handleClose() {
         store.state.addGoodsVisible = false;

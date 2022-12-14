@@ -9,12 +9,25 @@ export default createStore({
         user: {
             nickname: "Veronica",
             userID: 'VeronicaID',
-            type:1,
             // 头像Url
             avatar: "",
+            email: "837826068@qq.com",
+            intro: "爱打电动的BUAAer",
+            sex: "secret",
+            like:40207,
+            dislike:10207,
+        },
+        good: {
+          goodId: -1,
+          name: "nier",
+          CDKey: "123",
+          money: 20.5,
+          steamId: "kazeya9",
+          intro: "CDKey",
         },
         addGoodsVisible: false,
         editGoodsVisible: false,
+        appraiseVisible: false,
     },
 
     // mutation用于修改store中的数据

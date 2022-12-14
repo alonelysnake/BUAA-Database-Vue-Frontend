@@ -23,12 +23,13 @@ import {
 } from "@vicons/ionicons5";
 import router from "@/router";
 import store from "@/store";
+import {useRouter} from "vue-router";
 
 function renderIcon(icon) {
   return () => h(NIcon, null, { default: () => h(icon) });
 }
 
-const menuOptions = [
+let menuOptions = [
   {
     label: "个人信息",
     key: "userInfo",
@@ -61,25 +62,55 @@ const menuOptions = [
 export default defineComponent({
   name: "Aside",
   setup() {
+    const route = useRouter();
+    if (route.currentRoute.value.params.username !== store.state.user.userID) {
+      menuOptions = [
+        {
+          label: "个人信息",
+          key: "userInfo",
+          icon: renderIcon(PersonIcon),
+        },
+        {
+          label: "商品",
+          key: "goods",
+          icon: renderIcon(CardIcon),
+        },
+      ];
+    }
     return {
       activeKey: ref(null),
       menuOptions,
 
       handleSelect(key, item) {
         // console.log(key);
-        switch (key) {
-          case "userInfo":
-            router.push("/user/" + store.state.user.userID + "/info");
-            break;
-          case "buyer":
-            router.push("/user/" + store.state.user.userID + "/buyer");
-            break;
-          case "goods":
-            router.push("/user/" + store.state.user.userID + "/sellerGoods");
-            break;
-          case "order":
-            router.push("/user/" + store.state.user.userID + "/sellerOrder");
-            break;
+        if (route.currentRoute.value.params.username !== store.state.user.userID) {
+          console.log(route.currentRoute.value.params.username,store.state.user.userID)
+          console.log("访客进入")
+          switch (key) {
+            case "userInfo":
+              router.push("/user_v/" + route.currentRoute.value.params.username + "/info");
+              break;
+            case "goods":
+              router.push("/user_v/" + route.currentRoute.value.params.username + "/sellerGoods");
+              break;
+          }
+        }
+        else {
+          console.log("用户进入")
+          switch (key) {
+            case "userInfo":
+              router.push("/user/" + store.state.user.userID + "/info");
+              break;
+            case "buyer":
+              router.push("/user/" + store.state.user.userID + "/buyer");
+              break;
+            case "goods":
+              router.push("/user/" + store.state.user.userID + "/sellerGoods");
+              break;
+            case "order":
+              router.push("/user/" + store.state.user.userID + "/sellerOrder");
+              break;
+          }
         }
       }
     };

@@ -11,17 +11,6 @@
       <ul class="navbar-nav" style="margin-right: 25%">
         <li class="nav-item1">
           <SearchCard></SearchCard>
-<!--          <n-space id="search">-->
-<!--            <n-input round placeholder="搜索" clearable style="min-width: 300px">-->
-<!--              <template #suffix>-->
-<!--                <n-icon :component="FlashOutline" />-->
-<!--              </template>-->
-<!--              <template #clear-icon>-->
-<!--                  <n-icon :component="CloseCircleOutline" />-->
-<!--              </template>-->
-<!--            </n-input>-->
-
-<!--          </n-space>-->
         </li>
         <li class="nav-item1">
           <a class="nav-link" href="/">
@@ -67,7 +56,7 @@
             <n-dropdown :options="options">
               <n-button round>
                 <n-ellipsis style="max-width: 70px">
-                  {{nickname}}
+                  {{store.state.user.nickname}}
                 </n-ellipsis>
               </n-button>
             </n-dropdown>
@@ -123,7 +112,7 @@ export default {
 
   setup() {
     let nickname = computed(()=>{
-      return store.state.user.nickname
+      return store.state.user.userID
     })
     return {
       store,
@@ -168,7 +157,13 @@ export default {
         {
           label: "退出登录",
           key: "logout",
-          icon: renderIcon(LogoutIcon)
+          icon: renderIcon(LogoutIcon),
+          props: {
+            onClick:() => {
+              store.state.loggedIn = false;
+              // console.log(store.state.loggedIn)
+            }
+          }
         }
 
       ],
