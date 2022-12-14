@@ -20,6 +20,11 @@ const routes = [
         component: Home
     },
     {
+        path: '/game/:gameId',
+        name: 'Game',
+        component: import('@/view/DetailPage'),
+    },
+    {
       path: '/user_v/:username',
         component: UserPage,
         children: [
@@ -39,6 +44,9 @@ const routes = [
         path: '/user/:username',
         name: 'User',
         component: UserPage,
+        meta: {
+            requiresLoggedIn:true
+        },
         children: [
             {
                 path: '/user/:username/info',
