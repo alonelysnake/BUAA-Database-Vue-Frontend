@@ -15,14 +15,30 @@
       <n-form-item label="选择游戏" path="nameValue">
         <n-space id="search">
           <n-input v-model:value="model.nameValue"
-                   placeholder="按ID或游戏名搜索"
+                   placeholder="按游戏名搜索"
                    clearable
-                   :disabled="regular"
+                   @focus="focus"
+                   @blur="blur"
           >
             <template #clear-icon>
               <n-icon :component="CloseCircleOutline" />
             </template>
           </n-input>
+          <n-card
+              v-if="isSearch"
+              class="box-card"
+              @mouseenter="enterSearchBoxHandler"
+              style="max-width:170px; position: absolute;z-index:15"
+          >
+            <dl v-if="isSearchList">
+              <n-button
+                  v-for="search in searchList" :key="search.id"
+                  style="display:block;margin-bottom: 1px;min-width: 120px"
+                  quaternary
+                  @click="searchHandler(search.id,search.name)"
+              >{{search.name}}</n-button>
+            </dl>
+          </n-card>
         </n-space>
       </n-form-item>
       <n-form-item label="CDKey" path="keyValue">
@@ -60,30 +76,71 @@
 
 
 <script>
-import { ref,defineProps} from "vue";
+import {ref, defineProps, computed, watch, reactive} from "vue";
 import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
 import store from "../store"
+import request from "@/utils/request";
 
 export default ({
   name: "AddGood",
 
   setup() {
+    let isFocus = ref(false) //是否聚焦
+    let search = ref("") //当前输入框的值
+    let searchList = ref(["暂无数据"]) //搜索返回数据,
+    const model = reactive({
+      gameId: null,
+      nameValue: null,
+      keyValue: null,
+      steamValue:null,
+      introValue: null,
+      moneyValue:null,
+      sellerId: store.state.user.userID
+    })
+    // 显示候选
+    const isSearchList = computed(()=>{
+      // console.log(model.nameValue)
+      return isFocus.value && model.nameValue !== null && model.nameValue !== "";
+    })
+    // 显示搜索卡片
+    const isSearch = computed(()=>{
+      // console.log(historySearchList.value)
+      return isFocus.value && model.nameValue !== null && model.nameValue !== "";
+    })
+    let searchBoxTimeout = ref();
+
+    const loadSearchList = () => {
+      request.post("/searchGame/",JSON.stringify({'keyword':model.nameValue})).then(res=>{
+        console.log(res.data)
+        searchList.value = res.data
+      })
+    }
+
+    watch(()=>model.nameValue,(newValue,oldVal) => {
+      // console.log(model.nameValue)
+      loadSearchList();
+    })
+
+    const addGoods = () => {
+      request.post("/addGoods/",JSON.stringify({"goods":model})).then(res=>{
+        console.log(res.data)
+      })
+    }
+
     const props = defineProps(['regular']);
     const formRef = ref(null);
     return {
       formRef,
+      model,
+      isSearch,
+      isSearchList,
+      search,
+      searchList,
       CloseCircleOutline,
       size: ref("medium"),
-      model: ref({
-        gameId: null,
-        nameValue: null,
-        keyValue: null,
-        steamValue:null,
-        introValue: null,
-        moneyValue:null,
-      }),
+
       rules: {
         nameValue: {
           required: true,
@@ -112,6 +169,26 @@ export default ({
           message: "请输入商品价格"
         }
       },
+
+      focus() {
+        isFocus.value = true
+      },
+
+      blur() {
+        searchBoxTimeout.value = setTimeout(function() {
+          isFocus.value = false;
+        }, 100);
+      },
+
+      enterSearchBoxHandler() {
+        clearTimeout(searchBoxTimeout.value);
+      },
+
+      searchHandler(gameId,gameName) {
+        model.gameId = gameId;
+        model.nameValue = gameName
+      },
+
       handleClose() {
         store.state.addGoodsVisible = false;
         // this.$emit(visible);
@@ -121,8 +198,7 @@ export default ({
       handleConfirm(e) {
         e.preventDefault();
         store.state.addGoodsVisible = false;
-        // todo 向后端发送数据
-        // this.$emit(visible);
+        addGoods();
         console.log("确定添加游戏");
       }
     };

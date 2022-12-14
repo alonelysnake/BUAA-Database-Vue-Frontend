@@ -62,7 +62,6 @@ import Local from "../utils/local"
 import {computed, ref,watch} from "vue"
 import request from "@/utils/request";
 import router from "@/router";
-// todo 从后端进行模糊搜索，标签加路由/超链接
 
 export default {
   name: "SearchCard",
