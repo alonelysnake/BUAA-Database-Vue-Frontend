@@ -159,24 +159,24 @@ class Comment(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
-    content = models.CharField(max_length=300)
+    content = models.CharField(max_length=300, default='')
     likes = models.IntegerField(default=0)
     def to_dict(self):
         return {'id': self.id, 'user_id': self.user_id, 'game_id': self.game_id, 'time': self.time, 'content': self.content, 'likes': self.likes}
 
 class News(models.Model):
     id = models.AutoField(primary_key=True)
-    target = models.CharField(max_length=256)
-    title = models.CharField(max_length=256)
-    url = models.CharField(max_length=2560)
-    test = models.CharField(max_length=256)
+    target = models.CharField(max_length=256, default='')
+    title = models.CharField(max_length=256, default='')
+    url = models.CharField(max_length=2560, default='')
+    test = models.CharField(max_length=256, default='')
     def to_dict(self):
         return {'id': self.id, 'target': self.target, 'title': self.title, 'url': self.url, 'test': self.test}
 
 class Slide(models.Model):
     id = models.AutoField(primary_key=True)
     game = models.ForeignKey("Game", on_delete=models.CASCADE) 
-    url = models.CharField(max_length=2560)
+    url = models.CharField(max_length=2560, default='')
     def to_dict(self):
         return {'id': self.id, 'game_id': self.game_id, 'url': self.url}
 
