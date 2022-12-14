@@ -6,7 +6,7 @@
       show-arrow
       style="width: 100%;"
   >
-    <n-carousel-item v-for="item in items" :key="item.id">
+    <n-carousel-item v-for="item in items.value" :key="item.id">
       <!--      todo 路由修改为游戏 8080/game/gameID   -->
 <!--      <router-link-->
 <!--        :to="{name:'Game',params:{gameID:item.gameID}}"-->
@@ -36,26 +36,21 @@
 <script>
 
 import request from "@/utils/request";
+import {reactive} from "vue";
 
 export default {
   name: "Carousel",
 
   setup() {
-    let items = [
-      {id:1,gameID:1,url:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fstatics.klyou.cn%2Fimages%2Fuploadfiles%2F20190516%2F59074390.jpg&refer=http%3A%2F%2Fstatics.klyou.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673295600&t=9a7f474209c256501f36619e15eb1b0a'},
-      {id:0,gameID:0,url:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.199it.com%2Fwp-content%2Fuploads%2F2018%2F08%2F1533909558-3139-b5eab75f4eab636.jpg&refer=http%3A%2F%2Fwww.199it.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673295600&t=2b46e102c2f62ca11ddb8520eb3e1094'},
-
-    ]
     //从后端获取数据
-    // let items = []
-    // const load = () => {
-    //
-    //   request.get("/carousel/",JSON.stringify({a:1})).then(res=>{
-    //     console.log(res.data)
-    //     items = res.data.records
-    //   })
-    // }
-    // load()
+    let items = reactive([])
+    const load = () => {
+      request.post("/carousel/",JSON.stringify({})).then(res=>{
+        items.value = res.data
+        // console.log(items.value)
+      })
+    }
+    load()
     return {
       items,
     }
