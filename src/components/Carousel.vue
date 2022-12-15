@@ -45,7 +45,7 @@ export default {
     //从后端获取数据
     let items = reactive([])
     const load = () => {
-      request.post("/carousel/",JSON.stringify({})).then(res=>{
+      request.post("/getSlide/",JSON.stringify({})).then(res=>{
         items.value = res.data
         // console.log(items.value)
       })

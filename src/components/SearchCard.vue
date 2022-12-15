@@ -8,10 +8,9 @@
           clearable
           @focus="focus"
           @blur="blur"
-          @keyup.enter="searchHandler"
           style="min-width: 300px">
         <template #suffix>
-          <n-icon @click="searchHandler" :component="SearchSharp" />
+          <n-icon :component="SearchSharp" />
         </template>
         <template #clear-icon>
           <n-icon :component="CloseCircleOutline" />
@@ -37,13 +36,19 @@
             type="success"
             :bordered="false"
             @close="closeHandler(search)"
+            @click="searchHandler(search.id,search.name)"
             style="margin-right:5px; margin-bottom:5px;"
         >
           {{search.name}}
         </n-tag>
       </dl>
       <dl v-if="isSearchList">
-        <dd v-for="search in searchList" :key="search.id">{{search}}</dd>
+        <n-button
+            v-for="search in searchList" :key="search.id"
+            style="display:block;margin-bottom: 1px;min-width: 250px"
+            quaternary
+            @click="searchHandler(search.id,search.name)"
+        >{{search.name}}</n-button>
       </dl>
     </n-card>
   </div>
@@ -54,9 +59,9 @@
 import {CloseCircleOutline, SearchSharp,} from "@vicons/ionicons5";
 import store from "../store";
 import Local from "../utils/local"
-import {computed, ref} from "vue"
-
-// todo 从后端进行模糊搜索，标签加路由/超链接
+import {computed, ref,watch} from "vue"
+import request from "@/utils/request";
+import router from "@/router";
 
 export default {
   name: "SearchCard",
@@ -81,11 +86,22 @@ export default {
     })
     // 显示搜索卡片
     const isSearch = computed(()=>{
-      console.log(historySearchList.value)
+      // console.log(historySearchList.value)
       return isFocus.value && (historySearchList.value.length !== 0 || search.value !== "");
     })
+    let searchBoxTimeout = ref();
 
-    let searchBoxTimeout = ref()
+    const loadSearchList = () => {
+      request.post("/searchGame/",JSON.stringify({'keyword':search.value})).then(res=>{
+
+        searchList.value = res.data
+        console.log(searchList.value)
+      })
+    }
+
+    watch(search,(newValue,oldVal) => {
+      loadSearchList();
+    })
     return {
       store,
       isHistorySearch,
@@ -112,21 +128,27 @@ export default {
           isFocus.value = false;
         }, 100);
       },
+
       enterSearchBoxHandler() {
         clearTimeout(searchBoxTimeout.value);
       },
-      searchHandler() {
+
+      searchHandler(gameId,gameName) {
+        // console.log("search")
         let exist =
             historySearchList.value.filter(value => {
-              return value.name === search.value;
+              return value.id === gameId;
             }).length !== 0;
         if (!exist) {
-          historySearchList.value.push({name: search.value});
+          historySearchList.value.push({id:gameId,name: gameName});
           Local.saveHistory(historySearchList.value);
         }
         history.value = historySearchList.value.length !== 0;
+        router.push("/game/" + gameId)
       },
+
       closeHandler(search) {
+        // console.log(search)
         historySearchList.value.splice(historySearchList.value.indexOf(search), 1);
         Local.saveHistory(historySearchList);
         clearTimeout(searchBoxTimeout.value);
