@@ -20,6 +20,7 @@ import {
   DocumentOutline as DocIcon,
   CardOutline as CardIcon,
   CartOutline as CartIcon,
+    HeartOutline as FavorIcon,
 } from "@vicons/ionicons5";
 import router from "@/router";
 import store from "@/store";
@@ -34,6 +35,11 @@ let menuOptions = [
     label: "个人信息",
     key: "userInfo",
     icon: renderIcon(PersonIcon),
+  },
+  {
+    label: "我的收藏",
+    key: "favor",
+    icon: renderIcon(FavorIcon),
   },
   {
     label: "买家中心",
@@ -110,6 +116,8 @@ export default defineComponent({
             case "order":
               router.push("/user/" + store.state.user.userID + "/sellerOrder");
               break;
+            case "favor":
+              router.push("/user/" + store.state.user.userID + "/favor")
           }
         }
       }

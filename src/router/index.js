@@ -67,6 +67,11 @@ const routes = [
                 path: '/user/:username/sellerOrder',
                 name: 'SellerOrder',
                 component: SellerOrder,
+            },
+            {
+                path: '/user/:username/favor',
+                name: 'Favor',
+                component: import('@/components/FavoriteGame'),
             }
         ]
     },

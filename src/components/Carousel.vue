@@ -1,18 +1,12 @@
 <template>
-<!--  todo 将图片地址设置为属性 增加点击图片的路由 -->
-
   <n-carousel
       autoplay interval="2500"
       show-arrow
       style="width: 100%;"
   >
     <n-carousel-item v-for="item in items.value" :key="item.id">
-      <!--      todo 路由修改为游戏 8080/game/gameID   -->
-<!--      <router-link-->
-<!--        :to="{name:'Game',params:{gameID:item.gameID}}"-->
-<!--      >-->
       <router-link
-          :to="{name:'Info',params:{username:'Veronica'}}"
+          :to="{name:'Game',params:{gameId:item.game_id}}"
       >
         <img
             class="carousel-img"

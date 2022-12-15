@@ -123,11 +123,19 @@
         />
       </n-form-item>
       <div style="display: flex; justify-content: flex-end" v-if="isSelf.valueOf()">
+        <n-button round type="primary" ghost @click="modify" style="margin-right: 10px">
+          修改密码
+        </n-button>
         <n-button round type="primary" @click="handleSave">
           保存
         </n-button>
       </div>
     </n-form>
+    <ModifyPassword
+        class="modifyCard" v-if="store.state.modifyVisible"
+    >
+
+    </ModifyPassword>
   </div>
 
 
@@ -140,10 +148,11 @@ import {useMessage} from "naive-ui"
 import store from "@/store";
 import request from "@/utils/request";
 import { useRouter } from 'vue-router'
-
+import ModifyPassword from "@/components/ModifyPassword";
 
 export default ({
   name: "UserInfo",
+  components: {ModifyPassword},
 
   setup() {
     let fileList = [];
@@ -167,6 +176,7 @@ export default ({
         });
     const isSelf = ref(targetUserId.value === model.value.id);
     const load = () => {
+      // todo 这里是获得信息
       request.post("/getSlide/",JSON.stringify({})).then(res=>{
         model.value.avatarPath = res.data.avatar
         model.value.email = res.data.email
@@ -186,7 +196,7 @@ export default ({
       formRef,
       numberAnimationInstRef,
       ArchiveIcon,
-
+      store,
       model,
 
       handleChange(file,files) {
@@ -196,6 +206,10 @@ export default ({
       uploadFile (file) {
         console.log(file.file, "sb2");
         formData.value.file = file.file;
+      },
+
+      modify() {
+        store.state.modifyVisible = true;
       },
 
       handleSave() {
@@ -208,7 +222,10 @@ export default ({
         // request.post("/user/editInfo",JSON.stringify(this.model)).then(res=>{
         //
         // })
-        request().post("/updateUser/",JSON.stringify({}))
+        console.log("保存信息")
+        request.post("/updateUser/",JSON.stringify({"content":model})).then(res=>{
+          console.log(res.data)
+        })
         if (/* 成功退款 */true) {
           message.success("修改成功");
         }
@@ -258,4 +275,6 @@ export default ({
   min-width: 160px;
   margin-right: 40px
 }
+
+
 </style>

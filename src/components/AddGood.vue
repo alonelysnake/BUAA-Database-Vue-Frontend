@@ -91,13 +91,13 @@ export default ({
     let search = ref("") //当前输入框的值
     let searchList = ref(["暂无数据"]) //搜索返回数据,
     const model = reactive({
-      gameId: null,
+      game_id: null,
       nameValue: null,
       keyValue: null,
       steamValue:null,
       introValue: null,
       moneyValue:null,
-      sellerId: store.state.user.userID
+      seller_id: store.state.user.userID
     })
     // 显示候选
     const isSearchList = computed(()=>{
@@ -184,8 +184,8 @@ export default ({
         clearTimeout(searchBoxTimeout.value);
       },
 
-      searchHandler(gameId,gameName) {
-        model.gameId = gameId;
+      searchHandler(game_id,gameName) {
+        model.game_id = game_id;
         model.nameValue = gameName
       },
 
