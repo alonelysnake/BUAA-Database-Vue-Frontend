@@ -5,6 +5,7 @@ urlpatterns = [
     path('login/', login),
     path('register/', register),
     path('updateUser/', updateUser),
+    path('changePassword/', changePassword),
     path('addGameFromFile/', addGameFromFile),
     path('addGame/', addGame),
     path('getGame/', getGame),
