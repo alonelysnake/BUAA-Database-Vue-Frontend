@@ -53,7 +53,6 @@ def updateUser(request):
     id = update_content.id
     user = User.objects.get(id=id)
     user.name = update_content.name
-    user.password = update_content.password
     user.profile = update_content.profile
     user.gender = update_content.gender
     user.email = update_content.email
@@ -61,7 +60,26 @@ def updateUser(request):
     user.dislikes = update_content.dislikeValue
     user.photo = update_content.avatarPath
     user.save()
-    data = {'messsag': '修改用户信息成功'}
+    data = {'messsagee': '修改用户信息成功'}
+    result = JsonResponse(dict(data))
+    return result
+
+def changePassword(request):
+    content = request.body.decode()
+    content_dict = json.loads(content)
+    print(content_dict)
+    update_content = content_dict.get('password')
+    id = update_content.id
+    user = User.objects.get(id=id)
+    if user.password == update_content.oldPassword:
+        user.password = update_content.newPassword
+        msg = '密码更新成功'
+        data = 0
+        user.save()
+    else:
+        msg = '原密码输入错误'
+        data = 1
+    data = {'messsage': msg, 'data': data}
     result = JsonResponse(dict(data))
     return result
 
@@ -78,7 +96,7 @@ def addGameFromFile(request):
         platform = row['platform']
         if not Game.objects.filter(Q(name=name) & Q(date=date) & Q(rating=rating) & Q(platform=platform)):
             Game.objects.create(name=name, date=date, rating=rating, platform=platform)
-    data = {'messsage': '成功添加'}
+    data = {'messsagee': '成功添加'}
     result = JsonResponse(dict(data))
     return result
 
@@ -92,7 +110,7 @@ def addGame(request):
     platform = content_dict['platform']
     if not Game.objects.filter(Q(name=name) & Q(date=date) & Q(rating=rating) & Q(platform=platform)):
         Game.objects.create(name=name, date=date, rating=rating, platform=platform)
-    data = {'messsage': '成功添加'}
+    data = {'messsagee': '成功添加'}
     result = JsonResponse(dict(data))
     return result
 
@@ -122,7 +140,7 @@ def getGame(request):
     else:
         data = list(Game.objects.all())
         data = [i.to_dict() for i in data]
-    data = {'messsage': '成功导出游戏数据', "data": data}
+    data = {'messsagee': '成功导出游戏数据', "data": data}
     result = JsonResponse(dict(data))
     return result
 
@@ -143,7 +161,7 @@ def searchGame(request):
         game_list = game_list[:10]
         games = [i[0] for i in game_list]
     data = [i.to_dict() for i in games]
-    data = {'messsage': '成功搜索游戏', "data": data}
+    data = {'messsagee': '成功搜索游戏', "data": data}
     result = JsonResponse(dict(data))
     return result
 
@@ -157,7 +175,7 @@ def getUserFavorites(request):
     for item in items:
         game = item.game
         data.append(game.to_dict())
-    data = {'messsage': '成功导出该用户收藏夹', "data": data}
+    data = {'messsagee': '成功导出该用户收藏夹', "data": data}
     result = JsonResponse(dict(data))
     return result
 
@@ -200,7 +218,7 @@ def getHeat(request):
     else:
         data = list(Heat.objects.all())
     data = [i.to_dict() for i in data]
-    data = {'messsage': '成功导出游戏热度数据', "data": data}
+    data = {'messsagee': '成功导出游戏热度数据', "data": data}
     result = JsonResponse(dict(data))
     return result 
 
@@ -217,7 +235,7 @@ def getDiscount(request):
     else:
         data = list(Discount.objects.all())
     data = [i.to_dict() for i in data]
-    data = {'messsage': '成功导出游戏折扣数据', "data": data}
+    data = {'messsagee': '成功导出游戏折扣数据', "data": data}
     result = JsonResponse(dict(data))
     return result 
 
@@ -231,7 +249,7 @@ def getTag(request):
     else:
         data = list(Tag.objects.all())
     data = [i.to_dict() for i in data]
-    data = {'messsage': '成功导出游戏标签', "data": data}
+    data = {'messsagee': '成功导出游戏标签', "data": data}
     result = JsonResponse(dict(data))
     return result
 
@@ -246,7 +264,7 @@ def getPrice(request):
     else:
         data = list(Price.objects.filter(game_id=game_id).order_by('country', 'date'))
     data = [i.to_dict() for i in data]
-    data = {'messsage': '成功导出游戏价格', "data": data}
+    data = {'messsagee': '成功导出游戏价格', "data": data}
     result = JsonResponse(dict(data))
     return result
 
@@ -264,7 +282,7 @@ def getGoods(request):
     elif seller_id != None:
         data = list(Goods.objects.filter(seller_id=seller_id))
     data = [i.to_dict() for i in data]
-    data = {'messsage': '成功导出商品', "data": data}
+    data = {'messsagee': '成功导出商品', "data": data}
     result = JsonResponse(dict(data))
     return result
 
@@ -315,7 +333,7 @@ def updateGoods(request):
     elif update_type == 'steam_id':
         goods.steam_id = update_content
     goods.save()
-    data = {'messsag': '修改商品信息成功'}
+    data = {'messsage': '修改商品信息成功'}
     result = JsonResponse(dict(data))
     return result
 
@@ -329,7 +347,7 @@ def buyGoods(request):
     goods.buyer_id = buyer_id
     goods.status = '已购买'
     goods.save()
-    data = {'messsag': '商品购买成功'}
+    data = {'messsage': '商品购买成功'}
     result = JsonResponse(dict(data))
     return result
 
@@ -344,7 +362,7 @@ def getDeveloper(request):
     else:
         data = list(Price.objects.filter(game_id=game_id).order_by('country', 'date'))
     data = [i.to_dict() for i in data]
-    data = {'messsage': '成功导出游戏价格', "data": data}
+    data = {'messsagee': '成功导出游戏价格', "data": data}
     result = JsonResponse(dict(data))
     return result
 
@@ -356,7 +374,7 @@ def getComment(request):
     if game_id != None:
         data = list(Comment.objects.filter(game_id=game_id))
     data = [i.to_dict() for i in data]
-    data = {'messsage': '成功导出评论', "data": data}
+    data = {'messsagee': '成功导出评论', "data": data}
     result = JsonResponse(dict(data))
     return result
 
@@ -401,7 +419,7 @@ def updateComment(request):
     elif update_type == 'content':
         comment.content = update_content
     comment.save()
-    data = {'messsag': '修改评论成功'}
+    data = {'messsage': '修改评论成功'}
     result = JsonResponse(dict(data))
     return result
 
@@ -411,7 +429,7 @@ def getSlide(request):
     # print(content_dict)
     data = list(Slide.objects.all())
     data = [i.to_dict() for i in data]
-    data = {'messsage': '成功导出所有轮播图', "data": data}
+    data = {'messsagee': '成功导出所有轮播图', "data": data}
     result = JsonResponse(dict(data))
     return result
 
@@ -421,6 +439,6 @@ def getNews(request):
     # print(content_dict)
     data = list(News.objects.all())
     data = [i.to_dict() for i in data]
-    data = {'messsage': '成功导出所有新闻', "data": data}
+    data = {'messsagee': '成功导出所有新闻', "data": data}
     result = JsonResponse(dict(data))
     return result
