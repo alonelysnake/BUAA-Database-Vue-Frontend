@@ -55,13 +55,13 @@
     </n-space>
 
   </n-space>
-
 </template>
 
 <script>
 import {ref, computed} from "vue";
 import {GlassesOutline, Glasses} from '@vicons/ionicons5'
-import { useRouter } from 'vue-router'
+import {useRouter} from 'vue-router'
+import {useMessage} from 'naive-ui'
 
 export default {
   name: "Register",
@@ -69,6 +69,7 @@ export default {
     const mail = ref("");
     const loading = ref(false);
     const router = useRouter();
+    const message = useMessage();
 
     return {
       mail: mail,
@@ -80,11 +81,20 @@ export default {
         setTimeout(() => {
           loading.value = false;
         }, 2e3);
+        //TODO 从后端接受注册成功
+        let success = true;
+        if (success) {
+          message.success('注册成功');
+          router.push({name: "login"});
+        } else {
+          //TODO 注册失败反馈
+          message.error('注册失败');
+        }
       },
 
       handleLogin() {
-        //TODO 跳转到登录界面
-        router.push({name:'login'})
+        // 跳转到登录界面
+        router.push({name: 'login'})
       },
 
       options: computed(() => {

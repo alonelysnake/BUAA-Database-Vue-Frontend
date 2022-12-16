@@ -49,8 +49,9 @@
 
 <script>
 import {ref, computed} from "vue";
-import { useRouter } from 'vue-router'
+import {useRouter} from 'vue-router'
 import {GlassesOutline, Glasses} from '@vicons/ionicons5'
+import {useMessage} from 'naive-ui'
 
 export default {
   name: "Login",
@@ -58,6 +59,7 @@ export default {
     const mail = ref("");
     const loading = ref(false);
     const router = useRouter();
+    const message = useMessage();
 
     return {
       mail: mail,
@@ -69,11 +71,19 @@ export default {
         setTimeout(() => {
           loading.value = false;
         }, 2e3);
+        //TODO 从后端接收反馈
+        let success = false;
+        if (success) {
+          message.success("登录成功");
+          router.push({name: "Home"});
+        } else {
+          //TODO 登录失败提示
+          message.error("登录失败");
+        }
       },
 
       handleRegister() {
-        //TODO 处理注册事件（跳转到注册页面）
-        console.log("gg")
+        // 跳转到注册页面
         router.push({name: 'register'})
       },
 
