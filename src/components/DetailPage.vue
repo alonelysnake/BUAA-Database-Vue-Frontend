@@ -110,6 +110,7 @@ export default {
       //路由跳转
       handleUpdateValue(key, item) {
         console.log("详情页侧边切换");
+        console.log(gameId);
         switch (key) {
           case "price":
             router.push({name: "CountryPrice"});
@@ -121,8 +122,7 @@ export default {
             console.log("comment跳转未实现");
             break;
           case "screenshot":
-            console.log("screenshot跳转未实现");
-            //router.push({name: "ScreenShots"});
+            router.push({name: "ScreenShot"});
             break;
         }
       },

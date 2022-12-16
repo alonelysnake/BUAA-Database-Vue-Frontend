@@ -17,6 +17,7 @@ import FilterPage from "@/view/FilterPage";
 import DetailPage from "@/components/DetailPage";
 import CountryPriceTable from "@/components/CountryPriceTable";
 import Charts from "@/components/Charts";
+import ScreenShot from "@/components/ScreenShot";
 
 const routes = [
     {
@@ -74,7 +75,7 @@ const routes = [
             {
                 path: 'screenshot',
                 name: 'ScreenShot',
-                //TODO
+                component: ScreenShot,
             },
         ]
     },
