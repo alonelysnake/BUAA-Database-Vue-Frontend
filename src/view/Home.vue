@@ -12,12 +12,19 @@
   </div>
   <div id="cards">
     <h2 style="float: left;margin-right: 428px">最新资讯</h2>
-    <n-button round style="margin-bottom: 10px">
-      <template #icon>
-        <n-icon :component="DotIcon"></n-icon>
-      </template>
-      更多
-    </n-button>
+
+      <n-button
+          round
+          style="margin-bottom: 10px"
+          tag="a"
+          href="https://store.steampowered.com/news"
+      >
+        <template #icon>
+          <n-icon :component="DotIcon"></n-icon>
+        </template>
+        更多
+      </n-button>
+
     <Cards/>
   </div>
 

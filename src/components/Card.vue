@@ -1,6 +1,5 @@
 <template>
   <a :href="target">
-<!--    todo 将标题、封面、内容、跳转页面修改为属性-->
     <n-card :title="title" hoverable>
       <template #cover>
         <img :src="imgUrl">

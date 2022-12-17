@@ -1,5 +1,5 @@
 <template>
-  <n-space vertical :size="12" style="width: 83%;">
+  <n-space vertical :size="12" style="width: 83%;position:relative;">
     <div>
       <n-button type="primary" ghost style="margin-right: 20px">批量删除</n-button>
       <n-input v-model:value="search" placeholder="输入订单号或游戏名查询" style="width: 400px;"/>
@@ -15,7 +15,11 @@
         :row-key="rowKey"
         @update:checked-row-keys="handleCheck"
     />
-
+    <Appraise
+        class="appraiseCard"
+        v-show="store.state.appraiseVisible"
+        :orderId="orderId.value"
+    ></Appraise>
     <n-dropdown
         placement="bottom-start"
         trigger="manual"
@@ -34,7 +38,9 @@
 
 <script>
 import { h,ref,nextTick,computed } from "vue";
-import {NImage} from "naive-ui";
+import {NImage,useMessage,useDialog} from "naive-ui";
+import store from "../store"
+import Appraise from "@/components/Appraise";
 
 const options = [
   {
@@ -100,7 +106,7 @@ const columns = [
   {
     title: "交易状态",
     key: "status",
-    defaultFilterOptionValues: ['待付款', '已付款','已发货','交易成功','已取消','待退款'],
+    defaultFilterOptionValues: ['待付款', '已付款','已发货','待退款','已收货'],
     filterOptions: [
       {
         label: '待付款',
@@ -126,6 +132,10 @@ const columns = [
         label: '待退款',
         value: '待退款'
       },
+      {
+        label: '已收货',
+        value: '已收货',
+      }
     ],
     filter (value, row) {
       return ~row.status.indexOf(value)
@@ -153,7 +163,7 @@ const tableData = [
     date: '2016-05-03',
     value: 22.5,
     sellerId: 2,
-    status: '已发货'
+    status: '已收货'
   },
   {
     img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
@@ -189,15 +199,22 @@ const filterTableData = computed(() =>
 
 export default ({
   name:"Buyer",
+  components:{Appraise},
 
   setup () {
+    const status = ref("");
+    const orderId = ref(-1);
     const checkedRowKeysRef = ref([]);
     const showDropdownRef = ref(false);
     const tableRef = ref(null)
     const columnsRef = ref(columns)
     const xRef = ref(0);
     const yRef = ref(0);
+    const message = useMessage();
+    const dialog = useDialog();
     return {
+      store,
+      orderId,
       rowKey: (row) => row.orderId,
       checkedRowKeys: checkedRowKeysRef,
       handleCheck(rowKeys) {
@@ -229,8 +246,79 @@ export default ({
         })
       },
 
-      handleSelect() {
+      handleSelect(key) {
         showDropdownRef.value = false;
+        if (key === "edit") {
+          switch (status.value) {
+            case "已发货":
+              dialog.warning({
+                title: "确认收货",
+                content: () => "请确保您已经收货",
+                positiveText: "确定",
+                onPositiveClick: () => {
+                  // todo 向后端申请更改订单状态
+                  console.log(orderId.value);
+                  if (/* 成功删除 */true) {
+                    message.success("收货成功");
+                  }
+                  else {
+                    message.error("收货失败");
+                  }
+                },
+                negativeText: "取消"
+              });
+              break;
+            case "待付款":
+              message.error("您尚未付款");
+              break;
+            case "已付款":
+              message.error("商家尚未发货");
+              break;
+            case "待退款":
+              message.error("您已申请退款");
+              break;
+            case "已取消":
+              message.error("交易已取消");
+              break;
+            default:
+              message.error("您已确定收货");
+              break;
+          }
+        }
+        else if (key === "appraise") {
+          if (status.value === "已收货") {
+            store.state.appraiseVisible = true
+          }
+          else if (status.value === '交易成功'){
+            message.error("您已评价");
+          }
+          else {
+            message.error("请确认收货后再评价")
+          }
+        }
+        else {
+          if (status.value === "已取消" || status.value === "交易成功") {
+            dialog.warning({
+              title: "确认删除订单",
+              content: () => "是否确定删除已完成的交易订单",
+              positiveText: "确定",
+              onPositiveClick: () => {
+                // todo 向后端申请更改订单状态
+                console.log(orderId.value);
+                if (/* 成功删除 */true) {
+                  message.success("删除成功");
+                }
+                else {
+                  message.error("删除失败");
+                }
+              },
+              negativeText: "取消"
+            });
+          }
+          else {
+            message.error("请完成交易后再删除订单");
+          }
+        }
       },
       onClickoutside() {
         showDropdownRef.value = false;
@@ -243,6 +331,9 @@ export default ({
             showDropdownRef.value = false;
             nextTick().then(() => {
               showDropdownRef.value = true;
+              status.value = row.status;
+              orderId.value = row.orderId;
+              // console.log(orderId.value)
               xRef.value = e.clientX;
               yRef.value = e.clientY;
             });
@@ -253,3 +344,14 @@ export default ({
   }
 });
 </script>
+
+<style scoped>
+.appraiseCard {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
+</style>

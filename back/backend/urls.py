@@ -1,0 +1,32 @@
+from django.urls import path
+from .views import *
+
+urlpatterns = [
+    path('login/', login),
+    path('register/', register),
+    path('updateUser/', updateUser),
+    path('changePassword/', changePassword),
+    path('addGameFromFile/', addGameFromFile),
+    path('addGame/', addGame),
+    path('getGame/', getGame),
+    path('searchGame/', searchGame),
+    path('getUserFavorites/', getUserFavorites),
+    path('addFavorites/', addFavorites),
+    path('delFavorites/', delFavorites),
+    path('getHeat/', getHeat),
+    path('getDiscount/', getDiscount),
+    path('getTag/', getTag),
+    path('getPrice/', getPrice),
+    path('getGoods/', getGoods),
+    path('addGoods/', addGoods),
+    path('delGoods/', delGoods),
+    path('updateGoods/', updateGoods),
+    path('buyGoods/', buyGoods),
+    path('getDeveloper/', getDeveloper),
+    path('getComment/', getComment),
+    path('addComment/', addComment),
+    path('delComment/', delComment),
+    path('updateComment/', updateComment),
+    path('getSlide/', getSlide),
+    path('getNews/', getNews),
+]

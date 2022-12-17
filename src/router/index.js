@@ -19,6 +19,7 @@ import CountryPriceTable from "@/components/CountryPriceTable";
 import Charts from "@/components/Charts";
 import ScreenShot from "@/components/ScreenShot";
 
+import store from "@/store";
 const routes = [
     {
         path: '/',
@@ -33,6 +34,9 @@ const routes = [
         path: '/user/:username',
         name: 'User',
         component: UserPage,
+        meta: {
+            requiresLoggedIn:true
+        },
         children: [
             {
                 path: '/user/:username/info',
@@ -53,6 +57,11 @@ const routes = [
                 path: '/user/:username/sellerOrder',
                 name: 'SellerOrder',
                 component: SellerOrder,
+            },
+            {
+                path: '/user/:username/favor',
+                name: 'Favor',
+                component: import('@/components/FavoriteGame'),
             }
         ]
     },
@@ -112,6 +121,20 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
+})
+
+// 全局守卫
+router.beforeEach((to, from, next) => {
+    if (to.meta.requiresLoggedIn && !store.state.loggedIn) {
+        next({
+            path: '/logReg/login',
+            query: {
+                redirect: to.path
+            }
+        })
+    } else {
+        next()
+    }
 })
 
 export default router

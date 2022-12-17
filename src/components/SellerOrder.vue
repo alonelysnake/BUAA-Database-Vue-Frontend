@@ -34,20 +34,22 @@
 
 <script>
 import { h,ref,nextTick,computed } from "vue";
-import {NImage} from "naive-ui";
+import {NImage,useDialog,useMessage} from "naive-ui";
+
+const status = ref("");
 
 const options = [
   {
-    label: () => h("span", { style: { color: "black" } }, "确定发货"),
-    key: "deliver"
+    label: () => h("span", {style: { color: "black" } }, "确定发货"),
+    key: "deliver",
   },
   {
     label: () => h("span", { style: { color: "black" } }, "确定退款"),
-    key: "refund"
+    key: "refund",
   },
   {
     label: () => h("span", { style: { color: "red" } }, "删除订单"),
-    key: "delete"
+    key: "delete",
   }
 ];
 
@@ -126,6 +128,10 @@ const columns = [
         label: '待退款',
         value: '待退款'
       },
+      {
+        label: '已收货',
+        value: '已收货',
+      }
     ],
     filter (value, row) {
       return ~row.status.indexOf(value)
@@ -183,6 +189,8 @@ const filterTableData = computed(() =>
     )
 )
 
+const orderId = ref(-1);
+
 export default ({
   name:"SellerOrder",
 
@@ -193,6 +201,8 @@ export default ({
     const columnsRef = ref(columns)
     const xRef = ref(0);
     const yRef = ref(0);
+    const dialog = useDialog();
+    const message = useMessage();
     return {
       rowKey: (row) => row.orderId,
       checkedRowKeys: checkedRowKeysRef,
@@ -225,8 +235,88 @@ export default ({
         })
       },
 
-      handleSelect() {
+      handleSelect(key) {
         showDropdownRef.value = false;
+        if (key === "deliver") {
+          switch (status.value) {
+            case "已付款":
+              dialog.warning({
+                title: "确认发货",
+                content: () => "请确保您已经发货",
+                positiveText: "确定",
+                onPositiveClick: () => {
+                  // todo 向后端申请更改订单状态
+                  console.log(orderId.value);
+                  if (/* 成功删除 */true) {
+                    message.success("发货成功");
+                  }
+                  else {
+                    message.error("发货失败");
+                  }
+                },
+                negativeText: "取消"
+              });
+              break;
+            case "待付款":
+              message.error("客户尚未付款");
+              break;
+            case "待退款":
+              message.error("客户已申请退款");
+              break;
+            case "已取消":
+              message.error("交易已取消");
+              break;
+            default:
+              message.error("您已发货");
+              break;
+          }
+        }
+        else if (key === "refund") {
+          if (status.value === "待退款") {
+            dialog.warning({
+              title: "确认退款",
+              content: () => "是否确定取消交易并退款",
+              positiveText: "确定",
+              onPositiveClick: () => {
+                // todo 向后端申请更改订单状态
+                console.log(orderId.value);
+                if (/* 成功退款 */true) {
+                  message.success("退款成功，交易取消");
+                }
+                else {
+                  message.error("退款失败");
+                }
+              },
+              negativeText: "取消"
+            });
+          }
+          else {
+            message.error("用户未发起退款");
+          }
+        }
+        else {
+          if (status.value === "已取消" || status.value === "交易成功") {
+            dialog.warning({
+              title: "确认删除订单",
+              content: () => "是否确定删除已完成的交易订单",
+              positiveText: "确定",
+              onPositiveClick: () => {
+                // todo 向后端申请更改订单状态
+                console.log(orderId.value);
+                if (/* 成功删除 */true) {
+                  message.success("删除成功");
+                }
+                else {
+                  message.error("删除失败");
+                }
+              },
+              negativeText: "取消"
+            });
+          }
+          else {
+            message.error("请完成交易后再删除订单");
+          }
+        }
       },
       onClickoutside() {
         showDropdownRef.value = false;
@@ -239,6 +329,8 @@ export default ({
             showDropdownRef.value = false;
             nextTick().then(() => {
               showDropdownRef.value = true;
+              status.value = row.status
+              orderId.value = row.orderId
               xRef.value = e.clientX;
               yRef.value = e.clientY;
             });
