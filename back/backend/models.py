@@ -51,7 +51,12 @@ class Tag(models.Model):
 """
 1. 游戏截图 新建实体
 """
-
+class GamePhoto(models.Model):
+    id = models.AutoField(primary_key=True)
+    url = models.CharField(max_length=2560)
+    game = models.ForeignKey("Game", on_delete=models.CASCADE)
+    def to_dict(self):
+        return {'game_id': self.game_id, 'url': self.url} 
 """
 1. 查询游戏的所有信息 DONE
 2. 查询游戏所有价格（国家+时间） DONE
@@ -62,9 +67,10 @@ class Game(models.Model):
     name = models.CharField(max_length=11)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=5.0)
     date = models.DateField(default='2000-01-01')
-    platform = models.CharField(max_length=11)
+    platform = models.CharField(max_length=11, default='')
+    cover = models.CharField(max_length=2560, default='')
     def to_dict(self):
-        return {'id': self.id, 'name': self.name, 'rating': self.rating, 'platform': self.platform, 'date': self.date}
+        return {'id': self.id, 'name': self.name, 'rating': self.rating, 'platform': self.platform, 'date': self.date, 'cover': self.cover}
 
 class Favorites(models.Model):
     id = models.AutoField(primary_key=True)

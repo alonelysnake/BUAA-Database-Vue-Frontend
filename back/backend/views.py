@@ -94,8 +94,9 @@ def addGameFromFile(request):
         rating = row['rating']
         date = row['date']
         platform = row['platform']
+        cover = content_dict['cover']
         if not Game.objects.filter(Q(name=name) & Q(date=date) & Q(rating=rating) & Q(platform=platform)):
-            Game.objects.create(name=name, date=date, rating=rating, platform=platform)
+            Game.objects.create(name=name, date=date, rating=rating, platform=platform, cover=cover)
     data = {'messsagee': '成功添加'}
     result = JsonResponse(dict(data))
     return result
@@ -108,8 +109,9 @@ def addGame(request):
     rating = content_dict['rating']
     date = content_dict['date']
     platform = content_dict['platform']
+    cover = content_dict['cover']
     if not Game.objects.filter(Q(name=name) & Q(date=date) & Q(rating=rating) & Q(platform=platform)):
-        Game.objects.create(name=name, date=date, rating=rating, platform=platform)
+        Game.objects.create(name=name, date=date, rating=rating, platform=platform, cover=cover)
     data = {'messsagee': '成功添加'}
     result = JsonResponse(dict(data))
     return result
@@ -276,12 +278,17 @@ def getGoods(request):
     buyer_id = content_dict.get('buyer_id')
     seller_id = content_dict.get('seller_id')
     if game_id != None:
-        data = list(Goods.objects.filter(game_id=game_id))
+        goods = list(Goods.objects.filter(game_id=game_id))
     elif buyer_id != None:
-        data = list(Goods.objects.filter(buyer_id=buyer_id))
+        goods = list(Goods.objects.filter(buyer_id=buyer_id))
     elif seller_id != None:
-        data = list(Goods.objects.filter(seller_id=seller_id))
-    data = [i.to_dict() for i in data]
+        goods = list(Goods.objects.filter(seller_id=seller_id))
+        data = []
+    for i in goods:
+        goods_dict = i.to_dict()
+        goods_dict['game_name'] = i.game.name
+        goods_dict['game_cover'] = i.game.cover
+        data.append(goods_dict)
     data = {'messsagee': '成功导出商品', "data": data}
     result = JsonResponse(dict(data))
     return result
