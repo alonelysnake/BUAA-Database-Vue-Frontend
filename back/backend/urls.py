@@ -4,6 +4,7 @@ from .views import *
 urlpatterns = [
     path('login/', login),
     path('register/', register),
+    path('getUserInfo/', getUserInfo),
     path('updateUser/', updateUser),
     path('changePassword/', changePassword),
     path('addGameFromFile/', addGameFromFile),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('getGoods/', getGoods),
     path('addGoods/', addGoods),
     path('delGoods/', delGoods),
+    path('rateGoods/', rateGoods),
     path('updateGoods/', updateGoods),
     path('buyGoods/', buyGoods),
     path('getDeveloper/', getDeveloper),

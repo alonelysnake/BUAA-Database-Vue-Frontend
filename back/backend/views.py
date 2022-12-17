@@ -45,6 +45,16 @@ def register(request):
     result = JsonResponse(dict(data))
     return result
 
+def getUserInfo(request):
+    content = request.body.decode()
+    content_dict = json.loads(content)
+    print(content_dict)
+    id = content_dict.get('id')
+    data = User.objects.filter(id=id).to_dict()
+    data = {'messsagee': '成功获取用户信息', "data": data}
+    result = JsonResponse(dict(data))
+    return result
+
 def updateUser(request):
     content = request.body.decode()
     content_dict = json.loads(content)
@@ -355,6 +365,25 @@ def buyGoods(request):
     goods.status = '已购买'
     goods.save()
     data = {'messsage': '商品购买成功'}
+    result = JsonResponse(dict(data))
+    return result
+
+def rateGoods(request):
+    content = request.body.decode()
+    content_dict = json.loads(content)
+    print(content_dict)
+    id = content_dict.get('id')
+    rating = content_dict.get('rating')
+    goods = Goods.objects.get(id=id)
+    seller = goods.seller
+    if rating == 'like':
+        seller.likes += 1
+    else:
+        seller.dislikes += 1
+    goods.status = '已评价'
+    goods.rating = rating
+    goods.save()
+    data = {'messsage': '订单评价成功'}
     result = JsonResponse(dict(data))
     return result
 

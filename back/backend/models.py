@@ -92,10 +92,11 @@ class Goods(models.Model):
     decription = models.CharField(max_length=2560, default='')
     cd_key = models.CharField(max_length=256, default='')
     steam_id = models.CharField(max_length=256, default='')
+    rating = models.CharField(max_length=11, default='')
     comment = models.CharField(max_length=30, default='')
     status = models.CharField(max_length=11, default='已上架')
     def to_dict(self):
-        return {'id': self.id, 'price': self.price, 'seller_id': self.seller_id, 'buyer_id': self.buyer_id, 'game_id': self.game_id, 'steam_id': self.steam_id, 'cd_key': self.cd_key, 'decription': self.decription, 'comment': self.comment, 'status': self.status}
+        return {'id': self.id, 'price': self.price, 'seller_id': self.seller_id, 'buyer_id': self.buyer_id, 'game_id': self.game_id, 'steam_id': self.steam_id, 'cd_key': self.cd_key, 'decription': self.decription, 'comment': self.comment, 'status': self.status, 'rating': self.rating}
 
 """
 合并合并合并 DONE
