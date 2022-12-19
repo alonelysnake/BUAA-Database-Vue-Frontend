@@ -38,6 +38,7 @@
 
 <script>
 import {ref, reactive} from "vue";
+import {useMessage} from "naive-ui";
 import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
@@ -49,18 +50,31 @@ export default ({
   name: "ModifyPassword",
 
   setup() {
+    const message = useMessage();
     const model = reactive({
       id: store.state.user.userID,
       oldPassword: null,
       newPassword:null,
     })
 
+    const tmp = reactive({
+      id: store.state.user.userID,
+      oldPassword: null,
+      newPassword:null,
+    })
+
     const confirmModify = () => {
-      model.oldPassword = md5(model.oldPassword);
-      model.newPassword = md5(model.newPassword);
-      console.log(model)
-      request.post("/changePassword/",JSON.stringify({"password":model})).then(res=>{
-        console.log(res.data)
+      tmp.oldPassword = md5(model.oldPassword);
+      tmp.newPassword = md5(model.newPassword);
+      console.log(tmp)
+      request.post("/changePassword/",JSON.stringify({"password":tmp})).then(res=>{
+        if (res.data === 0) {
+          store.state.modifyVisible = false;
+          message.success(res.messsage)
+        }
+        else {
+          message.error(res.messsage)
+        }
       })
     }
 
@@ -90,7 +104,6 @@ export default ({
 
       handleConfirm(e) {
         e.preventDefault();
-        store.state.modifyVisible = false;
         confirmModify();
       }
     };
