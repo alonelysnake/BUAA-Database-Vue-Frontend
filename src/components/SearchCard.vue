@@ -145,6 +145,7 @@ export default {
         }
         history.value = historySearchList.value.length !== 0;
         router.push("/detail/" + gameId + '/price')
+        search.value = ''
       },
 
       closeHandler(search) {
