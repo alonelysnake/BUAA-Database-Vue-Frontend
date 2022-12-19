@@ -153,13 +153,13 @@ class Price(models.Model):
 class Discount(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30, default='')
-    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    country = models.ForeignKey("Country", on_delete=models.CASCADE)
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
     start_time = models.DateField(default=None)
     end_time = models.DateField(default=None)
     discount_rate = models.DecimalField(max_digits=5, decimal_places=2, default=100.0)
     def to_dict(self):
-        return {'id': self.id, 'user_id': self.user_id, 'game_id': self.game_id, 'start_time': self.start_time, 'end_time': self.end_time, 'discount_rate': self.discount_rate}
+        return {'id': self.id, 'country_id': self.user_id, 'game_id': self.game_id, 'start_time': self.start_time, 'end_time': self.end_time, 'discount_rate': self.discount_rate}
 
 """
 1. 发表删除评论 DONE
