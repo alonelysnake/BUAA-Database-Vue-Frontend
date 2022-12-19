@@ -134,7 +134,7 @@ def getGame(request):
     developer_id = content_dict.get('developer_id')
     data = []
     if game_id != None:
-        game = Game.objects.filter(game_id=game_id).first()
+        game = Game.objects.filter(id=game_id).first()
         item = game.to_dict()
         tags = list(Tag.objects.filter(game_id=item['id']))
         item['tag'] = [tag.to_dict() for tag in tags]
@@ -370,7 +370,7 @@ def buyGoods(request):
     buyer_id = content_dict.get('buyer_id')
     goods = Goods.objects.get(id=id)
     goods.buyer_id = buyer_id
-    goods.status = '已购买'
+    goods.status = '已付款'
     goods.save()
     data = {'messsage': '商品购买成功'}
     result = JsonResponse(dict(data))
@@ -382,12 +382,14 @@ def rateGoods(request):
     print(content_dict)
     id = content_dict.get('id')
     rating = content_dict.get('rating')
+    comment = content_dict.get('comment')
     goods = Goods.objects.get(id=id)
     seller = goods.seller
     if rating == 'like':
         seller.likes += 1
     else:
         seller.dislikes += 1
+    goods.comment = comment
     goods.status = '已评价'
     goods.rating = rating
     goods.save()
