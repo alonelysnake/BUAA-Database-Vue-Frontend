@@ -297,7 +297,7 @@ def getGoods(request):
             goods = list(Goods.objects.filter(seller_id=seller_id, status=status))
         else:
             goods = list(Goods.objects.filter(seller_id=seller_id))
-        data = []
+    data = []
     for i in goods:
         goods_dict = i.to_dict()
         goods_dict['game_name'] = i.game.name
@@ -328,12 +328,16 @@ def delGoods(request):
     content_dict = json.loads(content)
     print(content_dict)
     id = content_dict.get('id')
-    if Goods.objects.filter(Q(id=id)).exists():
-        item = Goods.objects.filter(Q(id=id))
-        item.delete()
-        data = {'message': '已删除该商品'}
+    if isinstance(id, list):
+        for id_i in id:
+            if Goods.objects.filter(Q(id=id_i)).exists():
+                item = Goods.objects.filter(Q(id=id_i))
+                item.delete()
     else:
-        data = {'message': '不存在该商品'}
+        if Goods.objects.filter(Q(id=id)).exists():
+            item = Goods.objects.filter(Q(id=id))
+            item.delete()
+    data = {'message': '删除商品成功'}
     result = JsonResponse(dict(data))
     return result
 
