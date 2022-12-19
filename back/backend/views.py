@@ -311,12 +311,12 @@ def addGoods(request):
     content = request.body.decode()
     content_dict = json.loads(content).get('goods')
     print(content_dict)
-    price = content_dict.moneyValue
-    game_id = content_dict.game_id
-    seller_id = content_dict.seller_id
-    steam_id = content_dict.steamValue
-    decription = content_dict.introValue
-    cd_key = content_dict.keyValue
+    price = content_dict['moneyValue']
+    game_id = content_dict['game_id']
+    seller_id = content_dict['seller_id']
+    steam_id = content_dict['steamValue']
+    decription = content_dict['introValue']
+    cd_key = content_dict['keyValue']
     status = '已上架'
     Goods.objects.create(seller_id=seller_id, game_id=game_id, price=price, steam_id=steam_id, status=status, decription=decription, cd_key=cd_key)
     data = {'message': '上架商品成功'}
