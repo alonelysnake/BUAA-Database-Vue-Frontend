@@ -16,7 +16,7 @@ class User(models.Model):
     name = models.CharField(max_length=11)
     email = models.EmailField(default='')
     gender = models.CharField(max_length=11, default='')
-    password = models.CharField(max_length=15)
+    password = models.CharField(max_length=64)
     profile = models.CharField(max_length=300, default='')
     sales = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
