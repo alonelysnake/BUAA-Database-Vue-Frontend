@@ -1,12 +1,12 @@
 <template>
-  <div ref="containerRef" class="container">
+  <div class="container">
 
     <!--    顶部导航栏-->
-    <div style="height: 60px; width: 100%">
-      <n-affix :top="0" :trigger-top="0" :listen-to="() => containerRef" class="head">
-        <Header ref="headerRef"/>
-      </n-affix>
-    </div>
+<!--    <div style="height: 60px; width: 100%">-->
+<!--      <n-affix :top="0" :trigger-top="0" :listen-to="() => containerRef" class="head">-->
+<!--        <Header ref="headerRef"/>-->
+<!--      </n-affix>-->
+<!--    </div>-->
 
     <!--    顶层基础信息-->
     <div class="basic-info">
@@ -15,7 +15,6 @@
     </div>
 
     <div class="content">
-      以下为游戏的不同详细信息
       <n-layout has-sider style="height: 100%;">
 
         <!--        选择查看不同详细信息的侧边栏-->
@@ -52,9 +51,9 @@
 
 <script>
 import {ref} from 'vue'
-import Header from "@/components/Header";
-import CountryPriceTable from "@/components/CountryPriceTable";
-import Charts from "@/components/Charts";
+// import Header from "@/components/Header";
+// import CountryPriceTable from "@/components/CountryPriceTable";
+// import Charts from "@/components/Charts";
 import BasicInfo from "@/components/BasicInfo";
 import {useRouter} from "vue-router";
 
@@ -88,23 +87,23 @@ export default {
     },
   },
   components: {
-    Header,
+    // Header,
     // eslint-disable-next-line vue/no-unused-components
-    CountryPriceTable,
-    Charts,
+    // CountryPriceTable,
+    // Charts,
     BasicInfo
   },
   setup() {
-    const containerRef = ref(void 0);
-    const headerRef = ref(void 0);
+    // const containerRef = ref(void 0);
+    // const headerRef = ref(void 0);
     const router = useRouter();
 
     const gameId = parseInt(router.currentRoute.value.params.gameid);//游戏id
 
     return {
       collapsed: ref(true),
-      containerRef,
-      headerRef,
+      // containerRef,
+      // headerRef,
       menuOptions,
 
       //路由跳转
@@ -146,13 +145,13 @@ export default {
 .head {
   height: 60px;
   width: 100%;
-  background-color: white;
+  /*background-color: white;*/
   z-index: 100;
 }
 
 /*基础信息*/
 .basic-info {
-  height: 200px;
+  height: 220px;
   width: 100%;
   background-color: white;
 }

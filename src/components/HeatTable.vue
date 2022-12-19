@@ -23,6 +23,7 @@ import {defineComponent, h, reactive, ref} from "vue";
 import {NButton, NImage} from "naive-ui";
 import {Add as AddIcon, Remove as RemoveIcon} from "@vicons/ionicons5";
 import {useRouter} from "vue-router";
+import request from "@/utils/request";
 
 const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) => {
   return [
@@ -135,7 +136,7 @@ const selects = [];
 * cur:当前热度（在线人数）
 * max:最大热度
 * */
-const data = [
+let data = [
   {
     id: 3,
     img: "https://cdn.cloudflare.steamstatic.com/steam/apps/1599340/header.jpg?t=1670026493",
@@ -172,10 +173,16 @@ export default defineComponent({
     })
 
     const router = useRouter();
+
+    //TODO 后端获取数据
+    request.post("/getHeat/",JSON.stringify(null)).then(res=>{
+      data = res.data;
+    });
+
     const columnsRef = ref(
         createColumns({
           clickGameName(value) {
-            //TODO 跳转到游戏详情页，路由为 'gameinfo/游戏id'的样子？
+            //TODO 跳转到游戏详情页
             console.log(value.id)
             router.push("/detail/"+value.id.toString()+"/price");
           },

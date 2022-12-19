@@ -8,6 +8,7 @@
 <script>
 import {onMounted, ref} from "vue";
 import * as echarts from "echarts";
+import request from "@/utils/request";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -36,6 +37,11 @@ export default {
 
     // 价格波动图
     function getPriceHistory(ids) {
+      //TODO 后端获取价格时间
+      let data;
+      request.post('/getPriceHistory/',JSON.stringify({'ids':ids})).then(res=>{
+        data = res.data;
+      })
       return {
         title: {
           text: '价格波动图'
@@ -65,6 +71,10 @@ export default {
 
     // 活跃人数波动图
     function getActiveHistory(ids) {
+      let data;
+      request.post('/getActiveHistory/',JSON.stringify({'ids':ids})).then(res=>{
+        data = res.data;
+      })
       return {
         title: {
           text: '人数波动图'

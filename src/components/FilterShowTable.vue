@@ -1,7 +1,7 @@
 <template>
   <n-data-table
       :columns="columns"
-      :data="data"
+      :data="dataRef"
       :pagination="pagination"
       @update:sorter="handleSorterChange"
       :bordered="false"
@@ -12,6 +12,7 @@
 import {h, reactive, ref} from "vue";
 import {NButton, NImage} from "naive-ui";
 import {useRouter} from "vue-router";
+import request from "@/utils/request";
 
 const createColumns = ({clickGameName: clickGameName}) => {
   return [
@@ -92,7 +93,7 @@ const createColumns = ({clickGameName: clickGameName}) => {
 
 /*
 * */
-const data = [
+const datas = [
   {
     id: 3,
     img: "https://cdn.cloudflare.steamstatic.com/steam/apps/1599340/header.jpg?t=1670026493",
@@ -136,6 +137,9 @@ export default {
         })
     )
 
+    //数据ref
+    const dataRef = ref(datas);
+
     //分页
     const paginationReactive = reactive({
       page: 1,
@@ -168,10 +172,23 @@ export default {
     const handleFilter = (conds) => {
       console.log("向后端查找满足cond的数据");
       console.log(conds);
+      //向后端传递数据：
+      /*
+      * 选择国家
+      * 选择开发商
+      * 优惠类型
+      * 折扣比例最低值
+      * 发售时间
+      * */
+      request.post('/getDiscount/',JSON.stringify(conds)).then(res=>{
+        dataRef.value = res.data;
+        // (dataRef.value)[0].rating=23.57;
+        console.log(dataRef.value);
+      });
     }
 
     return {
-      data,
+      dataRef,
       columns: columnsRef,
       pagination: paginationReactive,
 

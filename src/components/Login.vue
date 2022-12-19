@@ -23,6 +23,7 @@
       />
 
       <n-input
+          v-model:value="password"
           type="password"
           show-password-on="mousedown"
           placeholder="请输入密码"
@@ -52,34 +53,52 @@ import {ref, computed} from "vue";
 import {useRouter} from 'vue-router'
 import {GlassesOutline, Glasses} from '@vicons/ionicons5'
 import {useMessage} from 'naive-ui'
+import request from "@/utils/request";
+import store from "@/store";
 
 export default {
   name: "Login",
   setup() {
     const mail = ref("");
+    const password=ref("");
     const loading = ref(false);
     const router = useRouter();
     const message = useMessage();
 
     return {
       mail: mail,
+      password,
+
       loading: loading,
 
       // TODO 处理登录按钮事件
       handleLogin() {
         loading.value = true;
-        setTimeout(() => {
-          loading.value = false;
-        }, 2e3);
+        // setTimeout(() => {
+        //   loading.value = false;
+        // }, 2e3);
         //TODO 从后端接收反馈
         let success = false;
+        let id;
+        request.post("/login/", JSON.stringify({
+          'mail:': mail.value,
+          'password': password.value,
+        })).then(res => {
+          console.log(res.data);
+          //TODO 后端的返回结果
+          success = res.data;
+          id = res.data;
+        });
         if (success) {
           message.success("登录成功");
+          //TODO 用户全局量赋值
+          store.state.user.userID=id;
           router.push({name: "Home"});
         } else {
           //TODO 登录失败提示
           message.error("登录失败");
         }
+        loading.value=false;
       },
 
       handleRegister() {

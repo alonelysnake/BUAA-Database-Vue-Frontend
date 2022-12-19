@@ -14,7 +14,9 @@
 </template>
 
 <script>
-import {reactive, ref} from 'vue'
+import {reactive, ref, onMounted} from 'vue'
+import request from "@/utils/request";
+import {useRouter} from "vue-router/dist/vue-router";
 
 const nameColumn = {
   title: '国家（地区）',
@@ -64,7 +66,7 @@ const columns = [
 ]
 
 /*从后端读取的数据格式*/
-const data = [
+let data = [
   {
     key: 0,
     name: 'China',
@@ -117,6 +119,16 @@ export default {
     const curColumnReactive = reactive(curPriceColumn)
     const lowestColumnReactive = reactive(lowestPriceColumn)
     const columnsRef = ref(columns)
+    const router = useRouter();
+
+    const gameId = parseInt(router.currentRoute.value.params.gameid);//游戏id
+
+    //TODO 后端获取每个国家的价格
+    onMounted(() => {
+      request.post('/getPrice/', JSON.stringify({'id': gameId})).then(res => {
+        data = res.data;
+      });
+    })
 
     return {
       data,
@@ -127,6 +139,9 @@ export default {
       lowestColumn: lowestColumnReactive,
 
       pagination: {pageSize: 5},/*TODO 每页的元素数量*/
+
+
+
       handleSorterChange(sorter) {
         columnsRef.value.forEach((column) => {
           /** column.sortOrder !== undefined means it is uncontrolled */

@@ -25,6 +25,7 @@
       />
 
       <n-input
+          v-model:value="password"
           type="password"
           show-password-on="mousedown"
           placeholder="请输入密码6-15位"
@@ -34,6 +35,7 @@
       />
 
       <n-input
+          v-model:value="check"
           type="password"
           show-password-on="mousedown"
           placeholder="请再次输入密码"
@@ -62,27 +64,46 @@ import {ref, computed} from "vue";
 import {GlassesOutline, Glasses} from '@vicons/ionicons5'
 import {useRouter} from 'vue-router'
 import {useMessage} from 'naive-ui'
+import request from "@/utils/request"
 
 export default {
   name: "Register",
   setup() {
     const mail = ref("");
+    const password = ref("");
+    const check = ref("");
     const loading = ref(false);
     const router = useRouter();
     const message = useMessage();
 
     return {
       mail: mail,
+      password,
+      check,
       loading: loading,
 
       // TODO 处理登录按钮事件
       handleRegister() {
+        if (password.value !== check.value) {
+          message.error("两次密码不一致");
+          return;
+        }
+
         loading.value = true;
-        setTimeout(() => {
-          loading.value = false;
-        }, 2e3);
-        //TODO 从后端接受注册成功
-        let success = true;
+
+        let success = false;
+        // setTimeout(() => {
+        //   loading.value = false;
+        // }, 2e3);
+        //TODO 前后端交互
+        request.post("/register/", JSON.stringify({
+          'mail:': mail.value,
+          'password': password.value,
+        })).then(res => {
+          console.log(res.data);
+          //TODO 后端的返回结果
+          success = res.data;
+        });
         if (success) {
           message.success('注册成功');
           router.push({name: "login"});
@@ -90,6 +111,8 @@ export default {
           //TODO 注册失败反馈
           message.error('注册失败');
         }
+
+        loading.value = false;
       },
 
       handleLogin() {

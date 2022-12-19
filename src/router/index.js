@@ -14,7 +14,7 @@ import Login from "@/components/Login";
 import HeatPage from "@/view/HeatPage";
 import FilterPage from "@/view/FilterPage";
 
-import DetailPage from "@/components/DetailPage";
+import DetailPage from "@/view/DetailPage";
 import CountryPriceTable from "@/components/CountryPriceTable";
 import Charts from "@/components/Charts";
 import ScreenShot from "@/components/ScreenShot";
