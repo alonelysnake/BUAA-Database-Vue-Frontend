@@ -300,6 +300,7 @@ def getGoods(request):
     data = []
     for i in goods:
         goods_dict = i.to_dict()
+        goods_dict['seller_name'] = i.seller.name
         goods_dict['game_name'] = i.game.name
         goods_dict['game_cover'] = i.game.cover
         data.append(goods_dict)
