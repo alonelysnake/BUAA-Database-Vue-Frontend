@@ -50,7 +50,7 @@ def getUserInfo(request):
     content_dict = json.loads(content)
     print(content_dict)
     id = content_dict.get('id')
-    data = User.objects.filter(id=id).to_dict()
+    data = User.objects.get(id=id).to_dict()
     data = {'messsagee': '成功获取用户信息', "data": data}
     result = JsonResponse(dict(data))
     return result
@@ -60,15 +60,15 @@ def updateUser(request):
     content_dict = json.loads(content)
     print(content_dict)
     update_content = content_dict.get('content')
-    id = update_content.id
+    id = update_content['id']
     user = User.objects.get(id=id)
-    user.name = update_content.name
-    user.profile = update_content.profile
-    user.gender = update_content.gender
-    user.email = update_content.email
-    user.likes = update_content.likeValue
-    user.dislikes = update_content.dislikeValue
-    user.photo = update_content.avatarPath
+    user.name = update_content['name']
+    user.profile = update_content['profile']
+    user.gender = update_content['gender']
+    user.email = update_content['email']
+    user.likes = update_content['likeValue']
+    user.dislikes = update_content['dislikeValue']
+    user.photo = update_content['avatarPath']
     user.save()
     data = {'messsagee': '修改用户信息成功'}
     result = JsonResponse(dict(data))
@@ -287,12 +287,16 @@ def getGoods(request):
     game_id = content_dict.get('game_id')
     buyer_id = content_dict.get('buyer_id')
     seller_id = content_dict.get('seller_id')
+    status = content_dict.get('status')
     if game_id != None:
         goods = list(Goods.objects.filter(game_id=game_id))
     elif buyer_id != None:
         goods = list(Goods.objects.filter(buyer_id=buyer_id))
     elif seller_id != None:
-        goods = list(Goods.objects.filter(seller_id=seller_id))
+        if status != None:
+            goods = list(Goods.objects.filter(seller_id=seller_id, status=status))
+        else:
+            goods = list(Goods.objects.filter(seller_id=seller_id))
         data = []
     for i in goods:
         goods_dict = i.to_dict()
