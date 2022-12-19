@@ -78,27 +78,37 @@ export default {
         //   loading.value = false;
         // }, 2e3);
         //TODO 从后端接收反馈
-        let success = false;
-        let id;
-        request.post("/login/", JSON.stringify({
-          'mail:': mail.value,
+        let post = {
+          'email': mail.value,
           'password': password.value,
-        })).then(res => {
-          console.log(res.data);
+        };
+        request.post("/login/", JSON.stringify(post)).then(res => {
           //TODO 后端的返回结果
-          success = res.data;
-          id = res.data;
+          let recvMessage=res.message;
+          let userInfo = res.info;
+          let success = !(userInfo.id===undefined);
+          // console.log(userInfo);
+          // console.log(success);
+          if (success) {
+            message.success("登录成功");
+            // 用户全局量赋值
+            store.state.user.nickname=userInfo.username;
+            store.state.user.userID=userInfo.id;
+            store.state.user.sales=userInfo.sales;
+            store.state.user.avatar=userInfo.photo;
+            store.state.user.email=userInfo.email;
+            store.state.user.intro=userInfo.profile;
+            store.state.user.sex=userInfo.gender;
+            store.state.user.like=userInfo.likes;
+            store.state.user.dislike=userInfo.dislikes;
+
+            router.push({name: "Home"});
+          } else {
+            //TODO 登录失败提示
+            message.error(recvMessage);
+          }
+          loading.value=false;
         });
-        if (success) {
-          message.success("登录成功");
-          //TODO 用户全局量赋值
-          store.state.user.userID=id;
-          router.push({name: "Home"});
-        } else {
-          //TODO 登录失败提示
-          message.error("登录失败");
-        }
-        loading.value=false;
       },
 
       handleRegister() {
