@@ -278,6 +278,7 @@ def getPrice(request):
     data = []
     for price in prices:
         data_i = price.to_dict()
+        data_i['country_name'] = price.country.name
         data_i['lowest_price'] = Price.objects.filter(game_id=game_id, country=price.country).aggregate(res=Min('current_price'))['res']
         data.append(data_i)
     data = {'messsagee': '成功导出游戏价格', "data": data}
