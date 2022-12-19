@@ -79,10 +79,10 @@ def changePassword(request):
     content_dict = json.loads(content)
     print(content_dict)
     update_content = content_dict.get('password')
-    id = update_content.id
+    id = update_content['id']
     user = User.objects.get(id=id)
-    if user.password == update_content.oldPassword:
-        user.password = update_content.newPassword
+    if user.password == update_content['oldPassword']:
+        user.password = update_content['newPassword']
         msg = '密码更新成功'
         data = 0
         user.save()
