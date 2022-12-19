@@ -88,17 +88,17 @@ const routes = [
         component: DetailPage,
         children: [
             {
-                path: 'price',
+                path: '/detail/:gameid/price',
                 name: 'CountryPrice',
                 component: CountryPriceTable
             },
             {
-                path: 'graph',
+                path: '/detail/:gameid/graph',
                 name: 'Chart',
                 component: Charts
             },
             {
-                path: 'screenshot',
+                path: '/detail/:gameid/screenshot',
                 name: 'ScreenShot',
                 component: ScreenShot,
             },

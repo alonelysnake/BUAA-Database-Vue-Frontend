@@ -82,6 +82,7 @@ import {
 } from "@vicons/ionicons5";
 import store from "../store"
 import request from "@/utils/request";
+import {useMessage} from "naive-ui";
 
 export default ({
   name: "AddGood",
@@ -99,6 +100,7 @@ export default ({
       moneyValue:null,
       seller_id: store.state.user.userID
     })
+    const message = useMessage()
     // 显示候选
     const isSearchList = computed(()=>{
       // console.log(model.nameValue)
@@ -113,7 +115,7 @@ export default ({
 
     const loadSearchList = () => {
       request.post("/searchGame/",JSON.stringify({'keyword':model.nameValue})).then(res=>{
-        console.log(res.data)
+        // console.log(res.data)
         searchList.value = res.data
       })
     }
@@ -125,7 +127,7 @@ export default ({
 
     const addGoods = () => {
       request.post("/addGoods/",JSON.stringify({"goods":model})).then(res=>{
-        console.log(res.data)
+        message.success(res.message)
       })
     }
 
@@ -192,14 +194,14 @@ export default ({
       handleClose() {
         store.state.addGoodsVisible = false;
         // this.$emit(visible);
-        console.log("取消添加游戏");
+        // console.log("取消添加游戏");
       },
 
       handleConfirm(e) {
         e.preventDefault();
         store.state.addGoodsVisible = false;
         addGoods();
-        console.log("确定添加游戏");
+        // console.log("确定添加游戏");
       }
     };
   }
