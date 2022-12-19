@@ -33,7 +33,7 @@
 <!--todo 删除操作、从后端获得数据-->
 
 <script>
-import {h, ref, nextTick, computed, reactive, onMounted, onBeforeMount} from "vue";
+import {h, ref, nextTick, computed, onBeforeMount} from "vue";
 import {NImage,useDialog,useMessage} from "naive-ui";
 import request from "@/utils/request";
 
@@ -283,7 +283,7 @@ export default ({
               positiveText: "确定",
               onPositiveClick: () => {
                 request.post("/delGoods/",JSON.stringify({'id':orderId.value})).then(res=>{
-                  if (res.messsage === '已删除该商品') {
+                  if (res.message === '删除商品成功') {
                     message.success("删除成功");
                     load()
                   }
@@ -305,11 +305,23 @@ export default ({
       },
 
       delAll() {
-        console.log(checkedRowKeysRef.value)
-        request.post("/delGoods/",JSON.stringify({'ids':checkedRowKeysRef.value})).then(res=>{
-          console.log(res.data)
-
-        })
+        dialog.warning({
+          title: "确认删除订单",
+          content: () => "是否确定删除已完成的交易订单",
+          positiveText: "确定",
+          onPositiveClick: () => {
+            request.post("/delGoods/",JSON.stringify({'id':checkedRowKeysRef.value})).then(res=>{
+              if (res.message === '删除商品成功') {
+                message.success("删除成功");
+                load()
+              }
+              else {
+                message.error("删除失败");
+              }
+            })
+          },
+          negativeText: "取消"
+        });
       },
 
       rowProps: (row) => {

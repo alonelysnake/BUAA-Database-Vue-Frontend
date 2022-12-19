@@ -144,7 +144,8 @@ export default {
           Local.saveHistory(historySearchList.value);
         }
         history.value = historySearchList.value.length !== 0;
-        router.push("/game/" + gameId)
+        router.push("/detail/" + gameId + '/price')
+        search.value = ''
       },
 
       closeHandler(search) {

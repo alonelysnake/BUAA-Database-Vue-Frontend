@@ -5,15 +5,15 @@
     <div class="operate">
       <n-button type="primary" ghost style="height: 35px" @click="delAll">批量删除</n-button>
     </div>
-    <div class="operate">
-      <n-upload
-          action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-          @before-upload="beforeUpload"
-          style="display: inline"
-      >
-        <n-button type="primary" ghost style="height: 35px">批量导入</n-button>
-      </n-upload>
-    </div>
+<!--    <div class="operate">-->
+<!--      <n-upload-->
+<!--          action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"-->
+<!--          @before-upload="beforeUpload"-->
+<!--          style="display: inline"-->
+<!--      >-->
+<!--        <n-button type="primary" ghost style="height: 35px">批量导入</n-button>-->
+<!--      </n-upload>-->
+<!--    </div>-->
     <div class="operate">
       <n-button type="primary" ghost style="height: 35px" @click="handleAdd">添加商品</n-button>
     </div>
@@ -50,7 +50,7 @@
 <!--todo 编辑/删除操作、从后端获得数据、测试数据上传-->
 
 <script>
-import { h,ref,computed } from "vue";
+import {h, ref, computed, onBeforeMount, watch} from "vue";
 import {NButton, NImage, useDialog,useMessage,NEllipsis} from "naive-ui";
 import store from "../store"
 import AddGood from "@/components/AddGood";
@@ -62,56 +62,6 @@ import {
 import request from "@/utils/request";
 
 const search = ref('')
-const filterTableData = computed(() =>
-    tableData.filter(
-        (data) =>
-            !search.value ||
-            data.name.toLowerCase().includes(search.value.toLowerCase())
-            || data.CDKey === search.value ||
-            data.goodId === search.value - 0
-
-    )
-)
-
-
-const tableData = [
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: 1253,
-    name: 'Sekiro',
-    CDKey: '123456',
-    value: 20.5,
-    steamId: 'kazeya',
-    intro: '一个CDKEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY'
-  },
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: 1233,
-    name: 'Sekiro',
-    CDKey: '1234156',
-    value: 20.5,
-    steamId: 'kazeya',
-    intro: '一个CDKEY'
-  },
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: 1213,
-    name: 'Sekiro',
-    CDKey: '12123456',
-    value: 20.5,
-    steamId: 'kazeya',
-    intro: '一个CDKEY'
-  },
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: 1423,
-    name: 'Sekiro',
-    CDKey: '12413456',
-    value: 20.5,
-    steamId: 'kazeya',
-    intro: '一个CDKEY'
-  },
-]
 
 // 用户本人的列表
 const createColumns = ({
@@ -126,7 +76,7 @@ const createColumns = ({
     },
     {
       title: "",
-      key: "icon",
+      key: "game_cover",
       width: 140,
       render: (value) => {
         return h(
@@ -134,32 +84,32 @@ const createColumns = ({
             {
               width: 140,
               // height: 40,
-              src: value.img
+              src: value.game_cover
             }
         )
       }
     },
     {
       title: "商品号",
-      key: "goodId"
+      key: "id"
     },
     {
       title: "游戏名称",
-      key: "name",
+      key: "game_name",
       sortOrder: false,
       sorter: 'default',
     },
     {
       title: "CDKey",
-      key: "CDKey"
+      key: "cd_key"
     },
     {
       title: "价格",
-      key: "value"
+      key: "price"
     },
     {
       title: "商品详情",
-      key: "intro",
+      key: "decription",
       render(row) {
         return h(
             NEllipsis,
@@ -168,7 +118,7 @@ const createColumns = ({
                 maxWidth:"200px"
               }
             },
-            {default:()=>row.intro}
+            {default:()=>row.decription}
         )
       }
     },
@@ -211,7 +161,7 @@ const createColumnsForVistor = ({
   return [
     {
       title: "",
-      key: "icon",
+      key: "game_cover",
       width: 140,
       render: (value) => {
         return h(
@@ -219,32 +169,32 @@ const createColumnsForVistor = ({
             {
               width: 140,
               // height: 40,
-              src: value.img
+              src: value.game_cover
             }
         )
       }
     },
     {
       title: "商品号",
-      key: "goodId"
+      key: "id"
     },
     {
       title: "游戏名称",
-      key: "name",
+      key: "game_name",
       sortOrder: false,
       sorter: 'default',
     },
     {
       title: "CDKey",
-      key: "CDKey"
+      key: "cd_key"
     },
     {
       title: "价格",
-      key: "value"
+      key: "price"
     },
     {
       title: "商品详情",
-      key: "intro",
+      key: "decription",
       render(row) {
         return h(
           NEllipsis,
@@ -253,7 +203,7 @@ const createColumnsForVistor = ({
                 maxWidth:"200px"
               }
             },
-            {default:()=>row.intro}
+            {default:()=>row.decripition}
         )
       }
     },
@@ -284,6 +234,47 @@ export default {
   components:{AddGood,EditGood},
 
   setup () {
+    let tableData = ref([])
+    const load = () => {
+      request.post("/getGoods/",JSON.stringify({'seller_id':router.currentRoute.value.params.username,'status':'已上架'})).then(res=>{
+        // console.log(res)
+        tableData.value = res.data
+      })
+    }
+    onBeforeMount(()=>{
+      load()
+    })
+    const filterTableData = computed(() =>
+        tableData.value.filter(
+            (data) =>
+                !search.value ||
+                data.game_name.toLowerCase().includes(search.value.toLowerCase())
+                || data.cd_key === search.value ||
+                data.id  === search.value - 0
+
+        )
+    )
+    const addGoods = computed(()=>{
+      return store.state.addGoodsVisible;
+    })
+
+    const editGoods = computed(()=>{
+      return store.state.editGoodsVisible;
+    })
+
+    watch(addGoods,(newVal,oldVal) => {
+      if (newVal.valueOf() === false) {
+        load()
+      }
+    })
+
+    watch(editGoods,(newVal,oldVal) => {
+      // console.log('我在load啊')
+      if (newVal.valueOf() === false) {
+        load()
+      }
+    })
+
     const formRef = ref(null);
     const tableRef = ref(null)
     const checkedRowKeysRef = ref([]);
@@ -291,19 +282,27 @@ export default {
         {
           edit(rowData) {
             store.state.editGoodsVisible = true;
-            store.state.good.goodId = rowData.goodId;
-            store.state.good.intro = rowData.intro;
-            store.state.good.CDKey = rowData.CDKey;
-            store.state.good.name = rowData.name;
-            store.state.good.steamId = rowData.steamId;
-            store.state.good.money = rowData.value;
+            store.state.good.goodId = rowData.id;
+            store.state.good.intro = rowData.decription;
+            store.state.good.CDKey = rowData.cd_key;
+            store.state.good.name = rowData.game_name;
+            store.state.good.steamId = rowData.steam_id;
+            store.state.good.money = rowData.price;
             // console.log("edit data " + rowData.name)
           },
           del(rowData) {
-            request.post("/delGoods/",JSON.stringify({'id':rowData.goodId})).then(res=>{
-              console.log(res.data)
-            })
-            console.log("delete data " + rowData.name)
+            dialog.warning({
+              title: "确认删除",
+              content: () => "是否确定删除商品",
+              positiveText: "确定",
+              onPositiveClick: () => {
+                request.post("/delGoods/",JSON.stringify({'id':rowData.id})).then(res=>{
+                  message.success(res.message)
+                  load()
+                })
+              },
+              negativeText: "取消"
+            });
           }
         }
     ))
@@ -322,17 +321,10 @@ export default {
             content: () => "是否确定购买该商品",
             positiveText: "确定",
             onPositiveClick: () => {
-              // todo 向后端申请更改订单状态
-              request.post("/buyGoods/",JSON.stringify({'id':rowData.goodId,'buyer_id':store.state.user.userID})).then(res=>{
-                console.log(res.data)
+              request.post("/buyGoods/",JSON.stringify({'id':rowData.id,'buyer_id':store.state.user.userID})).then(res=>{
+                message.success(res.messsage)
+                load()
               })
-              console.log(rowData.goodId);
-              if (/* 成功删除 */true) {
-                message.success("购买成功");
-              }
-              else {
-                message.error("购买失败");
-              }
             },
             negativeText: "取消"
           });
@@ -343,7 +335,7 @@ export default {
       store,
       isSelf,
       notSelf,
-      rowKey: (row) => row.goodId,
+      rowKey: (row) => row.id,
       checkedRowKeys: checkedRowKeysRef,
       handleCheck(rowKeys) {
         checkedRowKeysRef.value = rowKeys;
@@ -383,9 +375,19 @@ export default {
         store.state.addGoodsVisible = true
       },
       delAll() {
-        request.post("/deleteOrders/",JSON.stringify({'ids':checkedRowKeysRef.value})).then(res=>{
-          console.log(res.data)
-        })
+        dialog.warning({
+          title: "确认删除",
+          content: () => "是否确定删除商品",
+          positiveText: "确定",
+          onPositiveClick: () => {
+            request.post("/delGoods/",JSON.stringify({'id':checkedRowKeysRef.value})).then(res=>{
+              message.success(res.message)
+              load()
+            })
+          },
+          negativeText: "取消"
+        });
+
       },
       formRef,
       CloseCircleOutline,

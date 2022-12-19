@@ -30,6 +30,7 @@ export default createStore({
         editGoodsVisible: false,
         appraiseVisible: false,
         modifyVisible: false,
+        rateGoodsId: -1,
     },
 
     // mutation用于修改store中的数据
