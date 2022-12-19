@@ -390,7 +390,7 @@ def rateGoods(request):
     else:
         seller.dislikes += 1
     goods.comment = comment
-    goods.status = '已评价'
+    goods.status = '交易成功'
     goods.rating = rating
     goods.save()
     data = {'messsage': '订单评价成功'}
