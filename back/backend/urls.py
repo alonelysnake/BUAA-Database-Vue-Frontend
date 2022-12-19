@@ -12,6 +12,7 @@ urlpatterns = [
     path('getGame/', getGame),
     path('searchGame/', searchGame),
     path('getUserFavorites/', getUserFavorites),
+    path('isFavorites/', isFavorites),
     path('addFavorites/', addFavorites),
     path('delFavorites/', delFavorites),
     path('getHeat/', getHeat),

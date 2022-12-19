@@ -220,6 +220,19 @@ def delFavorites(request):
     result = JsonResponse(dict(data))
     return result
 
+def isFavorites(request):
+    content = request.body.decode()
+    content_dict = json.loads(content)
+    print(content_dict)
+    game_id = content_dict.get('game_id')
+    user_id = content_dict.get('user_id')
+    if Favorites.objects.filter(Q(user_id=user_id) & Q(game_id=game_id)).exists():
+        data = {'data': True}
+    else:
+        data = {'data': False}
+    result = JsonResponse(dict(data))
+    return result
+
 def getHeat(request):
     content = request.body.decode()
     content_dict = json.loads(content)
