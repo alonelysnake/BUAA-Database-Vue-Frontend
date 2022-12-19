@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Min, Max
 from django.http import JsonResponse
 from backend.models import *
 import json
@@ -272,10 +272,14 @@ def getPrice(request):
     game_id = content_dict.get('game_id')
     country = content_dict.get('country')
     if country != None:
-        data = list(Price.objects.filter(game_id=game_id, country=country).order_by('country', 'date'))
+        prices = list(Price.objects.filter(game_id=game_id, country=country).order_by('date'))
     else:
-        data = list(Price.objects.filter(game_id=game_id).order_by('country', 'date'))
-    data = [i.to_dict() for i in data]
+        prices = list(Price.objects.filter(game_id=game_id).order_by('country', 'date'))
+    data = []
+    for price in prices:
+        data_i = price.to_dict()
+        data_i['lowest_price'] = Price.objects.filter(game_id=game_id, country=price.country).aggregate(res=Min('current_price'))['res']
+        data.append(data_i)
     data = {'messsagee': '成功导出游戏价格', "data": data}
     result = JsonResponse(dict(data))
     return result
@@ -473,9 +477,6 @@ def updateComment(request):
     return result
 
 def getSlide(request):
-    # content = request.body.decode()
-    # content_dict = json.loads(content)
-    # print(content_dict)
     data = list(Slide.objects.all())
     data = [i.to_dict() for i in data]
     data = {'messsagee': '成功导出所有轮播图', "data": data}
@@ -483,9 +484,6 @@ def getSlide(request):
     return result
 
 def getNews(request):
-    # content = request.body.decode()
-    # content_dict = json.loads(content)
-    # print(content_dict)
     data = list(News.objects.all())
     data = [i.to_dict() for i in data]
     data = {'messsagee': '成功导出所有新闻', "data": data}
