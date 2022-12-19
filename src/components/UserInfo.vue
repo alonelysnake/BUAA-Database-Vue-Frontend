@@ -8,12 +8,11 @@
         label-width="auto"
         require-mark-placement="right-hanging"
         size="medium"
-        :disabled="isSelf.value"
+        :disabled="!isSelf.valueOf()"
         :style="{
       maxWidth: '640px',
     }"
     >
-      <!--  todo 还没搞清楚path、v-model、检查上传文件、增加保存  -->
       <n-form-item label="用户头像" path="avatarValue">
           <div>
             <n-avatar
@@ -119,7 +118,6 @@
     <ModifyPassword
         class="modifyCard" v-if="store.state.modifyVisible"
     >
-
     </ModifyPassword>
   </div>
 
@@ -127,7 +125,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import {ref, computed, onBeforeMount} from "vue";
 import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5";
 import {useMessage} from "naive-ui"
 import store from "@/store";
@@ -146,24 +144,22 @@ export default ({
     const numberAnimationInstRef = ref(null);
     const targetUserId = ref(router.currentRoute.value.params.username);
     const model = ref({
-          avatarPath: store.state.user.avatar,
-          email: store.state.user.email,
-          sales: store.state.user.sales,
-          id: store.state.user.userID,
-          name:store.state.user.nickname,
-          profile: store.state.user.intro,
-          gender: store.state.user.sex,
-          likeValue: store.state.user.like,
-          dislikeValue: store.state.user.dislike,
+          avatarPath:   null,
+          email:        null,
+          sales:        null,
+          id:           null,
+          name:         null,
+          profile:      null,
+          gender:       null,
+          likeValue:    null,
+          dislikeValue: null,
         });
-    const isSelf = ref(targetUserId.value === model.value.id);
     const load = () => {
-      // todo 这里是获得信息
       request.post("/getUserInfo/",JSON.stringify({'id':targetUserId.value})).then(res=>{
-        model.value.avatarPath = res.data.avatar
+        model.value.avatarPath = res.data.photo
         model.value.email = res.data.email
         model.value.id = res.data.id
-        model.value.name = res.data.name
+        model.value.name = res.data.username
         model.value.profile = res.data.profile
         model.value.gender = res.data.gender
         model.value.sales = res.data.sales
@@ -171,9 +167,12 @@ export default ({
         model.value.dislikeValue = res.data.dislikes
       })
     }
-    if (!isSelf.value) {
+    onBeforeMount(()=>{
       load()
-    }
+    })
+    // const isSelf = ref(targetUserId.value === store.state.user.userID);
+    let isSelf = computed(()=> targetUserId.value === store.state.user.userID)
+
     return {
       isSelf,
       formRef,
@@ -181,21 +180,16 @@ export default ({
       ArchiveIcon,
       store,
       model,
-
+      targetUserId,
       modify() {
         store.state.modifyVisible = true;
       },
 
       handleSave() {
-        request.post("/updateUser/",JSON.stringify({"content":model})).then(res=>{
-          console.log(res.data)
+        request.post("/updateUser/",JSON.stringify({"content":model.value})).then(res=>{
+          message.success(res.messsagee);
+          // console.log(res.data)
         })
-        if (/* 成功退款 */true) {
-          message.success("修改成功");
-        }
-        else {
-          message.error("修改失败");
-        }
       },
       rules: {
         avatar: {
