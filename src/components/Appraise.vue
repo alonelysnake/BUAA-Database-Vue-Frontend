@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import {defineProps, ref} from "vue";
 import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
@@ -56,14 +56,9 @@ import request from "@/utils/request";
 
 export default {
   name: "Appraise",
-  props: {
-    orderId:{
-      type:Number,
-      default:-1
-    }
-  },
 
-  setup(props) {
+  setup() {
+    const props = defineProps(['orderId']);
     const message = useMessage();
     const formRef = ref(null);
     const model = ref({
@@ -90,28 +85,18 @@ export default {
       },
       handleClose() {
         store.state.appraiseVisible = false;
-
-        console.log("取消评价");
+        // console.log("取消评价");
       },
 
       handleConfirm(e) {
         e.preventDefault();
         store.state.appraiseVisible = false;
-        console.log(props.orderId)
-        // todo 向后端发送数据
-        request.post("/appraiseOrder/",JSON.stringify(
-            {'id':props.orderId,
-              'isLike':model.value.likeValue,
-          'content':model.value.contentValue})).then(res=>{
-          console.log(res.data)
+        request.post("/rateGoods/",JSON.stringify(
+            {'id':store.state.rateGoodsId,
+              'rating':model.value.likeValue,
+          'comment':model.value.contentValue})).then(res=>{
+          message.success(res.messsage);
         })
-        if (/* 成功删除 */true) {
-          message.success("评价成功");
-        }
-        else {
-          message.error("评价失败");
-        }
-        console.log("确定评价");
       }
     };
   }

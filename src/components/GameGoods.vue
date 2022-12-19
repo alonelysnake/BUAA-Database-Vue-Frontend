@@ -39,77 +39,26 @@
 <!--todo 编辑/删除操作、从后端获得数据、测试数据上传-->
 
 <script>
-import { h,ref,computed } from "vue";
+import {h, ref, computed, onBeforeMount} from "vue";
 import {NButton, NImage, useDialog,useMessage,NEllipsis} from "naive-ui";
 import store from "../store"
-import AddGood from "@/components/AddGood";
-import EditGood from "@/components/EditGood";
 import {useRouter,RouterLink} from "vue-router";
 import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
+import request from "@/utils/request";
+
 
 const search = ref('')
-const filterTableData = computed(() =>
-    tableData.filter(
-        (data) =>
-            !search.value || data.goodId === search.value - 0 ||
-            data.name.toLowerCase().includes(search.value.toLowerCase())
-    )
-)
-
-
-const tableData = [
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: 1253,
-    name: 'Sekiro',
-    CDKey: '123456',
-    value: 20.5,
-    steamId: 'kazeya',
-    intro: '一个CDKEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
-    sellerId: 'Kazeya'
-  },
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: 1233,
-    name: 'Sekiro',
-    CDKey: '1234156',
-    value: 20.5,
-    steamId: 'kazeya',
-    intro: '一个CDKEY',
-    sellerId: 'Kazeya'
-  },
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: 1213,
-    name: 'Sekiro',
-    CDKey: '12123456',
-    value: 20.5,
-    steamId: 'kazeya',
-    intro: '一个CDKEY',
-    sellerId: 'Kazeya'
-  },
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    goodId: 1423,
-    name: 'Sekiro',
-    CDKey: '12413456',
-    value: 20.5,
-    steamId: 'kazeya',
-    intro: '一个CDKEY',
-    sellerId: 'Kazeya'
-  },
-]
 
 // 用户本人的列表
 const createColumns = ({
-                         edit,purchase
+                         purchase
                        }) => {
   return [
     {
       title: "",
-      key: "icon",
+      key: "game_cover",
       width: 140,
       render: (value) => {
         return h(
@@ -117,18 +66,18 @@ const createColumns = ({
             {
               width: 140,
               // height: 40,
-              src: value.img
+              src: value.game_cover
             }
         )
       }
     },
     {
       title: "商品号",
-      key: "goodId"
+      key: "id"
     },
     {
       title: "商家昵称",
-      key: "name",
+      key: "seller_name",
       sortOrder: false,
       sorter: 'default',
       render(row) {
@@ -138,7 +87,7 @@ const createColumns = ({
               to: {
                 name: 'Info_v',
                 params: {
-                  username: row.sellerId
+                  username: row.seller_name
                 },
               },
               style: {
@@ -147,22 +96,22 @@ const createColumns = ({
               }
             },
             {
-              default: () => row.name
+              default: () => row.seller_name
             }
         )
       }
     },
     {
       title: "CDKey",
-      key: "CDKey"
+      key: "cd_key"
     },
     {
       title: "价格",
-      key: "value"
+      key: "price"
     },
     {
       title: "商品详情",
-      key: "intro",
+      key: "decription",
       render(row) {
         return h(
             NEllipsis,
@@ -171,7 +120,7 @@ const createColumns = ({
                 maxWidth:"200px"
               }
             },
-            {default:()=>row.intro}
+            {default:()=>row.decription}
         )
       }
     },
@@ -210,9 +159,26 @@ const createColumns = ({
 
 export default {
   name: "GameGoods",
-  components:{AddGood,EditGood},
 
   setup () {
+    let tableData = ref([])
+    const load = () => {
+      request.post("/getGoods/",JSON.stringify({'game_id':router.currentRoute.value.params.gameid,'status':'已上架'})).then(res=>{
+        // console.log(res)
+        tableData.value = res.data
+      })
+    }
+    onBeforeMount(()=>{
+      load()
+    })
+    const filterTableData = computed(() =>
+        tableData.value.filter(
+            (data) =>
+                !search.value || data.id === search.value - 0 ||
+                data.seller_name.toLowerCase().includes(search.value.toLowerCase())
+        )
+    )
+    const router = useRouter();
     const dialog = useDialog();
     const message = useMessage();
     const canEdit = ref(true)
@@ -221,30 +187,16 @@ export default {
     const checkedRowKeysRef = ref([]);
     let columnsRef = ref(createColumns(
         {
-          edit(rowData) {
-            store.state.editGoodsVisible = true;
-            store.state.good.goodId = rowData.goodId;
-            store.state.good.intro = rowData.intro;
-            store.state.good.CDKey = rowData.CDKey;
-            store.state.good.name = rowData.name;
-            store.state.good.steamId = rowData.steamId;
-            store.state.good.money = rowData.value;
-            // console.log("edit data " + rowData.name)
-          },
           purchase(rowData) {
             dialog.warning({
               title: "确认购买",
               content: () => "是否确定购买该商品",
               positiveText: "确定",
               onPositiveClick: () => {
-                // todo 向后端申请更改订单状态
-                console.log(rowData.goodId);
-                if (/* 成功删除 */true) {
-                  message.success("购买成功");
-                }
-                else {
-                  message.error("购买失败");
-                }
+                request.post("/buyGoods/",JSON.stringify({'id':rowData.id,'buyer_id':store.state.user.userID})).then(res=>{
+                  message.success(res.messsage)
+                  load()
+                })
               },
               negativeText: "取消"
             });

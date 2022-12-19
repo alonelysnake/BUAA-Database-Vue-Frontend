@@ -138,10 +138,10 @@ def getGame(request):
         item = game.to_dict()
         tags = list(Tag.objects.filter(game_id=item['id']))
         item['tag'] = [tag.to_dict() for tag in tags]
-        developers = list(Develop.objects.filter(game_id=item['id']))
+        develops = list(Develop.objects.filter(game_id=item['id']))
         item['developer'] = []
-        for developer in developers:
-            item['developer'].append(developer.to_dict())
+        for develop in develops:
+            item['developer'].append(develop.developer.to_dict())
         data = [item]
     elif developer_id != None:
         items = list(Develop.objects.filter(developer_id=developer_id))
@@ -300,6 +300,7 @@ def getGoods(request):
     data = []
     for i in goods:
         goods_dict = i.to_dict()
+        goods_dict['seller_name'] = i.seller.name
         goods_dict['game_name'] = i.game.name
         goods_dict['game_cover'] = i.game.cover
         data.append(goods_dict)
@@ -311,12 +312,12 @@ def addGoods(request):
     content = request.body.decode()
     content_dict = json.loads(content).get('goods')
     print(content_dict)
-    price = content_dict.moneyValue
-    game_id = content_dict.game_id
-    seller_id = content_dict.seller_id
-    steam_id = content_dict.steamValue
-    decription = content_dict.introValue
-    cd_key = content_dict.keyValue
+    price = content_dict['moneyValue']
+    game_id = content_dict['game_id']
+    seller_id = content_dict['seller_id']
+    steam_id = content_dict['steamValue']
+    decription = content_dict['introValue']
+    cd_key = content_dict['keyValue']
     status = '已上架'
     Goods.objects.create(seller_id=seller_id, game_id=game_id, price=price, steam_id=steam_id, status=status, decription=decription, cd_key=cd_key)
     data = {'message': '上架商品成功'}
@@ -357,6 +358,8 @@ def updateGoods(request):
         goods.comment = update_content
     elif update_type == 'steam_id':
         goods.steam_id = update_content
+    elif update_type == 'decription':
+        goods.decription = update_content
     goods.save()
     data = {'messsage': '修改商品信息成功'}
     result = JsonResponse(dict(data))
@@ -390,7 +393,7 @@ def rateGoods(request):
     else:
         seller.dislikes += 1
     goods.comment = comment
-    goods.status = '已评价'
+    goods.status = '交易成功'
     goods.rating = rating
     goods.save()
     data = {'messsage': '订单评价成功'}

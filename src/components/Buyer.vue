@@ -18,7 +18,6 @@
     <Appraise
         class="appraiseCard"
         v-show="store.state.appraiseVisible"
-        :orderId="orderId.value"
     ></Appraise>
     <n-dropdown
         placement="bottom-start"
@@ -34,7 +33,6 @@
 
 </template>
 
-<!--todo 删除操作、从后端获得数据-->
 
 <script>
 import {h, ref, nextTick, computed, onBeforeMount} from "vue";
@@ -82,11 +80,11 @@ const columns = [
   },
   {
     title: "订单号",
-    key: "orderId"
+    key: "id"
   },
   {
     title: "游戏名称",
-    key: "name",
+    key: "game_name",
     sortOrder: false,
     sorter: 'default'
   },
@@ -98,11 +96,11 @@ const columns = [
   // },
   {
     title: "订单金额",
-    key: "value"
+    key: "price"
   },
   {
     title: "卖家ID",
-    key: "sellerId"
+    key: "seller_id"
   },
   {
     title: "交易状态",
@@ -148,7 +146,7 @@ let tableData = ref([])
 const load = () => {
   request.post("/getGoods/",JSON.stringify({'buyer_id':store.state.user.userID})).then(res=>{
     tableData.value = res.data
-    console.log(tableData.value)
+    // console.log(tableData.value)
   })
 }
 
@@ -186,7 +184,7 @@ export default ({
     return {
       store,
       orderId,
-      rowKey: (row) => row.orderId,
+      rowKey: (row) => row.id,
       checkedRowKeys: checkedRowKeysRef,
       handleCheck(rowKeys) {
         checkedRowKeysRef.value = rowKeys;
@@ -227,7 +225,6 @@ export default ({
                 content: () => "请确保您已经收货",
                 positiveText: "确定",
                 onPositiveClick: () => {
-                  // todo 向后端申请更改订单状态
                   request.post("/updateGoods/",JSON.stringify({'id':orderId.value,'type':'status','content':'已收货'})).then(res=>{
                     if (res.messsage === '修改商品信息成功') {
                       message.success("收货成功");
@@ -261,6 +258,7 @@ export default ({
         else if (key === "appraise") {
           if (status.value === "已收货") {
             store.state.appraiseVisible = true
+            store.state.rateGoodsId = orderId.value
           }
           else if (status.value === '交易成功'){
             message.error("您已评价");
@@ -277,7 +275,7 @@ export default ({
               positiveText: "确定",
               onPositiveClick: () => {
                 request.post("/delGoods/",JSON.stringify({'id':orderId.value})).then(res=>{
-                  if (res.messsage === '已删除该商品') {
+                  if (res.message === '删除商品成功') {
                     message.success("删除成功");
                     load()
                   }
@@ -299,10 +297,18 @@ export default ({
       },
 
       delAll() {
-        console.log(checkedRowKeysRef.value)
-        request.post("/deleteGoods/",JSON.stringify({'ids':checkedRowKeysRef.value})).then(res=>{
-          console.log(res.data)
-        })
+        dialog.warning({
+          title: "确认删除",
+          content: () => "是否确定删除订单",
+          positiveText: "确定",
+          onPositiveClick: () => {
+            request.post("/delGoods/",JSON.stringify({'id':checkedRowKeysRef.value})).then(res=>{
+              message.success(res.message)
+              load()
+            })
+          },
+          negativeText: "取消"
+        });
       },
 
       rowProps: (row) => {
@@ -313,7 +319,7 @@ export default ({
             nextTick().then(() => {
               showDropdownRef.value = true;
               status.value = row.status;
-              orderId.value = row.orderId;
+              orderId.value = row.id;
               xRef.value = e.clientX;
               yRef.value = e.clientY;
             });
