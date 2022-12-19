@@ -138,10 +138,10 @@ def getGame(request):
         item = game.to_dict()
         tags = list(Tag.objects.filter(game_id=item['id']))
         item['tag'] = [tag.to_dict() for tag in tags]
-        developers = list(Develop.objects.filter(game_id=item['id']))
+        develops = list(Develop.objects.filter(game_id=item['id']))
         item['developer'] = []
-        for developer in developers:
-            item['developer'].append(developer.to_dict())
+        for develop in develops:
+            item['developer'].append(develop.developer.to_dict())
         data = [item]
     elif developer_id != None:
         items = list(Develop.objects.filter(developer_id=developer_id))
