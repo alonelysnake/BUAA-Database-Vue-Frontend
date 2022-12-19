@@ -54,27 +54,30 @@
 <script>
 import { ref,defineProps } from "vue";
 import store from "../store"
-
+import request from "@/utils/request";
+import {useMessage} from "naive-ui";
 
 export default ({
   name: "EditGood",
 
   setup() {
     // vue3 父组件向子组件传值
+    const message = useMessage();
     const props = defineProps(['title','edit']);
     const formRef = ref(null);
-    const goodId = ref(store.state.good.goodId);
+    const model = ref({
+      goodId: store.state.good.goodId,
+      nameValue:  store.state.good.name,
+      keyValue:   store.state.good.CDKey,
+      steamValue: store.state.good.steamId,
+      introValue: store.state.good.intro,
+      moneyValue: store.state.good.money
+    })
     return {
       formRef,
       props,
       size: ref("medium"),
-      model: ref({
-        nameValue:  store.state.good.name,
-        keyValue:   store.state.good.CDKey,
-        steamValue: store.state.good.steamId,
-        introValue: store.state.good.intro,
-        moneyValue: store.state.good.money
-      }),
+      model,
       rules: {
         nameValue: {
           required: true,
@@ -112,9 +115,19 @@ export default ({
       handleConfirm(e) {
         e.preventDefault();
         store.state.editGoodsVisible = false;
-        // todo 向后端发送数据
-        // this.$emit(visible);
-        console.log("确定修改游戏");
+        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'steam_id','content':model.value.steamValue})).then(res=>{
+
+        })
+        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'decription','content':model.value.introValue})).then(res=>{
+
+        })
+        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'cd_key','content':model.value.keyValue})).then(res=>{
+
+        })
+        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'price','content':model.value.moneyValue})).then(res=>{
+
+        })
+        message.success('修改成功')
       },
     }
   }

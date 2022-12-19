@@ -1,7 +1,7 @@
 <template>
   <n-space vertical :size="12" style="width: 83%;">
     <div>
-      <n-button type="primary" ghost style="margin-right: 20px">批量删除</n-button>
+      <n-button type="primary" ghost style="margin-right: 20px" @click="delAll">批量删除</n-button>
       <n-input v-model:value="search" placeholder="输入订单号或游戏名查询" style="width: 400px;"/>
     </div>
         <n-data-table
@@ -33,8 +33,9 @@
 <!--todo 删除操作、从后端获得数据-->
 
 <script>
-import { h,ref,nextTick,computed } from "vue";
+import {h, ref, nextTick, computed, reactive, onMounted, onBeforeMount} from "vue";
 import {NImage,useDialog,useMessage} from "naive-ui";
+import request from "@/utils/request";
 
 const status = ref("");
 
@@ -62,7 +63,7 @@ const columns = [
   },
   {
     title: "",
-    key: "icon",
+    key: "game_cover",
     width: 140,
     render: (value) => {
       return h(
@@ -70,34 +71,34 @@ const columns = [
           {
             width: 140,
             // height: 40,
-            src: value.img
+            src: value.game_cover
           }
       )
     }
   },
   {
     title: "订单号",
-    key: "orderId"
+    key: "id"
   },
   {
     title: "游戏名称",
-    key: "name",
+    key: "game_name",
     sortOrder: false,
     sorter: 'default'
   },
-  {
-    title: "用户购买时间",
-    key: "date",
-    sortOrder: 'descend',
-    sorter: 'default'
-  },
+  // {
+  //   title: "用户购买时间",
+  //   key: "date",
+  //   sortOrder: 'descend',
+  //   sorter: 'default'
+  // },
   {
     title: "订单金额",
-    key: "value"
+    key: "price"
   },
   {
     title: "买家ID",
-    key: "sellerId"
+    key: "buyer_id"
   },
   {
     title: "交易状态",
@@ -139,62 +140,38 @@ const columns = [
   }
 ]
 
-
-const tableData = [
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    orderId: 1,
-    name: 'Sekiro',
-    date: '2016-05-02',
-    value: 20.5,
-    sellerId: 1,
-    status: '已发货',
-  },
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp4.itc.cn%2Fq_70%2Fimages03%2F20210622%2F3254befcfb29402297aefdd8a8944b95.jpeg&refer=http%3A%2F%2Fp4.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109495&t=872a11a71436ae2fa168921b78396785',
-    orderId: 2,
-    name: 'NieR',
-    date: '2016-05-03',
-    value: 22.5,
-    sellerId: 2,
-    status: '已发货'
-  },
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    orderId: 3,
-    name: 'Sekiro',
-    date: '2016-04-05',
-    value: 23.5,
-    sellerId: 3,
-    status: '交易成功'
-  },
-  {
-    img: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F1b13137cddeb48b0b378108f1d8452a1c099959c.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673109288&t=59aa2c866d7bce31c6d17d60aa101b17',
-    orderId: 4,
-    name: 'Sekiro',
-    date: '2016-02-02',
-    value: 26.5,
-    sellerId: 1,
-    status: '已付款'
-  },
-]
-
+import store from "@/store";
 const search = ref('')
-const filterTableData = computed(() =>
-    tableData.filter(
-        (data) =>
-            !search.value ||
-            data.name.toLowerCase().includes(search.value.toLowerCase())
-            || data.orderId === parseInt(search.value)
-    )
-)
+
 
 const orderId = ref(-1);
+
+let tableData = ref([])
+const load = () => {
+  request.post("/getGoods/",JSON.stringify({'seller_id':store.state.user.userID})).then(res=>{
+    tableData.value = res.data
+    // console.log(tableData.value)
+  })
+}
+
 
 export default ({
   name:"SellerOrder",
 
   setup () {
+    onBeforeMount(()=>{
+      load()
+    })
+
+    const filterTableData = computed(() =>
+        tableData.value.filter(
+            (data) =>
+                search.value === '' ||
+                data.game_name.toLowerCase().includes(search.value.toLowerCase())
+                || data.id === parseInt(search.value)
+        )
+    )
+
     const checkedRowKeysRef = ref([]);
     const showDropdownRef = ref(false);
     const tableRef = ref(null)
@@ -204,11 +181,12 @@ export default ({
     const dialog = useDialog();
     const message = useMessage();
     return {
-      rowKey: (row) => row.orderId,
+      rowKey: (row) => row.id,
       checkedRowKeys: checkedRowKeysRef,
       handleCheck(rowKeys) {
         checkedRowKeysRef.value = rowKeys;
       },
+
       table: tableRef,
       filterTableData,
       columns: columnsRef,
@@ -244,15 +222,17 @@ export default ({
                 title: "确认发货",
                 content: () => "请确保您已经发货",
                 positiveText: "确定",
+
                 onPositiveClick: () => {
-                  // todo 向后端申请更改订单状态
-                  console.log(orderId.value);
-                  if (/* 成功删除 */true) {
-                    message.success("发货成功");
-                  }
-                  else {
-                    message.error("发货失败");
-                  }
+                  request.post("/updateGoods/",JSON.stringify({'id':orderId.value,'type':'status','content':'已发货'})).then(res=>{
+                    if (res.messsage === '修改商品信息成功') {
+                      message.success("发货成功");
+                      load()
+                    }
+                    else {
+                      message.error("发货失败");
+                    }
+                  })
                 },
                 negativeText: "取消"
               });
@@ -278,14 +258,15 @@ export default ({
               content: () => "是否确定取消交易并退款",
               positiveText: "确定",
               onPositiveClick: () => {
-                // todo 向后端申请更改订单状态
-                console.log(orderId.value);
-                if (/* 成功退款 */true) {
-                  message.success("退款成功，交易取消");
-                }
-                else {
-                  message.error("退款失败");
-                }
+                request.post("/updateGoods/",JSON.stringify({'id':orderId.value,'type':'status','content':'已取消'})).then(res=>{
+                  if (res.messsage === '修改商品信息成功') {
+                    message.success("退款成功，交易取消");
+                    load()
+                  }
+                  else {
+                    message.error("退款失败");
+                  }
+                })
               },
               negativeText: "取消"
             });
@@ -301,14 +282,15 @@ export default ({
               content: () => "是否确定删除已完成的交易订单",
               positiveText: "确定",
               onPositiveClick: () => {
-                // todo 向后端申请更改订单状态
-                console.log(orderId.value);
-                if (/* 成功删除 */true) {
-                  message.success("删除成功");
-                }
-                else {
-                  message.error("删除失败");
-                }
+                request.post("/delGoods/",JSON.stringify({'id':orderId.value})).then(res=>{
+                  if (res.messsage === '已删除该商品') {
+                    message.success("删除成功");
+                    load()
+                  }
+                  else {
+                    message.error("删除失败");
+                  }
+                })
               },
               negativeText: "取消"
             });
@@ -322,6 +304,14 @@ export default ({
         showDropdownRef.value = false;
       },
 
+      delAll() {
+        console.log(checkedRowKeysRef.value)
+        request.post("/delGoods/",JSON.stringify({'ids':checkedRowKeysRef.value})).then(res=>{
+          console.log(res.data)
+
+        })
+      },
+
       rowProps: (row) => {
         return {
           onContextmenu: (e) => {
@@ -330,7 +320,7 @@ export default ({
             nextTick().then(() => {
               showDropdownRef.value = true;
               status.value = row.status
-              orderId.value = row.orderId
+              orderId.value = row.id
               xRef.value = e.clientX;
               yRef.value = e.clientY;
             });

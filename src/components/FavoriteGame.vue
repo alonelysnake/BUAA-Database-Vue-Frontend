@@ -24,6 +24,7 @@
 import {reactive} from "vue";
 import request from "@/utils/request";
 
+// TODO 从后端获取数据
 export default {
   name: "FavoriteGame",
 
