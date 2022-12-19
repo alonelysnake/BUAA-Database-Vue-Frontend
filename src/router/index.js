@@ -31,6 +31,22 @@ const routes = [
         component: Home
     },
     {
+        path: '/user_v/:username',
+        component: UserPage,
+        children: [
+            {
+                path: '/user_v/:username/info',
+                name: 'Info_v',
+                component: UserInfo,
+            },
+            {
+                path: '/user_v/:username/sellerGoods',
+                name: 'SellerGoods_v',
+                component: SellerGoods,
+            },
+        ]
+    },
+    {
         path: '/user/:username',
         name: 'User',
         component: UserPage,

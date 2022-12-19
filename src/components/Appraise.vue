@@ -51,6 +51,7 @@ import {
 } from "@vicons/ionicons5";
 import store from "../store"
 import {useMessage} from "naive-ui";
+import request from "@/utils/request";
 
 
 export default {
@@ -65,14 +66,15 @@ export default {
   setup(props) {
     const message = useMessage();
     const formRef = ref(null);
+    const model = ref({
+      likeValue: null,
+      contentValue: null,
+    })
     return {
       formRef,
       CloseCircleOutline,
       size: ref("medium"),
-      model: ref({
-        likeValue: null,
-        contentValue: null,
-      }),
+      model,
       rules: {
         likeValue: {
           required: true,
@@ -97,6 +99,12 @@ export default {
         store.state.appraiseVisible = false;
         console.log(props.orderId)
         // todo 向后端发送数据
+        request.post("/appraiseOrder/",JSON.stringify(
+            {'id':props.orderId,
+              'isLike':model.value.likeValue,
+          'content':model.value.contentValue})).then(res=>{
+          console.log(res.data)
+        })
         if (/* 成功删除 */true) {
           message.success("评价成功");
         }

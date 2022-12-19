@@ -3,7 +3,7 @@
        v-if="isSelf.valueOf()">
 
     <div class="operate">
-      <n-button type="primary" ghost style="height: 35px">批量删除</n-button>
+      <n-button type="primary" ghost style="height: 35px" @click="delAll">批量删除</n-button>
     </div>
     <div class="operate">
       <n-upload
@@ -59,6 +59,7 @@ import {useRouter} from "vue-router";
 import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
+import request from "@/utils/request";
 
 const search = ref('')
 const filterTableData = computed(() =>
@@ -299,7 +300,9 @@ export default {
             // console.log("edit data " + rowData.name)
           },
           del(rowData) {
-            // todo 向后端回传
+            request.post("/delGoods/",JSON.stringify({'id':rowData.goodId})).then(res=>{
+              console.log(res.data)
+            })
             console.log("delete data " + rowData.name)
           }
         }
@@ -320,6 +323,9 @@ export default {
             positiveText: "确定",
             onPositiveClick: () => {
               // todo 向后端申请更改订单状态
+              request.post("/buyGoods/",JSON.stringify({'id':rowData.goodId,'buyer_id':store.state.user.userID})).then(res=>{
+                console.log(res.data)
+              })
               console.log(rowData.goodId);
               if (/* 成功删除 */true) {
                 message.success("购买成功");
@@ -375,7 +381,11 @@ export default {
       },
       handleAdd() {
         store.state.addGoodsVisible = true
-
+      },
+      delAll() {
+        request.post("/deleteOrders/",JSON.stringify({'ids':checkedRowKeysRef.value})).then(res=>{
+          console.log(res.data)
+        })
       },
       formRef,
       CloseCircleOutline,

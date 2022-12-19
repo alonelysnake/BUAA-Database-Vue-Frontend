@@ -8,13 +8,14 @@ export default createStore({
         searchItem: "",
         user: {
             nickname: "Veronica",
-            userID: 'VeronicaID',
+            userID: '1',
+            sales: 40207,
             // 头像Url
-            avatar: "",
+            avatar: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg",
             email: "837826068@qq.com",
             intro: "爱打电动的BUAAer",
             sex: "secret",
-            like:40207,
+            like:207,
             dislike:10207,
         },
         good: {

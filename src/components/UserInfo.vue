@@ -18,26 +18,11 @@
           <div>
             <n-avatar
                 size="large"
-                src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+                :src="model.avatarPath"
+                style="margin-right: 10px"
             />
           </div>
-
-<!--        <n-upload-->
-<!--            accept=".jpg,.png"-->
-<!--            directory-dnd-->
-<!--            action="http://127.0.0.1:1234/upload/ava"-->
-<!--            v-if="isSelf.valueOf()"-->
-<!--        >-->
-          <n-upload
-              accept=".jpg,.png"
-              directory-dnd
-              :file-list="fileList"
-              :custom-request="uploadFile"
-              :on-change="handleChange"
-              v-if="isSelf.valueOf()"
-          >
-            <n-button style="height: 40px;margin-left: 20px">上传头像</n-button>
-          </n-upload>
+          <n-input v-if="isSelf.valueOf()" v-model:value="model.avatarPath" placeholder="头像图片地址"/>
       </n-form-item>
       <div style="min-height: 100px">
         <n-statistic
@@ -49,7 +34,7 @@
           <n-number-animation
               ref="numberAnimationInstRef"
               :from="0"
-              :to="model.likeValue"
+              :to="model.sales"
               duration="1000"
           />
           <template #suffix>
@@ -87,7 +72,7 @@
           </template>
         </n-statistic>
       </div>
-      <n-form-item label="用户名" path="id">
+      <n-form-item label="用户ID" path="id">
         <n-input v-model:value="model.id" placeholder="用户名" disabled/>
       </n-form-item>
       <n-form-item v-if="isSelf.valueOf()" label="用户邮箱" path="email">
@@ -155,10 +140,6 @@ export default ({
   components: {ModifyPassword},
 
   setup() {
-    let fileList = [];
-    const formData = ref({
-      file:null
-    });
     const router = useRouter();
     const formRef = ref(null);
     const message = useMessage();
@@ -167,6 +148,7 @@ export default ({
     const model = ref({
           avatarPath: store.state.user.avatar,
           email: store.state.user.email,
+          sales: store.state.user.sales,
           id: store.state.user.userID,
           name:store.state.user.nickname,
           profile: store.state.user.intro,
@@ -177,13 +159,14 @@ export default ({
     const isSelf = ref(targetUserId.value === model.value.id);
     const load = () => {
       // todo 这里是获得信息
-      request.post("/getSlide/",JSON.stringify({})).then(res=>{
+      request.post("/getUserInfo/",JSON.stringify({'id':targetUserId.value})).then(res=>{
         model.value.avatarPath = res.data.avatar
         model.value.email = res.data.email
         model.value.id = res.data.id
         model.value.name = res.data.name
         model.value.profile = res.data.profile
         model.value.gender = res.data.gender
+        model.value.sales = res.data.sales
         model.value.likeValue = res.data.likes
         model.value.dislikeValue = res.data.dislikes
       })
@@ -199,30 +182,11 @@ export default ({
       store,
       model,
 
-      handleChange(file,files) {
-        fileList = files
-      },
-
-      uploadFile (file) {
-        console.log(file.file, "sb2");
-        formData.value.file = file.file;
-      },
-
       modify() {
         store.state.modifyVisible = true;
       },
 
       handleSave() {
-        // todo 上传头像
-        // let formData = new FormData();
-        // formData.append("file",fileList)
-        // console.log(formData)
-        // request.post("/api/upload",formData,
-        //     {"Content-Type": "multipart/form-data;charset=utf-8"})
-        // request.post("/user/editInfo",JSON.stringify(this.model)).then(res=>{
-        //
-        // })
-        console.log("保存信息")
         request.post("/updateUser/",JSON.stringify({"content":model})).then(res=>{
           console.log(res.data)
         })
@@ -233,13 +197,12 @@ export default ({
           message.error("修改失败");
         }
       },
-      generalOptions: ["groode", "veli good", "emazing", "lidiculous"].map(
-          (v) => ({
-            label: v,
-            value: v
-          })
-      ),
       rules: {
+        avatar: {
+          required: true,
+          trigger: ["blur", "input"],
+          message: "请输入图片地址"
+        },
         id: {
           required: false,
           trigger: ["blur", "input"],

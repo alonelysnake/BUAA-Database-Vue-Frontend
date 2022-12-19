@@ -43,19 +43,23 @@ import {
 } from "@vicons/ionicons5";
 import store from "../store"
 import request from "@/utils/request";
+import md5 from 'js-md5';
 
 export default ({
   name: "ModifyPassword",
 
   setup() {
     const model = reactive({
-      id: null,
+      id: store.state.user.userID,
       oldPassword: null,
       newPassword:null,
     })
 
     const confirmModify = () => {
-      request.post("/confirmModify/",JSON.stringify({"password":model})).then(res=>{
+      model.oldPassword = md5(model.oldPassword);
+      model.newPassword = md5(model.newPassword);
+      console.log(model)
+      request.post("/changePassword/",JSON.stringify({"password":model})).then(res=>{
         console.log(res.data)
       })
     }
