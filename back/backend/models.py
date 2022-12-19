@@ -148,7 +148,7 @@ class Price(models.Model):
     original_price = models.DecimalField(max_digits=8, decimal_places=2, default=0.0)
     current_price = models.DecimalField(max_digits=8, decimal_places=2, default=0.0)
     def to_dict(self):
-        return {'game_id': self.game_id, 'country_id': self.country_id, 'date': self.date, 'original_price': self.original_price, 'current_price': self.current_price}
+        return {'game_id': self.game_id, 'country_name': self.country_name, 'date': self.date, 'original_price': self.original_price, 'current_price': self.current_price}
 
 class Discount(models.Model):
     id = models.AutoField(primary_key=True)
