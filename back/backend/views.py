@@ -134,7 +134,7 @@ def getGame(request):
     developer_id = content_dict.get('developer_id')
     data = []
     if game_id != None:
-        game = Game.objects.filter(id=game_id).first()
+        game = Game.objects.get(id=game_id)
         item = game.to_dict()
         tags = list(Tag.objects.filter(game_id=item['id']))
         item['tag'] = [tag.to_dict() for tag in tags]
