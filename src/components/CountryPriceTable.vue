@@ -20,35 +20,35 @@ import {useRouter} from "vue-router/dist/vue-router";
 
 const nameColumn = {
   title: '国家（地区）',
-  key: 'name',
+  key: 'country_name',
   sortOrder: false,//表示是否排序
   sorter: 'default'//排序方式
 }
 
 const originPriceColumn = {
   title: '原价',
-  key: 'origin',
+  key: 'original_price',
   sortOrder: false,
   sorter(rowA, rowB) {
-    return rowA.origin - rowB.origin//自定义的排序函数
+    return rowA.original_price - rowB.original_price//自定义的排序函数
   }
 }
 
 const curPriceColumn = {
   title: '当前价格',
-  key: 'curPrice',
+  key: 'current_price',
   sortOrder: false,
   sorter(rowA, rowB) {
-    return rowA.curPrice - rowB.curPrice
+    return rowA.current_price - rowB.current_price
   }
 }
 
 const lowestPriceColumn = {
   title: '历史最低价格',
-  key: 'lowest',
+  key: 'lowest_price',
   sortOrder: false,
   sorter(rowA, rowB) {
-    return rowA.lowest - rowB.lowest
+    return rowA.lowest_price - rowB.lowest_price
   }
 }
 
@@ -65,52 +65,6 @@ const columns = [
   lowestPriceColumn
 ]
 
-/*从后端读取的数据格式*/
-let data = [
-  {
-    key: 0,
-    name: 'China',
-    origin: 99,
-    curPrice: 38,
-    lowest: 1
-  },
-  {
-    key: 1,
-    name: 'USA',
-    origin: 108,
-    curPrice: 42,
-    lowest: 9
-  },
-  {
-    key: 2,
-    name: 'UK',
-    origin: 105,
-    curPrice: 36,
-    lowest: '3'
-  },
-  {
-    key: 3,
-    name: 'Japan',
-    origin: 648,
-    curPrice: 32,
-    lowest: '7'
-  },
-  {
-    key: 4,
-    name: 'Korea',
-    origin: 328,
-    curPrice: 32,
-    lowest: '5'
-  },
-  {
-    key: 5,
-    name: 'Russia',
-    origin: 98,
-    curPrice: 32,
-    lowest: '2'
-  },
-]
-
 export default {
   name: "CountryPriceTable",
   setup() {
@@ -121,12 +75,18 @@ export default {
     const columnsRef = ref(columns)
     const router = useRouter();
 
+    //从后端读取的数据格式
+    let data = ref([]);
+
     const gameId = parseInt(router.currentRoute.value.params.gameid);//游戏id
 
     //TODO 后端获取每个国家的价格
     onMounted(() => {
-      request.post('/getPrice/', JSON.stringify({'id': gameId})).then(res => {
-        data = res.data;
+      request.post('/getPrice/', JSON.stringify({'game_id': gameId})).then(res => {
+        console.log("gg");
+        console.log(res.data);
+        console.log("gg");
+        data.value = res.data;
       });
     })
 
@@ -139,8 +99,6 @@ export default {
       lowestColumn: lowestColumnReactive,
 
       pagination: {pageSize: 5},/*TODO 每页的元素数量*/
-
-
 
       handleSorterChange(sorter) {
         columnsRef.value.forEach((column) => {
