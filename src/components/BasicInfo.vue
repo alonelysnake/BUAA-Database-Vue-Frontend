@@ -88,15 +88,15 @@ export default {
         "game_id": gameId,
         "user_id": store.state.user.userID,
       });
-      // request.post("/用户是否收藏了这个游戏/", post).then(res => {
-        //TODO 根据res得到是否被收藏
-        favorButtonRef.value.flag = true;
+      request.post("/isFavorites/", post).then(res => {
+        // 根据res得到是否被收藏
+        favorButtonRef.value.flag = res.data;
         if (favorButtonRef.value.flag) {
           favorButtonRef.value.text = "取消收藏";
         } else {
           favorButtonRef.value.text = "收藏";
         }
-      // })
+      })
     })
 
     function handleFavor() {
@@ -105,15 +105,15 @@ export default {
         "user_id": store.state.user.userID,
       });
       if (favorButtonRef.value.flag) {
-        // request.post('取消收藏', post).then(res => {
+        request.post('/delFavorites/', post).then(res => {
           favorButtonRef.value.flag = false;
           favorButtonRef.value.text = "收藏";
-        // })
+        })
       } else {
-        // request.post('收藏', post).then(res => {
+        request.post('/addFavorites/', post).then(res => {
           favorButtonRef.value.flag = true;
           favorButtonRef.value.text = "取消收藏";
-        // })
+        })
       }
     }
 
