@@ -278,6 +278,19 @@ def getTag(request):
     result = JsonResponse(dict(data))
     return result
 
+def getCountry(request):
+    content = request.body.decode()
+    content_dict = json.loads(content)
+    print(content_dict)
+    game_id = content_dict.get('game_id')
+    data = list(Price.objects.filter(game_id=game_id).distinct('country_id'))
+    data = [i.country.to_dict() for i in data]
+    for i in len(data):
+        data[i]['value'] = data[i].pop('id')
+    data = {'messsagee': '成功导出游戏标签', "data": data}
+    result = JsonResponse(dict(data))
+    return result
+
 def getPrice(request):
     content = request.body.decode()
     content_dict = json.loads(content)
