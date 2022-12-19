@@ -9,11 +9,11 @@
               style="max-width: 233px"
       >
         <template #cover>
-          <router-link
-              :to="{name:'Game',params:{gameId:item.game_id}}"
-          >
-          <img :src="item.url">
-          </router-link>
+<!--          <router-link-->
+<!--              :to="{name:'Detail',params:{gameid:item.game_id}}"-->
+<!--          >-->
+          <img :src="item.cover" @click="link(item.id)">
+<!--          </router-link>-->
         </template>
       </n-card>
     </ul>
@@ -21,65 +21,42 @@
 </template>
 
 <script>
-import {reactive} from "vue";
+import {onBeforeMount, ref} from "vue";
 import request from "@/utils/request";
+import store from "@/store";
+import router from "@/router";
+import {useMessage} from "naive-ui";
 
-// TODO 从后端获取数据
+let items = ref([])
+const load = () => {
+  request.post("/getUserFavorites/",JSON.stringify({'user_id':store.state.user.userID})).then(res=>{
+    items.value = res.data
+    // console.log(items.value)
+  })
+}
 export default {
   name: "FavoriteGame",
 
   setup() {
-    let items = [{
-      id:1,
-      name:'CyberPunk 2077',
-      game_id:1,
-      url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.juxia.com%2Fupload%2F202104%2F02%2F02163737e1ea7ih8JTL7npy2rne.jpg&refer=http%3A%2F%2Fimg.juxia.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673708300&t=19ca6c235fa8906cc5c45af75bc1ca9b'
-    },
-      {
-        id:2,
-        game_id:2,
-        name:'CyberPunk 2077',
-        url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.juxia.com%2Fupload%2F202104%2F02%2F02163737e1ea7ih8JTL7npy2rne.jpg&refer=http%3A%2F%2Fimg.juxia.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673708300&t=19ca6c235fa8906cc5c45af75bc1ca9b'
-      },
-      {
-        id:3,
-        game_id:3,
-        name:'CyberPunk 2077',
-        url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.juxia.com%2Fupload%2F202104%2F02%2F02163737e1ea7ih8JTL7npy2rne.jpg&refer=http%3A%2F%2Fimg.juxia.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673708300&t=19ca6c235fa8906cc5c45af75bc1ca9b'
-      },
-      {
-        id:4,
-        game_id:4,
-        name:'CyberPunk 2077',
-        url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.juxia.com%2Fupload%2F202104%2F02%2F02163737e1ea7ih8JTL7npy2rne.jpg&refer=http%3A%2F%2Fimg.juxia.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673708300&t=19ca6c235fa8906cc5c45af75bc1ca9b'
-      },
-      {
-        id:5,
-        game_id:5,
-        name:'CyberPunk 2077',
-        url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.juxia.com%2Fupload%2F202104%2F02%2F02163737e1ea7ih8JTL7npy2rne.jpg&refer=http%3A%2F%2Fimg.juxia.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673708300&t=19ca6c235fa8906cc5c45af75bc1ca9b'
-      },
-      {
-        id:6,
-        game_id:6,
-        name:'CyberPunk 2077',
-        url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.juxia.com%2Fupload%2F202104%2F02%2F02163737e1ea7ih8JTL7npy2rne.jpg&refer=http%3A%2F%2Fimg.juxia.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673708300&t=19ca6c235fa8906cc5c45af75bc1ca9b'
-      }
-    ]
-    // const load = () => {
-    //   request.post("/getUserFavorites/",JSON.stringify({})).then(res=>{
-    //     items.value = res.data
-    //     // console.log(items.value)
-    //   })
-    // }
-    // load()
+    onBeforeMount(()=>{
+      load()
+    })
+    const message = useMessage()
     return {
       items,
       handleDel(id) {
-        request.post("/deleteFavor/",JSON.stringify({"id":id})).then(res=>{
-          console.log(res.data)
+        request.post("/delFavorites/",JSON.stringify({"user_id":store.state.user.userID,"game_id":id})).then(res=>{
+          if (res.message === '已从收藏夹中删除') {
+            message.success('取消收藏')
+            load()
+          }
+          else {
+            message.error('取消收藏失败')
+          }
         })
-        console.log('取消收藏')
+      },
+      link(id) {
+        router.push('/detail/' + id + '/price')
       }
     }
   }
