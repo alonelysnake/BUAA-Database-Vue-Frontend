@@ -4,6 +4,7 @@ from backend.models import *
 import json
 import pandas as pd
 from fuzzywuzzy import fuzz
+import time
 
 
 def login(request):
@@ -177,6 +178,17 @@ def searchGame(request):
     result = JsonResponse(dict(data))
     return result
 
+def getGamePhoto(request):
+    content = request.body.decode()
+    content_dict = json.loads(content)
+    print(content_dict)
+    game_id = content_dict.get('game_id')
+    data = list(GamePhoto.objects.filter(game_id=game_id))
+    data = [i.to_dict() for i in data]
+    data = {'messsagee': '成功获取游戏图片', "data": data}
+    result = JsonResponse(dict(data))
+    return result
+
 def getUserFavorites(request):
     content = request.body.decode()
     content_dict = json.loads(content)
@@ -239,10 +251,21 @@ def getHeat(request):
     print(content_dict)
     game_id = content_dict.get('game_id')
     if game_id != None:
-        data = list(Heat.objects.filter(game_id=game_id))
+        heats = list(Heat.objects.filter(game_id=game_id).order_by('date'))
+        data = []
+        for heat in heats:
+            data.append({'value': [heat.date, heats.players]})
     else:
-        data = list(Heat.objects.all())
-    data = [i.to_dict() for i in data]
+        t = time.localtime()
+        date = str(t.tm_year) + '-' + str(t.tm_mon) + '-' + (t.tm_mday)
+        heats = list(Heat.objects.filter(date=date))
+        data = []
+        for heat in heats:
+            data_i = heat.to_dict()
+            data_i['game_name'] = heat.game.name
+            data_i['game_cover'] = heat.game.cover
+            data_i['max_heat'] = Heat.objects.filter(game_id=heat.game_id).aggregate(res=Max('players'))['res']
+            data.append(data_i)
     data = {'messsagee': '成功导出游戏热度数据', "data": data}
     result = JsonResponse(dict(data))
     return result 
@@ -282,11 +305,11 @@ def getCountry(request):
     content = request.body.decode()
     content_dict = json.loads(content)
     print(content_dict)
-    game_id = content_dict.get('game_id')
-    data = list(Price.objects.filter(game_id=game_id).distinct('country_id'))
+    data = list(Price.objects.all().values('country_id').distinct())
     data = [i.country.to_dict() for i in data]
     for i in len(data):
         data[i]['value'] = data[i].pop('id')
+        data[i]['label'] = data[i].pop('name')
     data = {'messsagee': '成功导出游戏标签', "data": data}
     result = JsonResponse(dict(data))
     return result
@@ -299,14 +322,19 @@ def getPrice(request):
     country = content_dict.get('country')
     if country != None:
         prices = list(Price.objects.filter(game_id=game_id, country=country).order_by('date'))
+        data = []
+        for price in prices:
+            data.append({'value': [price.date, price.current_price]})
     else:
-        prices = list(Price.objects.filter(game_id=game_id).order_by('country', 'date'))
-    data = []
-    for price in prices:
-        data_i = price.to_dict()
-        data_i['country_name'] = price.country.name
-        data_i['lowest_price'] = Price.objects.filter(game_id=game_id, country=price.country).aggregate(res=Min('current_price'))['res']
-        data.append(data_i)
+        t = time.localtime()
+        date = str(t.tm_year) + '-' + str(t.tm_mon) + '-' + (t.tm_mday)
+        prices = list(Price.objects.filter(game_id=game_id, date=date).order_by('country'))
+        data = []
+        for price in prices:
+            data_i = price.to_dict()
+            data_i['country_name'] = price.country.name
+            data_i['lowest_price'] = Price.objects.filter(game_id=game_id, country=price.country).aggregate(res=Min('current_price'))['res']
+            data.append(data_i)
     data = {'messsagee': '成功导出游戏价格', "data": data}
     result = JsonResponse(dict(data))
     return result
