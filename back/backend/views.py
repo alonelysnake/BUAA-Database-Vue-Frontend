@@ -281,14 +281,13 @@ def getDiscount(request):
     elif game_id != None:
         data = list(Discount.objects.filter(game_id=game_id))
     else:
-        data = list(Discount.objects.all().values('name').distinct())
-    data = list(Develop.objects.all().values('developer_id').distinct())
-    data = [i.developer.to_dict() for i in data]
-    for i in len(data):
-        data[i]['value'] = data[i].pop('id')
-        data[i]['label'] = data[i].pop('name')
-    data = {'messsagee': '成功导出所有发行商', "data": data}
-    data = [i.to_dict() for i in data]
+        discounts = list(Discount.objects.all().values('name').distinct())
+        data = []
+        for i in range(len(discounts)):
+            data_i = {}
+            data_i['value'] = discounts[i]['id']
+            data_i['label'] = discounts[i]['name']
+            data.append(data_i)
     data = {'messsagee': '成功导出游戏折扣数据', "data": data}
     result = JsonResponse(dict(data))
     return result 
@@ -311,12 +310,15 @@ def getCountry(request):
     content = request.body.decode()
     content_dict = json.loads(content)
     print(content_dict)
-    data = list(Price.objects.all().values('country_id').distinct())
-    for i in len(data):
+    countries = list(Price.objects.all().values('country_id').distinct())
+    data = []
+    for i in countries:
         id = i['country_id']
         country = Country.objects.get(id=id)
-        data[i]['value'] = country.id
-        data[i]['label'] = country.label
+        data_i = {}
+        data_i['value'] = country.id
+        data_i['label'] = country.label
+        data.append(data_i)
     data = {'messsagee': '成功导出所有国家', "data": data}
     result = JsonResponse(dict(data))
     return result
@@ -472,7 +474,7 @@ def getDeveloper(request):
     print(content_dict)
     data = list(Developer.objects.all())
     data = [i.developer.to_dict() for i in data]
-    for i in len(data):
+    for i in range(len(data)):
         data[i]['value'] = data[i].pop('id')
         data[i]['label'] = data[i].pop('name')
     data = {'messsagee': '成功导出所有发行商', "data": data}
