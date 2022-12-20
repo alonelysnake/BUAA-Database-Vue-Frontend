@@ -5,7 +5,7 @@ import json
 import pandas as pd
 from fuzzywuzzy import fuzz
 import time
-
+import datetime
 
 def login(request):
     content = request.body.decode()
@@ -257,7 +257,7 @@ def getHeat(request):
             data.append({'value': [heat.date, heats.players]})
     else:
         t = time.localtime()
-        date = str(t.tm_year) + '-' + str(t.tm_mon) + '-' + (t.tm_mday)
+        date = datetime.date(t.tm_year, t.tm_mon, t.tm_mday)
         heats = list(Heat.objects.filter(date=date))
         data = []
         for heat in heats:
@@ -338,7 +338,7 @@ def getPrice(request):
             data.append({'value': [price.date, price.current_price]})
     else:
         t = time.localtime()
-        date = str(t.tm_year) + '-' + str(t.tm_mon) + '-' + str(t.tm_mday)
+        date = datetime.date(t.tm_year, t.tm_mon, t.tm_mday)
         prices = list(Price.objects.filter(game_id=game_id, date=date).order_by('country'))
         data = []
         for price in prices:
