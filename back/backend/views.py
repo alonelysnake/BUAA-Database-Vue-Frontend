@@ -312,10 +312,11 @@ def getCountry(request):
     content_dict = json.loads(content)
     print(content_dict)
     data = list(Price.objects.all().values('country_id').distinct())
-    data = [i.country.to_dict() for i in data]
     for i in len(data):
-        data[i]['value'] = data[i].pop('id')
-        data[i]['label'] = data[i].pop('name')
+        id = i['country_id']
+        country = Country.objects.get(id=id)
+        data[i]['value'] = country.id
+        data[i]['label'] = country.label
     data = {'messsagee': '成功导出所有国家', "data": data}
     result = JsonResponse(dict(data))
     return result
@@ -333,7 +334,7 @@ def getPrice(request):
             data.append({'value': [price.date, price.current_price]})
     else:
         t = time.localtime()
-        date = str(t.tm_year) + '-' + str(t.tm_mon) + '-' + (t.tm_mday)
+        date = str(t.tm_year) + '-' + str(t.tm_mon) + '-' + str(t.tm_mday)
         prices = list(Price.objects.filter(game_id=game_id, date=date).order_by('country'))
         data = []
         for price in prices:
