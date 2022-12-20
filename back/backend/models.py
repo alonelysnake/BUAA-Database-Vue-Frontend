@@ -159,7 +159,7 @@ class Discount(models.Model):
     end_time = models.DateField(default=None)
     discount_rate = models.DecimalField(max_digits=5, decimal_places=2, default=100.0)
     def to_dict(self):
-        return {'id': self.id, 'country_id': self.user_id, 'game_id': self.game_id, 'start_time': self.start_time, 'end_time': self.end_time, 'discount_rate': self.discount_rate}
+        return {'id': self.id, 'country_id': self.country_id, 'game_id': self.game_id, 'start_time': self.start_time, 'end_time': self.end_time, 'discount_rate': self.discount_rate}
 
 """
 1. 发表删除评论 DONE

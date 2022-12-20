@@ -18,6 +18,7 @@ urlpatterns = [
     path('getHeat/', getHeat),
     path('getDiscount/', getDiscount),
     path('getTag/', getTag),
+    path('getCountry/', getCountry),
     path('getPrice/', getPrice),
     path('getGoods/', getGoods),
     path('addGoods/', addGoods),
