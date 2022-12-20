@@ -474,7 +474,7 @@ def getDeveloper(request):
     content = request.body.decode()
     content_dict = json.loads(content)
     print(content_dict)
-    data = list(Developer.objects.all())
+    data = list(Develop.objects.all())
     data = [i.developer.to_dict() for i in data]
     for i in range(len(data)):
         data[i]['value'] = data[i].pop('id')
