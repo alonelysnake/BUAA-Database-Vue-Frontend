@@ -142,6 +142,7 @@ class Country(models.Model):
         return {'id': self.id, 'name': self.name}
 
 class Price(models.Model):
+    id = models.AutoField(primary_key=True)
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
     country = models.ForeignKey("Country", on_delete=models.CASCADE)
     date = models.DateField(default='2000-01-01')
@@ -153,13 +154,19 @@ class Price(models.Model):
 class Discount(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30, default='')
-    country = models.ForeignKey("Country", on_delete=models.CASCADE)
-    game = models.ForeignKey("Game", on_delete=models.CASCADE)
     start_time = models.DateField(default=None)
     end_time = models.DateField(default=None)
     discount_rate = models.DecimalField(max_digits=5, decimal_places=2, default=100.0)
     def to_dict(self):
-        return {'id': self.id, 'country_id': self.country_id, 'game_id': self.game_id, 'start_time': self.start_time, 'end_time': self.end_time, 'discount_rate': self.discount_rate}
+        return {'id': self.id, 'start_time': self.start_time, 'end_time': self.end_time, 'discount_rate': self.discount_rate}
+
+class GameDiscount(models.Model):
+    id = models.AutoField(primary_key=True)
+    country = models.ForeignKey("Country", on_delete=models.CASCADE)
+    game = models.ForeignKey("Game", on_delete=models.CASCADE)
+    discount = models.ForeignKey("Discount", on_delete=models.CASCADE)
+    def to_dict(self):
+        return {'discount_id': self.discount_id, 'country_id': self.country_id, 'game_id': self.game_id}
 
 """
 1. 发表删除评论 DONE

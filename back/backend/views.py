@@ -277,16 +277,18 @@ def getDiscount(request):
     game_id = content_dict.get('game_id')
     country = content_dict.get('country')
     if country != None:
-        data = list(Discount.objects.filter(game_id=game_id, country=country).order_by('country', 'date'))
+        data = list(GameDiscount.objects.filter(game_id=game_id, country=country))
+        data = [i.to_dict() for i in data]
     elif game_id != None:
-        data = list(Discount.objects.filter(game_id=game_id))
+        data = list(GameDiscount.objects.filter(game_id=game_id))
+        data = [i.to_dict() for i in data]
     else:
-        discounts = list(Discount.objects.all().values('name').distinct())
+        discounts = list(Discount.objects.all())
         data = []
-        for i in range(len(discounts)):
+        for i in discounts:
             data_i = {}
-            data_i['value'] = discounts[i]['id']
-            data_i['label'] = discounts[i]['name']
+            data_i['value'] = i.id
+            data_i['label'] = i.name
             data.append(data_i)
     data = {'messsagee': '成功导出游戏折扣数据', "data": data}
     result = JsonResponse(dict(data))
