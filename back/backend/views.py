@@ -254,13 +254,14 @@ def getHeat(request):
         heats = list(Heat.objects.filter(game_id=game_id).order_by('date'))
         data = []
         for heat in heats:
-            data.append({'value': [heat.date, heats.players]})
+            data.append({'value': [heat.date, heat.players]})
     else:
-        t = time.localtime()
-        date = datetime.date(t.tm_year, t.tm_mon, t.tm_mday)
-        heats = list(Heat.objects.filter(date=date))
+        # t = time.localtime()
+        # date = datetime.date(t.tm_year, t.tm_mon, t.tm_mday)
+        games = list(Heat.objects.all().values('game_id').distinct())
         data = []
-        for heat in heats:
+        for game in games:
+            heat = Heat.objects.filter(game_id=game['game_id']).order_by('-date').first()
             data_i = heat.to_dict()
             data_i['game_name'] = heat.game.name
             data_i['game_cover'] = heat.game.cover
@@ -337,11 +338,12 @@ def getPrice(request):
         for price in prices:
             data.append({'value': [price.date, price.current_price]})
     else:
-        t = time.localtime()
-        date = datetime.date(t.tm_year, t.tm_mon, t.tm_mday)
-        prices = list(Price.objects.filter(game_id=game_id, date=date).order_by('country'))
+        # t = time.localtime()
+        # date = datetime.date(t.tm_year, t.tm_mon, t.tm_mday)
+        countries = list(Price.objects.filter(game_id=game_id).order_by('country').values('country').distinct())
         data = []
-        for price in prices:
+        for country in countries:
+            price = Price.objects.filter(game_id=game_id, country=country).order_by('-date').first()
             data_i = price.to_dict()
             data_i['country_name'] = price.country.name
             data_i['lowest_price'] = Price.objects.filter(game_id=game_id, country=price.country).aggregate(res=Min('current_price'))['res']
