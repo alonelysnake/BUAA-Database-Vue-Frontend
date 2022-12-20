@@ -319,7 +319,7 @@ def getCountry(request):
         country = Country.objects.get(id=id)
         data_i = {}
         data_i['value'] = country.id
-        data_i['label'] = country.label
+        data_i['label'] = country.name
         data.append(data_i)
     data = {'messsagee': '成功导出所有国家', "data": data}
     result = JsonResponse(dict(data))
