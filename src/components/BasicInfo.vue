@@ -78,9 +78,13 @@ export default {
         info.id.value = gameInfo.id;
         info.name.value = gameInfo.name;
         info.platform.value = gameInfo.platform;
-        info.publisher.value = gameInfo.developer;
+        for (let i = 0; i < gameInfo.developer.length; i++) {
+          info.publisher.value += gameInfo.developer[i].name + " "
+        }
         info.time.value = gameInfo.date;
-        info.tags.value = gameInfo.tag;
+        for (let i = 0; i < gameInfo.tag.length; i++) {
+          info.tags.value += gameInfo.tag[i].tag + " "
+        }
         info.image.value = gameInfo.cover;
       });
 
