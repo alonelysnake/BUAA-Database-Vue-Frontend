@@ -281,7 +281,13 @@ def getDiscount(request):
     elif game_id != None:
         data = list(Discount.objects.filter(game_id=game_id))
     else:
-        data = list(Discount.objects.all())
+        data = list(Discount.objects.all().values('name').distinct())
+    data = list(Develop.objects.all().values('developer_id').distinct())
+    data = [i.developer.to_dict() for i in data]
+    for i in len(data):
+        data[i]['value'] = data[i].pop('id')
+        data[i]['label'] = data[i].pop('name')
+    data = {'messsagee': '成功导出所有发行商', "data": data}
     data = [i.to_dict() for i in data]
     data = {'messsagee': '成功导出游戏折扣数据', "data": data}
     result = JsonResponse(dict(data))
@@ -310,7 +316,7 @@ def getCountry(request):
     for i in len(data):
         data[i]['value'] = data[i].pop('id')
         data[i]['label'] = data[i].pop('name')
-    data = {'messsagee': '成功导出游戏标签', "data": data}
+    data = {'messsagee': '成功导出所有国家', "data": data}
     result = JsonResponse(dict(data))
     return result
 
@@ -463,14 +469,12 @@ def getDeveloper(request):
     content = request.body.decode()
     content_dict = json.loads(content)
     print(content_dict)
-    game_id = content_dict.get('game_id')
-    country = content_dict.get('country')
-    if country != None:
-        data = list(Price.objects.filter(game_id=game_id, country=country).order_by('country', 'date'))
-    else:
-        data = list(Price.objects.filter(game_id=game_id).order_by('country', 'date'))
-    data = [i.to_dict() for i in data]
-    data = {'messsagee': '成功导出游戏价格', "data": data}
+    data = list(Developer.objects.all())
+    data = [i.developer.to_dict() for i in data]
+    for i in len(data):
+        data[i]['value'] = data[i].pop('id')
+        data[i]['label'] = data[i].pop('name')
+    data = {'messsagee': '成功导出所有发行商', "data": data}
     result = JsonResponse(dict(data))
     return result
 
