@@ -41,7 +41,7 @@ def register(request):
         message = "两次输入密码不一致，请重新输入"
     else:
         message = '注册成功'
-        User.objects.create(name=name, email=email, password=password)
+        User.objects.create(name=name, email=email, password=password, photo='/img/head.d31cda9c.jpg')
     data = {'message':message}
     result = JsonResponse(dict(data))
     return result
@@ -340,10 +340,10 @@ def getPrice(request):
     else:
         # t = time.localtime()
         # date = datetime.date(t.tm_year, t.tm_mon, t.tm_mday)
-        countries = list(Price.objects.filter(game_id=game_id).order_by('country').values('country').distinct())
+        countries = list(Price.objects.filter(game_id=game_id).order_by('country').values('country_id').distinct())
         data = []
         for country in countries:
-            price = Price.objects.filter(game_id=game_id, country=country).order_by('-date').first()
+            price = Price.objects.filter(game_id=game_id, country=country['country_id']).order_by('-date').first()
             data_i = price.to_dict()
             data_i['country_name'] = price.country.name
             data_i['lowest_price'] = Price.objects.filter(game_id=game_id, country=price.country).aggregate(res=Min('current_price'))['res']
