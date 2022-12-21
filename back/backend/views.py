@@ -210,7 +210,7 @@ def filterGame(request):
         if discount_rate != None and Discount.objects.get(id=discount_id).discount_rate > discount_rate:
             continue
         discount = Discount.objects.get(id=discount_id)
-        current_price = Price.objects.filter(game_id=id, country=country_id).order_by('-date').first()
+        current_price = Price.objects.filter(game_id=id, country=country_id).order_by('-date').first().current_price
         data_i = {'id': id, 'current_price': current_price, 'discount_rate': discount.discount_rate, 'start_time': discount.start_time, 'end_time': discount.end_time}
         data.append(data_i)
     data = {'messsagee': '成功过滤得到游戏数据', "data": data}
