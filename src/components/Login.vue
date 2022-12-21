@@ -61,7 +61,7 @@ export default {
   name: "Login",
   setup() {
     const mail = ref("");
-    const password=ref("");
+    const password = ref("");
     const loading = ref(false);
     const router = useRouter();
     const message = useMessage();
@@ -85,30 +85,29 @@ export default {
         };
         request.post("/login/", JSON.stringify(post)).then(res => {
           //TODO 后端的返回结果
-          let recvMessage=res.message;
+          let recvMessage = res.message;
           let userInfo = res.info;
-          let success = !(userInfo.id===undefined);
-          // console.log(userInfo);
-          // console.log(success);
+          let success = !(userInfo.id === undefined);
           if (success) {
             message.success("登录成功");
             // 用户全局量赋值
-            store.state.user.nickname=userInfo.username;
-            store.state.user.userID=userInfo.id;
-            store.state.user.sales=userInfo.sales;
-            store.state.user.avatar=userInfo.photo;
-            store.state.user.email=userInfo.email;
-            store.state.user.intro=userInfo.profile;
-            store.state.user.sex=userInfo.gender;
-            store.state.user.like=userInfo.likes;
-            store.state.user.dislike=userInfo.dislikes;
+            store.state.user.nickname = userInfo.username;
+            store.state.user.userID = userInfo.id;
+            store.state.user.sales = userInfo.sales;
+            store.state.user.avatar = userInfo.photo;
+            store.state.user.email = userInfo.email;
+            store.state.user.intro = userInfo.profile;
+            store.state.user.sex = userInfo.gender;
+            store.state.user.like = userInfo.likes;
+            store.state.user.dislike = userInfo.dislikes;
+            store.state.loggedIn = true;
 
             router.push({name: "Home"});
           } else {
             //TODO 登录失败提示
             message.error(recvMessage);
           }
-          loading.value=false;
+          loading.value = false;
         });
       },
 
