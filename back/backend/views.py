@@ -190,7 +190,8 @@ def filterGame(request):
     end_date = content_dict.get('end_date')
     data = []
     game_ids = list(Price.objects.filter(country_id=country_id).values('game_id').distinct())
-    for id in game_ids:
+    for game_id in game_ids:
+        id = game_id['game_id']
         # developer_id
         if developer_id != None and not Develop.objects.filter(game_id=id, developer_id=developer_id).exists():
            continue
