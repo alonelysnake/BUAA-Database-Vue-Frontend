@@ -20,14 +20,14 @@
           </a>
         </li>
         <li class="nav-item1">
-          <router-link class="nav-link" to="Filter">
+          <router-link class="nav-link" to="/filter">
             <n-button text>
               优惠
             </n-button>
           </router-link>
         </li>
         <li class="nav-item1">
-          <router-link to="Heat" class="nav-link" >
+          <router-link to="/heat" class="nav-link" >
             <n-button text>
               热门
             </n-button>
@@ -86,7 +86,8 @@ import {
   CartOutline as CartIcon,
 } from "@vicons/ionicons5";
 
-import headUrl from "../static/img/head.jpg"
+// import headUrl from "../static/img/head.jpg"
+import headUrl from "../assets/logo.png"
 import logoUrl from "../assets/logo.png"
 import { RouterLink } from "vue-router";
 import store from "../store"
