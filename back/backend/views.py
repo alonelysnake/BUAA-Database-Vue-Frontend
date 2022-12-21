@@ -41,7 +41,7 @@ def register(request):
         message = "两次输入密码不一致，请重新输入"
     else:
         message = '注册成功'
-        User.objects.create(name=name, email=email, password=password)
+        User.objects.create(name=name, email=email, password=password, photo='/img/head.d31cda9c.jpg')
     data = {'message':message}
     result = JsonResponse(dict(data))
     return result
