@@ -40,7 +40,7 @@
           v-model:value="password"
           type="password"
           show-password-on="mousedown"
-          placeholder="请输入密码6-15位"
+          placeholder="6-15位，同时包含字母与数字"
           :maxlength="15"
           :minlength="6"
           size="small"
@@ -103,7 +103,14 @@ export default {
           message.error("两次密码不一致");
           return;
         }
-        //TODO 要求密码同时包含数字和字母
+        //必须包含字母和数字
+        let format = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9~!@&%#_]{6,15}$/gi
+        if(!format.test(password.value)){
+          message.error('密码长度应在6-15位，且同时包含字母与数字')
+          password.value=''
+          check.value=''
+          return;
+        }
 
         loading.value = true;
 
