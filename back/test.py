@@ -1,20 +1,18 @@
 from django.test import TestCase
-from django.urls import resolve
+from django.urls import resolve, reverse
 from django.http import HttpRequest
-import requests
-from django.shortcuts import render,reverse
+
 from backend.views import *
 
 
 class Test(TestCase):
 
     def test_root_url_to_home_page(self):
-        url1 = 'http://127.0.0.1:8000/getTag/' 
-        jsonData = requests.get(url1)
-        reverse('127.0.0.1:8000/getTag/')
-        found = resolve('http://127.0.0.1:8000/getTag/')
-        print(found)
-        self.assertEqual(found.func, getCountry)
+        self.create_read_url = reverse("getPrice/")
+        param = {'game_id'}
+        param = json.dumps(param)
+        response = self.client.post(self.create_read_url, param)
+        print(response)
 
     # def test_home_page_returns_correct_html(self):
     #     request = HttpRequest()  # 1
