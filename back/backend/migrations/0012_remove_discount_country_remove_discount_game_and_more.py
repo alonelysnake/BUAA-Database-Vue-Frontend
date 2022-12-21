@@ -11,18 +11,18 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # migrations.RemoveField(
-        #     model_name='discount',
-        #     name='country',
-        # ),
-        # migrations.RemoveField(
-        #     model_name='discount',
-        #     name='game',
-        # ),
-        # migrations.RemoveField(
-        #     model_name='discount',
-        #     name='user',
-        # ),
+        migrations.RemoveField(
+            model_name='discount',
+            name='country',
+        ),
+        migrations.RemoveField(
+            model_name='discount',
+            name='game',
+        ),
+        migrations.RemoveField(
+            model_name='discount',
+            name='user',
+        ),
         migrations.AlterField(
             model_name='price',
             name='id',

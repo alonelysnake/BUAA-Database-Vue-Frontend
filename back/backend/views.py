@@ -178,6 +178,44 @@ def searchGame(request):
     result = JsonResponse(dict(data))
     return result
 
+def filterGame(request):
+    content = request.body.decode()
+    content_dict = json.loads(content)
+    print(content_dict)
+    country_id = content_dict.get('country_id')
+    developer_id = content_dict.get('developer_id')
+    discount_id = content_dict.get('discount_id')
+    discount_rate = 100 - content_dict.get('discount_rate')
+    start_date = content_dict.get('start_date')
+    end_date = content_dict.get('end_date')
+    data = []
+    game_ids = list(Price.objects.filter(country_id=country_id).values('game_id').distinct())
+    for id in game_ids:
+        # developer_id
+        if developer_id != None and not Develop.objects.filter(game_id=id, developer_id=developer_id).exists():
+           continue
+        # date
+        if start_date != None and end_date != None:
+            start_date = time.strftime("%Y-%m-%d", time.localtime(start_date/1000))
+            end_date = time.strftime("%Y-%m-%d", time.localtime(end_date/1000))
+            if not Game.objects.filter(date__range=[start_date, end_date]).exists():
+                continue
+        # discount_id
+        if discount_id == 0:
+            discount_id = Discount.objects.all().order_by('-date').first().id
+        if not GameDiscount.objects.filter(game_id=id, discount_id=discount_id).exists():
+            continue
+        # discount_rate
+        if discount_rate != None and Discount.objects.get(id=discount_id).discount_rate > discount_rate:
+            continue
+        discount = Discount.objects.get(id=discount_id)
+        current_price = Price.objects.filter(game_id=id, country=country_id).order_by('-date').first()
+        data_i = {'id': id, 'current_price': current_price, 'discount_rate': discount.discount_rate, 'start_time': discount.start_time, 'end_time': discount.end_time}
+        data.append(data_i)
+    data = {'messsagee': '成功过滤得到游戏数据', "data": data}
+    result = JsonResponse(dict(data))
+    return result
+
 def getGamePhoto(request):
     content = request.body.decode()
     content_dict = json.loads(content)
@@ -250,8 +288,19 @@ def getHeat(request):
     content_dict = json.loads(content)
     print(content_dict)
     game_id = content_dict.get('game_id')
+    time = content_dict.get('time')
     if game_id != None:
-        heats = list(Heat.objects.filter(game_id=game_id).order_by('date'))
+        now = datetime.datetime.now()
+        if time == 'year':
+            delta = datetime.timedelta(days=365)
+        elif time == 'month':
+            delta = datetime.timedelta(days=30)
+        elif time == 'week':
+            delta = datetime.timedelta(days=7)
+        else:
+            delta = datetime.timedelta(days=0)
+        start_date = (now - delta).strftime('%Y-%m-%d')
+        heats = list(Heat.objects.filter(game_id=game_id, date__gt=start_date).order_by('date'))
         data = []
         for heat in heats:
             data.append({'value': [heat.date, heat.players]})
@@ -332,8 +381,19 @@ def getPrice(request):
     print(content_dict)
     game_id = content_dict.get('game_id')
     country = content_dict.get('country')
+    time = content_dict.get('time')
     if country != None:
-        prices = list(Price.objects.filter(game_id=game_id, country=country).order_by('date'))
+        now = datetime.datetime.now()
+        if time == 'year':
+            delta = datetime.timedelta(days=365)
+        elif time == 'month':
+            delta = datetime.timedelta(days=30)
+        elif time == 'week':
+            delta = datetime.timedelta(days=7)
+        else:
+            delta = datetime.timedelta(days=0)
+        start_date = (now - delta).strftime('%Y-%m-%d')
+        prices = list(Price.objects.filter(game_id=game_id, country=country, date__gt=start_date).order_by('date'))
         data = []
         for price in prices:
             data.append({'value': [price.date, price.current_price]})
