@@ -38,6 +38,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Import-export
+IMPORT_EXPORT_USE_TRANSACTIONS = True 
 
 # Application definition
 
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'backend',
+    'import_export',
     'corsheaders',
     'rest_framework',
 ]
