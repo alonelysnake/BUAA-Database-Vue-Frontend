@@ -24,6 +24,12 @@
             show-password-on="click"
             v-model:value="model.newPassword" placeholder="请输入新密码" />
       </n-form-item>
+      <n-form-item label="确定密码" path="checkPassword">
+        <n-input
+            type="password"
+            show-password-on="click"
+            v-model:value="model.checkPassword" placeholder="请输入新密码" />
+      </n-form-item>
       <div style="display: flex; justify-content: flex-end">
         <n-button style="margin-right: 10px" round @click="handleClose">
           取消
@@ -55,6 +61,7 @@ export default ({
       id: store.state.user.userID,
       oldPassword: null,
       newPassword:null,
+      checkPassword:null,
     })
 
     const tmp = reactive({
@@ -64,9 +71,18 @@ export default ({
     })
 
     const confirmModify = () => {
+      if (model.newPassword !== model.checkPassword) {
+        message.error("两次密码不一致");
+        return;
+      }
+      let format = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9~!@&%#_]{6,15}$/gi
+      if(!format.test(model.newPassword)){
+        message.error('密码长度应在6-15位，且同时包含字母与数字')
+        return;
+      }
       tmp.oldPassword = md5(model.oldPassword);
       tmp.newPassword = md5(model.newPassword);
-      console.log(tmp)
+      // console.log(tmp)
       request.post("/changePassword/",JSON.stringify({"password":tmp})).then(res=>{
         if (res.data === 0) {
           store.state.modifyVisible = false;
@@ -95,6 +111,11 @@ export default ({
           required: true,
           trigger: ["blur", "input"],
           message: "请输入新密码"
+        },
+        checkPassword: {
+          required: true,
+          trigger: ["blur", "input"],
+          message: "请再次输入密码"
         }
       },
 

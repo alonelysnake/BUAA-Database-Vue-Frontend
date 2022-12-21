@@ -20,18 +20,18 @@
           </a>
         </li>
         <li class="nav-item1">
-          <a class="nav-link" href="/">
+          <router-link class="nav-link" to="Filter">
             <n-button text>
               优惠
             </n-button>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item1">
-          <a class="nav-link" href="/">
+          <router-link to="Heat" class="nav-link" >
             <n-button text>
               热门
             </n-button>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item1">
           <a class="nav-link" href="/">
@@ -103,14 +103,11 @@ const renderIcon = (icon) => {
 
 export default {
   name: "Header",
-  // todo 实现跳转登陆注册页面，登出，搜索等功能
-  props: {
-    headIndex: String,
-  },
 
   components: {SearchCard},
 
   setup() {
+    // console.log(store.state.user.avatar)
     let nickname = computed(()=>{
       return store.state.user.userID
     })
@@ -161,13 +158,14 @@ export default {
           props: {
             onClick:() => {
               store.state.loggedIn = false;
+              router.push('/home/')
               // console.log(store.state.loggedIn)
             }
           }
         }
 
       ],
-      headUrl:headUrl,
+      headUrl:store.state.user.avatar,
       logoUrl:logoUrl,
       FlashOutline: SearchSharp,
       CloseCircleOutline,

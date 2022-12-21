@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import {ref, computed, onBeforeMount} from "vue";
+import {ref, onBeforeMount} from "vue";
 import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5";
 import {useMessage} from "naive-ui"
 import store from "@/store";
@@ -170,9 +170,9 @@ export default ({
     onBeforeMount(()=>{
       load()
     })
-    // const isSelf = ref(targetUserId.value === store.state.user.userID);
-    let isSelf = computed(()=> targetUserId.value === store.state.user.userID)
-
+    const isSelf = ref(parseInt(targetUserId.value) === store.state.user.userID);
+    //let isSelf = computed(()=> targetUserId.value === store.state.user.userID)
+    // console.log(isSelf.value,targetUserId.value,store.state.user.userID)
     return {
       isSelf,
       formRef,

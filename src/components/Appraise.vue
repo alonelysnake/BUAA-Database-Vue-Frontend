@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import {defineProps, ref} from "vue";
+import {ref} from "vue";
 import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
@@ -58,7 +58,6 @@ export default {
   name: "Appraise",
 
   setup() {
-    const props = defineProps(['orderId']);
     const message = useMessage();
     const formRef = ref(null);
     const model = ref({

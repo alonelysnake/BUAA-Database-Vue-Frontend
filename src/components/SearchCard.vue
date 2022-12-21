@@ -95,11 +95,11 @@ export default {
       request.post("/searchGame/",JSON.stringify({'keyword':search.value})).then(res=>{
 
         searchList.value = res.data
-        console.log(searchList.value)
+        // console.log(searchList.value)
       })
     }
 
-    watch(search,(newValue,oldVal) => {
+    watch(search,() => {
       loadSearchList();
     })
     return {
