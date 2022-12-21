@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showChart">
+  <div class="table" v-if="showChart">
     <Charts :ids="selectRef"/>
   </div>
   <div class="table">

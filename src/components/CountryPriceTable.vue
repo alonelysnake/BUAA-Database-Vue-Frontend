@@ -84,7 +84,6 @@ export default {
       init();
     })
 
-    //TODO 后端获取每个国家的价格
     onMounted(() => {
       init();
     })

@@ -121,7 +121,7 @@ export default {
 
     //收藏
     function handleFavor() {
-      //TODO 未登录时提示登录
+      //未登录时提示登录
       if (store.state.loggedIn === false) {
         dialog.warning({
           title: "请先登录",
