@@ -86,7 +86,6 @@ import {
   CartOutline as CartIcon,
 } from "@vicons/ionicons5";
 
-import headUrl from "../static/img/head.jpg"
 import logoUrl from "../assets/logo.png"
 import { RouterLink } from "vue-router";
 import store from "../store"
