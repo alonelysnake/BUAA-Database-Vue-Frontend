@@ -94,7 +94,7 @@ export default {
       });
       request.post("/isFavorites/", post).then(res => {
         // 根据res得到是否被收藏
-        /// console.log(res.data)
+        // console.log(res.data)
         favorButtonRef.value.flag = res.data;
         if (favorButtonRef.value.flag) {
           favorButtonRef.value.text = "取消收藏";

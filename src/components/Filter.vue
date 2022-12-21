@@ -1,9 +1,9 @@
 <template>
-
+<div style="min-height: 300px">
   <n-grid :cols="2" x-gap="10px" y-gap="10">
 
     <!--  国家地区-->
-    <n-grid-item>
+    <n-grid-item class="left">
       <!--      国家/地区-->
       <n-select
           placeholder="国家/地区"
@@ -13,13 +13,13 @@
     </n-grid-item>
 
     <!--  优惠比例-->
-    <n-grid-item>
+    <n-grid-item class="right">
       <n-text>折扣比例：≥{{ discountThreshold }}%</n-text>
       <n-slider v-model:value="discountThreshold" :step="5"/>
     </n-grid-item>
 
     <!--    发行商-->
-    <n-grid-item>
+    <n-grid-item class="left">
       <!--      开发商-->
       <n-select
           placeholder="开发商"
@@ -29,7 +29,7 @@
     </n-grid-item>
 
     <!--  发售时间-->
-    <n-grid-item>
+    <n-grid-item class="right">
       <n-space>
         发售时间
         <n-date-picker v-model:value="timeRange" type="daterange" clearable/>
@@ -37,7 +37,7 @@
     </n-grid-item>
 
     <!--  优惠类型-->
-    <n-grid-item>
+    <n-grid-item class="left">
       <n-select
           placeholder="优惠类型"
           v-model:value="discountValue"
@@ -49,6 +49,8 @@
   <n-button type="success" :loading="loading" @click="handleFilter">
     搜索
   </n-button>
+</div>
+
 
 </template>
 
@@ -171,5 +173,10 @@ export default {
 </script>
 
 <style scoped>
-
+.right {
+  margin-left: 50px;
+}
+.left {
+  margin-bottom: 30px;
+}
 </style>
