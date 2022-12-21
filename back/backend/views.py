@@ -189,7 +189,7 @@ def filterGame(request):
     start_date = content_dict.get('start_date')
     end_date = content_dict.get('end_date')
     data = []
-    if discount_id == 0:
+    if discount_id == '0':
         discount_id = Discount.objects.all().order_by('-start_time').first().id
     game_ids = list(Price.objects.filter(country_id=country_id).values('game_id').distinct())
     for game_id in game_ids:
