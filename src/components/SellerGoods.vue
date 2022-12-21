@@ -1,7 +1,6 @@
 <template>
   <div class="header"
        v-if="isSelf.valueOf()">
-
     <div class="operate">
       <n-button type="primary" ghost style="height: 35px" @click="delAll">批量删除</n-button>
     </div>
@@ -47,7 +46,6 @@
 
 </template>
 
-<!--todo 编辑/删除操作、从后端获得数据、测试数据上传-->
 
 <script>
 import {h, ref, computed, onBeforeMount, watch} from "vue";
@@ -60,6 +58,8 @@ import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
 import request from "@/utils/request";
+import sleep from "@/utils/sleep";
+
 
 const search = ref('')
 
@@ -70,7 +70,7 @@ const createColumns = ({
   return [
     {
       type: "selection",
-      disabled(row) {
+      disabled() {
         return false;
       }
     },
@@ -262,13 +262,13 @@ export default {
       return store.state.editGoodsVisible;
     })
 
-    watch(addGoods,(newVal,oldVal) => {
+    watch(addGoods,(newVal) => {
       if (newVal.valueOf() === false) {
         load()
       }
     })
 
-    watch(editGoods,(newVal,oldVal) => {
+    watch(editGoods,(newVal) => {
       // console.log('我在load啊')
       if (newVal.valueOf() === false) {
         load()
@@ -311,11 +311,23 @@ export default {
     const notSelf = ref(false);
     const dialog = useDialog();
     const message = useMessage();
-    if (router.currentRoute.value.params.username !== store.state.user.userID) {
+    if (parseInt(router.currentRoute.value.params.username) !== store.state.user.userID) {
       isSelf.value = false;
       notSelf.value = true;
       columnsRef = ref(createColumnsForVistor({
         purchase(rowData) {
+          if (store.state.loggedIn === false) {
+            dialog.warning({
+              title: "请先登录",
+              content: () => "请先登陆",
+              positiveText: "确定",
+              onPositiveClick: () => {
+                router.push({name:'login'})
+              },
+              negativeText: "取消"
+            })
+            return;
+          }
           dialog.warning({
             title: "确认购买",
             content: () => "是否确定购买该商品",

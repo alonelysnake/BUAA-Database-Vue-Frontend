@@ -87,7 +87,7 @@ export default defineComponent({
       activeKey: ref(null),
       menuOptions,
 
-      handleSelect(key, item) {
+      handleSelect(key) {
         // console.log(key);
         if (parseInt(route.currentRoute.value.params.username) !== store.state.user.userID) {
           //console.log(route.currentRoute.value.params.username,store.state.user.userID)

@@ -76,7 +76,7 @@
 
 
 <script>
-import {ref, defineProps, computed, watch, reactive} from "vue";
+import {ref, computed, watch, reactive} from "vue";
 import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
@@ -120,7 +120,7 @@ export default ({
       })
     }
 
-    watch(()=>model.nameValue,(newValue,oldVal) => {
+    watch(()=>model.nameValue,() => {
       // console.log(model.nameValue)
       loadSearchList();
     })
@@ -131,7 +131,6 @@ export default ({
       })
     }
 
-    const props = defineProps(['regular']);
     const formRef = ref(null);
     return {
       formRef,

@@ -188,6 +188,18 @@ export default {
     let columnsRef = ref(createColumns(
         {
           purchase(rowData) {
+            if (store.state.loggedIn === false) {
+              dialog.warning({
+                title: "请先登录",
+                content: () => "请先登陆",
+                positiveText: "确定",
+                onPositiveClick: () => {
+                  router.push({name:'login'})
+                },
+                negativeText: "取消"
+              })
+              return;
+            }
             dialog.warning({
               title: "确认购买",
               content: () => "是否确定购买该商品",

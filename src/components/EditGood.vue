@@ -115,18 +115,10 @@ export default ({
       handleConfirm(e) {
         e.preventDefault();
         store.state.editGoodsVisible = false;
-        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'steam_id','content':model.value.steamValue})).then(res=>{
-
-        })
-        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'decription','content':model.value.introValue})).then(res=>{
-
-        })
-        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'cd_key','content':model.value.keyValue})).then(res=>{
-
-        })
-        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'price','content':model.value.moneyValue})).then(res=>{
-
-        })
+        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'steam_id','content':model.value.steamValue}))
+        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'decription','content':model.value.introValue}))
+        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'cd_key','content':model.value.keyValue}))
+        request.post("/updateGoods/",JSON.stringify({'id':model.value.goodId,'type':'price','content':model.value.moneyValue}))
         message.success('修改成功')
       },
     }

@@ -20,18 +20,18 @@
           </a>
         </li>
         <li class="nav-item1">
-          <a class="nav-link" href="/">
+          <router-link class="nav-link" to="Filter">
             <n-button text>
               优惠
             </n-button>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item1">
-          <a class="nav-link" href="/">
+          <router-link to="Heat" class="nav-link" >
             <n-button text>
               热门
             </n-button>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item1">
           <a class="nav-link" href="/">

@@ -7,11 +7,6 @@
               :title="item.title"
               :img-url="item.url"
               :text="item.test"/>
-<!--        <Card class="card"/>-->
-<!--        <Card class="card"/>-->
-<!--        <Card class="card"/>-->
-<!--        <Card class="card"/>-->
-<!--        <Card style="list-style: none;float: left;"/>-->
       </ul>
     </div>
   </n-scrollbar>
