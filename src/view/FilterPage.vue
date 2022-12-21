@@ -1,8 +1,8 @@
 <template>
   <!--  筛选器-->
-  <div class="filter">
-    <Filter @handleFilter="handleFilter"/>
-  </div>
+  <n-card class="filter" hoverable>
+    <Filter class="content" @handleFilter="handleFilter"/>
+  </n-card>
 
   <!--经过筛选后的展示-->
   <div class="table">
@@ -39,11 +39,23 @@ export default {
 
 <style scoped>
 .filter {
-  padding: 100px 100px 0 100px;
+  margin-left: 100px;
+  margin-top: 30px;
+  padding: 100px 100px;
   width: 800px;
+  min-height: 300px;
+  position: relative;
+}
+
+.content {
+  position: absolute;
+  top: 30px;
+  right: 20px;
+  left: 20px;
+  margin: auto;
 }
 
 .table {
-  padding: 50px 100px;
+  padding: 20px 100px 50px;
 }
 </style>
