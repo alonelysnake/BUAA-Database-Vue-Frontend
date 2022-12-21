@@ -55,6 +55,7 @@ import {GlassesOutline, Glasses} from '@vicons/ionicons5'
 import {useMessage} from 'naive-ui'
 import request from "@/utils/request";
 import store from "@/store";
+import md5 from 'js-md5';
 
 export default {
   name: "Login",
@@ -80,7 +81,7 @@ export default {
         //TODO 从后端接收反馈
         let post = {
           'email': mail.value,
-          'password': password.value,
+          'password': md5(password.value),
         };
         request.post("/login/", JSON.stringify(post)).then(res => {
           //TODO 后端的返回结果

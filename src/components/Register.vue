@@ -77,6 +77,7 @@ import {GlassesOutline, Glasses} from '@vicons/ionicons5'
 import {useRouter} from 'vue-router'
 import {useMessage} from 'naive-ui'
 import request from "@/utils/request"
+import md5 from 'js-md5';
 
 export default {
   name: "Register",
@@ -113,8 +114,8 @@ export default {
         let post = JSON.stringify({
           'username': name.value,
           'email': mail.value,
-          'password': password.value,
-          'password2': password.value,
+          'password': md5(password.value),
+          'password2': md5(password.value),
         });
         request.post("register/", post).then(res => {
           console.log(res.message);
