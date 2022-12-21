@@ -189,6 +189,8 @@ def filterGame(request):
     start_date = content_dict.get('start_date')
     end_date = content_dict.get('end_date')
     data = []
+    if discount_id == 0:
+        discount_id = Discount.objects.all().order_by('-start_time').first().id
     game_ids = list(Price.objects.filter(country_id=country_id).values('game_id').distinct())
     for game_id in game_ids:
         id = game_id['game_id']
@@ -203,8 +205,6 @@ def filterGame(request):
             if not Game.objects.filter(date__range=[start_date, end_date]).exists():
                 continue
         # discount_id
-        if discount_id == 0:
-            discount_id = Discount.objects.all().order_by('-start_time').first().id
         if not GameDiscount.objects.filter(game_id=id, discount_id=discount_id).exists():
             continue
         # discount_rate
@@ -212,7 +212,7 @@ def filterGame(request):
             continue
         discount = Discount.objects.get(id=discount_id)
         current_price = Price.objects.filter(game_id=id, country=country_id).order_by('-date').first().current_price
-        data_i = {'id': id, 'cover': game.cover, 'name': game.name, 'current_price': current_price, 'discount_rate': discount.discount_rate, 'start_time': discount.start_time, 'end_time': discount.end_time}
+        data_i = {'id': id, 'cover': game.cover, 'name': game.name, 'current_price': current_price, 'discount_rate': 100-discount.discount_rate, 'start_time': discount.start_time, 'end_time': discount.end_time}
         data.append(data_i)
     data = {'messsagee': '成功过滤得到游戏数据', "data": data}
     result = JsonResponse(dict(data))
