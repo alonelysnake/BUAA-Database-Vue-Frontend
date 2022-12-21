@@ -69,7 +69,7 @@ export default defineComponent({
   name: "Aside",
   setup() {
     const route = useRouter();
-    if (route.currentRoute.value.params.username !== store.state.user.userID) {
+    if (parseInt(route.currentRoute.value.params.username) !== store.state.user.userID) {
       menuOptions = [
         {
           label: "个人信息",
@@ -89,9 +89,9 @@ export default defineComponent({
 
       handleSelect(key, item) {
         // console.log(key);
-        if (route.currentRoute.value.params.username !== store.state.user.userID) {
-          console.log(route.currentRoute.value.params.username,store.state.user.userID)
-          console.log("访客进入")
+        if (parseInt(route.currentRoute.value.params.username) !== store.state.user.userID) {
+          //console.log(route.currentRoute.value.params.username,store.state.user.userID)
+          //console.log("访客进入")
           switch (key) {
             case "userInfo":
               router.push("/user_v/" + route.currentRoute.value.params.username + "/info");
@@ -102,7 +102,7 @@ export default defineComponent({
           }
         }
         else {
-          console.log("用户进入")
+          //console.log("用户进入")
           switch (key) {
             case "userInfo":
               router.push("/user/" + store.state.user.userID + "/info");

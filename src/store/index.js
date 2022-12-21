@@ -4,14 +4,14 @@ export default createStore({
     // state,提供唯一的公共数据源，所有共享数据统一放到store的state中进行存储
     // 访问方式: this.$store.state.数据名
     state: {
-        loggedIn: true,
+        loggedIn: false,
         searchItem: "",
         user: {
             nickname: "Veronica",
             userID: '1',
             sales: 40207,
             // 头像Url
-            avatar: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg",
+            avatar: "/img/head.d31cda9c.jpg",
             email: "837826068@qq.com",
             intro: "爱打电动的BUAAer",
             sex: "secret",
