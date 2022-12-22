@@ -182,6 +182,13 @@ class Comment(models.Model):
     def to_dict(self):
         return {'id': self.id, 'user_id': self.user_id, 'game_id': self.game_id, 'time': self.time, 'content': self.content, 'likes': self.likes}
 
+class Like(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    comment = models.ForeignKey("Comment", on_delete=models.CASCADE)
+    def to_dict(self):
+        return {'id': self.id, 'user_id': self.user_id, 'comment_id': self.comment_id}
+
 class News(models.Model):
     id = models.AutoField(primary_key=True)
     target = models.CharField(max_length=256, default='')

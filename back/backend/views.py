@@ -300,7 +300,7 @@ def getHeat(request):
         elif time == 'week':
             delta = datetime.timedelta(days=7)
         else:
-            delta = datetime.timedelta(days=0)
+            delta = datetime.timedelta(days=36500)
         start_date = (now - delta).strftime('%Y-%m-%d')
         heats = list(Heat.objects.filter(game_id=game_id, date__gt=start_date).order_by('date'))
         data = []
@@ -393,7 +393,7 @@ def getPrice(request):
         elif time == 'week':
             delta = datetime.timedelta(days=7)
         else:
-            delta = datetime.timedelta(days=0)
+            delta = datetime.timedelta(days=36500)
         start_date = (now - delta).strftime('%Y-%m-%d')
         prices = list(Price.objects.filter(game_id=game_id, country=country, date__gt=start_date).order_by('date'))
         data = []
@@ -552,9 +552,18 @@ def getComment(request):
     content_dict = json.loads(content)
     print(content_dict)
     game_id = content_dict.get('game_id')
-    if game_id != None:
-        data = list(Comment.objects.filter(game_id=game_id))
-    data = [i.to_dict() for i in data]
+    user_id = content_dict.get('user_id')
+    comments = list(Comment.objects.filter(game_id=game_id))
+    data = []
+    for comment in comments:
+        flag = 0
+        if user_id != None and Like.objects.filter(comment_id=comment.id, user_id=user_id).exists():
+            flag = 1
+        data_i = comment.to_dict()
+        data_i['flag'] = flag
+        data_i['user_name'] = comment.user.name
+        data_i['user_photo'] = comment.user.photo
+        data.append(data_i)
     data = {'messsagee': '成功导出评论', "data": data}
     result = JsonResponse(dict(data))
     return result
