@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import pre_save, post_delete, pre_delete
+from django.dispatch import receiver
 
 # Create your models here.
 class Admin(models.Model):
@@ -188,6 +190,18 @@ class Like(models.Model):
     comment = models.ForeignKey("Comment", on_delete=models.CASCADE)
     def to_dict(self):
         return {'id': self.id, 'user_id': self.user_id, 'comment_id': self.comment_id}
+
+@receiver(pre_save, sender=Like)
+def pre_save_like(sender, instance, **kwargs):
+    comment = instance.comment
+    comment.likes += 1
+    comment.save()
+
+@receiver(pre_delete, sender=Like)
+def pre_delete_like(sender, instance, **kwargs):
+    comment = instance.comment
+    comment.likes -= 1
+    comment.save()
 
 class News(models.Model):
     id = models.AutoField(primary_key=True)

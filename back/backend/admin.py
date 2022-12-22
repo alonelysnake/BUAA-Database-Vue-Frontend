@@ -28,4 +28,4 @@ class LogEntryAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(Game, GameAdmin)
 admin.site.register(Goods, GoodsAdmin)
-admin.site.register([User, Heat, Tag, GamePhoto, Favorites, Developer, Develop, Country, Price, Discount, GameDiscount, Comment, News, Slide])
+admin.site.register([User, Heat, Tag, GamePhoto, Favorites, Developer, Develop, Country, Price, Discount, GameDiscount, Comment, Like, News, Slide])
