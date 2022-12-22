@@ -185,7 +185,7 @@ def filterGame(request):
     country_id = content_dict.get('country_id')
     developer_id = content_dict.get('developer_id')
     discount_id = content_dict.get('discount_id')
-    discount_rate = 100 - content_dict.get('discount_rate')
+    discount_rate = content_dict.get('discount_rate')
     start_date = content_dict.get('start_date')
     end_date = content_dict.get('end_date')
     data = []
@@ -212,7 +212,7 @@ def filterGame(request):
             continue
         discount = Discount.objects.get(id=discount_id)
         current_price = Price.objects.filter(game_id=id, country=country_id).order_by('-date').first().current_price
-        data_i = {'id': id, 'cover': game.cover, 'name': game.name, 'current_price': current_price, 'discount_rate': 100-discount.discount_rate, 'start_time': discount.start_time, 'end_time': discount.end_time}
+        data_i = {'id': id, 'cover': game.cover, 'name': game.name, 'current_price': current_price, 'discount_rate': discount.discount_rate, 'start_time': discount.start_time, 'end_time': discount.end_time}
         data.append(data_i)
     data = {'messsagee': '成功过滤得到游戏数据', "data": data}
     result = JsonResponse(dict(data))
@@ -300,7 +300,7 @@ def getHeat(request):
         elif time == 'week':
             delta = datetime.timedelta(days=7)
         else:
-            delta = datetime.timedelta(days=0)
+            delta = datetime.timedelta(days=36500)
         start_date = (now - delta).strftime('%Y-%m-%d')
         heats = list(Heat.objects.filter(game_id=game_id, date__gt=start_date).order_by('date'))
         data = []
@@ -393,7 +393,7 @@ def getPrice(request):
         elif time == 'week':
             delta = datetime.timedelta(days=7)
         else:
-            delta = datetime.timedelta(days=0)
+            delta = datetime.timedelta(days=36500)
         start_date = (now - delta).strftime('%Y-%m-%d')
         prices = list(Price.objects.filter(game_id=game_id, country=country, date__gt=start_date).order_by('date'))
         data = []
@@ -552,9 +552,18 @@ def getComment(request):
     content_dict = json.loads(content)
     print(content_dict)
     game_id = content_dict.get('game_id')
-    if game_id != None:
-        data = list(Comment.objects.filter(game_id=game_id))
-    data = [i.to_dict() for i in data]
+    user_id = content_dict.get('user_id')
+    comments = list(Comment.objects.filter(game_id=game_id))
+    data = []
+    for comment in comments:
+        flag = 0
+        if user_id != None and Like.objects.filter(comment_id=comment.id, user_id=user_id).exists():
+            flag = 1
+        data_i = comment.to_dict()
+        data_i['flag'] = flag
+        data_i['user_name'] = comment.user.name
+        data_i['user_photo'] = comment.user.photo
+        data.append(data_i)
     data = {'messsagee': '成功导出评论', "data": data}
     result = JsonResponse(dict(data))
     return result
