@@ -21,6 +21,7 @@ import ScreenShot from "@/components/ScreenShot";
 import Comment from "@/components/Comment"
 
 import store from "@/store";
+import GameGoods from "@/components/GameGoods";
 const routes = [
     {
         path: '/',
@@ -102,6 +103,11 @@ const routes = [
                 path: '/detail/:gameid/comment',
                 name: 'Commment',
                 component: Comment,
+            },
+            {
+                path: '/detail/:gameid/goods',
+                name: 'Good',
+                component: GameGoods,
             },
             {
                 path: '/detail/:gameid/screenshot',

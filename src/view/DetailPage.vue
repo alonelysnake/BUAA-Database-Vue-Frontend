@@ -71,6 +71,10 @@ const menuOptions = [
     disabled: false
   },
   {
+    label: "购买",
+    key: "good",
+  },
+  {
     label: "游戏截图",
     key: "screenshot",
     disabled: false
@@ -118,6 +122,9 @@ export default {
           case "comment":
             // console.log({name: "Commment"});
             router.push({name: "Commment"});
+            break;
+          case "good":
+            router.push({name: "Good"});
             break;
           case "screenshot":
             router.push({name: "ScreenShot"});
