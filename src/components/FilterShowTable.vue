@@ -94,33 +94,33 @@ const createColumns = ({clickGameName: clickGameName}) => {
 /*
 * */
 const datas = [
-  {
-    id: 3,
-    cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/1599340/header.jpg?t=1670026493",
-    name: "Houkai 3rd",
-    discount_rate: 84.75,
-    current_price: 12.5,
-    start_time: "2020-3-5",
-    end_time: "2023-2-2"
-  },
-  {
-    id: 3,
-    img: "https://cdn.cloudflare.steamstatic.com/steam/apps/33230/header.jpg?t=1667609065",
-    name: "Assassin's Creed 2",
-    rating: 60,
-    curPrice: 18.32,
-    start: "2022-12-1",
-    end: "2022-12-29"
-  },
-  {
-    id: 8,
-    img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg",
-    name: "aa",
-    rating: 60,
-    curPrice: 18.32,
-    start: "2022-12-1",
-    end: "2022-12-29"
-  },
+  // {
+  //   id: 3,
+  //   cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/1599340/header.jpg?t=1670026493",
+  //   name: "Houkai 3rd",
+  //   discount_rate: 84.75,
+  //   current_price: 12.5,
+  //   start_time: "2020-3-5",
+  //   end_time: "2023-2-2"
+  // },
+  // {
+  //   id: 3,
+  //   img: "https://cdn.cloudflare.steamstatic.com/steam/apps/33230/header.jpg?t=1667609065",
+  //   name: "Assassin's Creed 2",
+  //   rating: 60,
+  //   curPrice: 18.32,
+  //   start: "2022-12-1",
+  //   end: "2022-12-29"
+  // },
+  // {
+  //   id: 8,
+  //   img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg",
+  //   name: "aa",
+  //   rating: 60,
+  //   curPrice: 18.32,
+  //   start: "2022-12-1",
+  //   end: "2022-12-29"
+  // },
 ];
 
 export default {

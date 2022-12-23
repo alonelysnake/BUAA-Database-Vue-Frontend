@@ -167,7 +167,6 @@ export default {
           'country': districtValue.value,
           'time': timeType
         })).then(res => {
-          console.log(res.data);
           priceData.series.push({
             name: priceData.legend.data[i],
             data: res.data,
@@ -192,7 +191,7 @@ export default {
           timeType = null;
         }
         request.post('/getHeat/', JSON.stringify({'game_id': ids[i], 'time': timeType})).then(res => {
-          console.log(res.data);
+          // console.log(res.data);
           activeData.series.push({
             name: activeData.legend.data[i],
             data: res.data,
