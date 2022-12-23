@@ -90,7 +90,9 @@ const createColumns = ({
     },
     {
       title: "商品号",
-      key: "id"
+      key: "id",
+      sortOrder: false,
+      sorter: 'default',
     },
     {
       title: "游戏名称",
@@ -202,7 +204,7 @@ const createColumnsForVistor = ({
                 maxWidth:"200px"
               }
             },
-            {default:()=>row.decripition}
+            {default:()=>row.decription}
         )
       }
     },
@@ -236,7 +238,7 @@ export default {
     let tableData = ref([])
     const load = () => {
       request.post("/getGoods/",JSON.stringify({'seller_id':router.currentRoute.value.params.username,'status':'已上架'})).then(res=>{
-        // console.log(res)
+        console.log(res)
         tableData.value = res.data
       })
     }
@@ -357,7 +359,7 @@ export default {
       search,
       pagination:
           {
-            pageSize: 15,
+            pageSize: 5,
             showQuickJumper:true,
           },
       handleSorterChange (sorter) {

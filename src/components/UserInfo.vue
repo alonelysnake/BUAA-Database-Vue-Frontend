@@ -186,6 +186,7 @@ export default ({
       },
 
       handleSave() {
+        store.state.user.avatar = model.value.avatarPath
         request.post("/updateUser/",JSON.stringify({"content":model.value})).then(res=>{
           message.success(res.messsagee);
           // console.log(res.data)

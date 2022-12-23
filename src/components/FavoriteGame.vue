@@ -67,7 +67,7 @@ export default {
 .card {
   list-style: none;
   float: left;
-  margin-right: 20px;
+  margin-right: 25px;
   margin-bottom: 20px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <n-scrollbar x-scrollable trigger="hover" style="width: 600px">
-    <div style="white-space: nowrap; width: 1310px">
+    <div style="white-space: nowrap; width: 1350px">
       <ul v-for="item in items.value" :key="item.id" style="position:relative;">
         <Card class="card"
               :target="item.target"
