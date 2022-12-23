@@ -37,7 +37,7 @@ const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) =
     },
     {
       title: "",//游戏图标
-      key: "icon",//图片
+      key: "game_cover",//图片
       width: 140,
       render: (value) => {
         return h(
@@ -45,16 +45,16 @@ const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) =
             {
               width: 140,
               height: 40,
-              src: value.img
+              src: value.game_cover
             }
         )
       }
     },
     {
       title: "游戏名",
-      key: "name",
-      sortOrder: false,
-      sorter: 'default',
+      key: "game_name",
+      // sortOrder: false,
+      // sorter: 'default',
       render: (value) => {
         return h(
             NButton,
@@ -63,13 +63,13 @@ const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) =
               type: 'primary',
               onClick: () => clickGameName(value)
             },
-            {default: () => value.name}
+            {default: () => value.game_name}
         )
       }
     },
     {
       title: "当前热度",
-      key: "cur",
+      key: "players",
       width: 160,
       sortOrder: false,
       sorter(rowA, rowB) {
@@ -78,7 +78,7 @@ const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) =
     },
     {
       title: "最高热度",
-      key: "max",
+      key: "max_heat",
       width: 160,
       sortOrder: false,
       sorter(rowA, rowB) {
@@ -91,21 +91,20 @@ const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) =
       key: "",
       width: 60,
       render: (rowValue) => {
-        console.log(selects.indexOf(rowValue.id)!==-1);
         const flag = ref(selects.indexOf(rowValue.id)!==-1);
         return h(
             NButton,
             {
-              //TODO 添加/删除
+              // 添加/删除按钮
               onClick: () => {
                 if (flag.value) {
-                  //TODO 取消选择
+                  // 取消选择
                   selects.pop();
                   if (selects.length < 2) {
                     compareRef.value.flag = true;
                   }
                 } else {
-                  //TODO 选择
+                  // 选择
                   if (!flag.value) {
                     selects.push(rowValue.id);
                   }
@@ -129,37 +128,37 @@ const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) =
   ];
 };
 
-//TODO 改成字典? 选择进行比较的游戏
+// 选择的游戏id
 const selects = [];
 
 /*
 * cur:当前热度（在线人数）
 * max:最大热度
 * */
-let data = [
-  {
-    id: 3,
-    img: "https://cdn.cloudflare.steamstatic.com/steam/apps/1599340/header.jpg?t=1670026493",
-    name: "Houkai 3rd",
-    cur: 99,
-    max: 999
-  },
-  {
-    id: 9,
-    img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg",
-    name: "Genshin Impact",
-    cur: 2999,
-    max: 19990
-  },
-  {id: 8, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 2, max: 160},
-  {id: 2, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 21, max: 150},
-  {id: 4, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 22, max: 110},
-  {id: 6, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 32, max: 130},
-  {id: 8, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 2, max: 160},
-  {id: 2, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 21, max: 150},
-  {id: 4, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 22, max: 110},
-  {id: 6, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 32, max: 130}
-];
+// let data = [
+//   {
+//     game_id: 3,
+//     img: "https://cdn.cloudflare.steamstatic.com/steam/apps/1599340/header.jpg?t=1670026493",
+//     name: "Houkai 3rd",
+//     cur: 99,
+//     max: 999
+//   },
+//   {
+//     game_id: 9,
+//     img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg",
+//     name: "Genshin Impact",
+//     cur: 2999,
+//     max: 19990
+//   },
+//   {game_id: 8, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 2, max: 160},
+//   {game_id: 2, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 21, max: 150},
+//   {game_id: 4, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 22, max: 110},
+//   {game_id: 6, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 32, max: 130},
+//   {game_id: 8, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 2, max: 160},
+//   {game_id: 2, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 21, max: 150},
+//   {game_id: 4, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 22, max: 110},
+//   {game_id: 6, img: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg", name: "aa", cur: 32, max: 130}
+// ];
 
 export default defineComponent({
   name: 'HeatTable',
@@ -174,17 +173,18 @@ export default defineComponent({
 
     const router = useRouter();
 
+    const data = ref([]);
     //TODO 后端获取数据
-    request.post("/getHeat/",JSON.stringify(null)).then(res=>{
-      data = res.data;
+    request.post("/getHeat/",JSON.stringify({})).then(res=>{
+      console.log(res.data);
+      data.value = res.data;
     });
 
     const columnsRef = ref(
         createColumns({
           clickGameName(value) {
-            //TODO 跳转到游戏详情页
-            console.log(value.id)
-            router.push("/detail/"+value.id.toString()+"/price");
+            //跳转到游戏详情页
+            router.push("/detail/"+value.game_id.toString()+"/price");
           },
           compareRef
         })

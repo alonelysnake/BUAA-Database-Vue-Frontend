@@ -2,11 +2,11 @@
   <div class="container">
 
     <!--    顶部导航栏-->
-<!--    <div style="height: 60px; width: 100%">-->
-<!--      <n-affix :top="0" :trigger-top="0" :listen-to="() => containerRef" class="head">-->
-<!--        <Header ref="headerRef"/>-->
-<!--      </n-affix>-->
-<!--    </div>-->
+    <!--    <div style="height: 60px; width: 100%">-->
+    <!--      <n-affix :top="0" :trigger-top="0" :listen-to="() => containerRef" class="head">-->
+    <!--        <Header ref="headerRef"/>-->
+    <!--      </n-affix>-->
+    <!--    </div>-->
 
     <!--    顶层基础信息-->
     <div class="basic-info">
@@ -15,7 +15,7 @@
     </div>
 
     <div class="content">
-      <n-layout has-sider style="height: 100%;">
+      <n-layout has-sider>
 
         <!--        选择查看不同详细信息的侧边栏-->
         <n-layout-sider
@@ -23,7 +23,6 @@
             :width="240"
         >
           <!--        TODO 设置保持顶端-->
-          <!--          <n-affix :top="0" :trigger-top="0" :listen-to="() => headerRef" class="sidebar">-->
           <n-menu
               :collapsed-width="10"
               :collapsed-icon-size="22"
@@ -32,7 +31,6 @@
               class="sidebar"
               @update:value="handleUpdateValue"
           />
-          <!--          </n-affix>-->
         </n-layout-sider>
 
         <!--详细信息-->
@@ -118,7 +116,8 @@ export default {
             router.push({name: "Chart"});
             break;
           case "comment":
-            console.log("comment跳转未实现");
+            // console.log({name: "Commment"});
+            router.push({name: "Commment"});
             break;
           case "screenshot":
             router.push({name: "ScreenShot"});
@@ -135,8 +134,8 @@ export default {
 /*整个页面*/
 .container {
   width: 100%;
-  height: 100%;
-  background-color: blueviolet;
+  /*height: 100%;*/
+  /*background-color: blueviolet;*/
   border-radius: 3px;
   overflow: auto;
 }
@@ -151,27 +150,27 @@ export default {
 
 /*基础信息*/
 .basic-info {
-  height: 220px;
+  height: 250px;
   width: 100%;
-  background-color: white;
+  /*background-color: white;*/
 }
 
 /*详细信息*/
 .content {
-  height: 100%;
+  /*height: 100%;*/
 }
 
 /*侧边导航栏*/
 .sidebar {
-  background-color: antiquewhite;
+  /*background-color: antiquewhite;*/
   height: 100%;
   /*z-index: 99;*/
   /*width: 240px;*/
 }
 
 .detail {
-  background-color: aqua;
-  height: 1000px;
+  /*background-color: aqua;*/
+  /*height: 1000px;*/
   /*height: 1000px;*/
 }
 </style>
