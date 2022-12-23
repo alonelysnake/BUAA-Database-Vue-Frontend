@@ -47,19 +47,28 @@
 <script>
 import {useRouter} from "vue-router/dist/vue-router";
 import request from "@/utils/request";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import store from "@/store";
+import {useDialog} from "naive-ui";
 
 export default {
   name: "BasicInfo",
   setup() {
     const router = useRouter();
+    const dialog = useDialog();
     const favorButtonRef = ref({
       "text": "收藏",
       "flag": false,
     })
 
-    const gameId = parseInt(router.currentRoute.value.params.gameid);//游戏id
+    watch(() => router.currentRoute.value, (newValue, oldValue) => {
+      // console.log(oldValue);
+      // console.log(newValue);
+      gameId = parseInt(router.currentRoute.value.params.gameid);
+      init();
+    })
+
+    let gameId = parseInt(router.currentRoute.value.params.gameid);//游戏id
     let info = {
       "id": ref(''),
       "name": ref(''),
@@ -71,6 +80,10 @@ export default {
     };
 
     onMounted(() => {
+      init()
+    })
+
+    function init() {
       // 发送游戏id，得到游戏的id、游戏名、发行商、发行日期、标签
       request.post('/getGame/', JSON.stringify({'game_id': gameId})).then(res => {
         // console.log(res.data[0]);
@@ -78,10 +91,12 @@ export default {
         info.id.value = gameInfo.id;
         info.name.value = gameInfo.name;
         info.platform.value = gameInfo.platform;
+        info.publisher.value = ""
         for (let i = 0; i < gameInfo.developer.length; i++) {
           info.publisher.value += gameInfo.developer[i].name + " "
         }
         info.time.value = gameInfo.date;
+        info.tags.value = ""
         for (let i = 0; i < gameInfo.tag.length; i++) {
           info.tags.value += gameInfo.tag[i].tag + " "
         }
@@ -102,9 +117,23 @@ export default {
           favorButtonRef.value.text = "收藏";
         }
       })
-    })
+    }
 
+    //收藏
     function handleFavor() {
+      //未登录时提示登录
+      if (store.state.loggedIn === false) {
+        dialog.warning({
+          title: "请先登录",
+          content: () => "请先登录",
+          positiveText: "确定",
+          onPositiveClick: () => {
+            router.push({name:'login'})
+          },
+          negativeText: "取消"
+        })
+        return;
+      }
       let post = JSON.stringify({
         "game_id": gameId,
         "user_id": store.state.user.userID,

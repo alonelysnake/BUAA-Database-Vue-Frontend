@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import {reactive, ref, onMounted} from 'vue'
+import {reactive, ref, onMounted, watch} from 'vue'
 import request from "@/utils/request";
 import {useRouter} from "vue-router/dist/vue-router";
 
@@ -77,18 +77,23 @@ export default {
 
     //从后端读取的数据格式
     let data = ref([]);
+    let gameId = parseInt(router.currentRoute.value.params.gameid);//游戏id
 
-    const gameId = parseInt(router.currentRoute.value.params.gameid);//游戏id
+    watch(() => router.currentRoute.value, (newValue, oldValue) => {
+      gameId = parseInt(router.currentRoute.value.params.gameid);
+      init();
+    })
 
-    //TODO 后端获取每个国家的价格
     onMounted(() => {
+      init();
+    })
+
+    function init() {
       request.post('/getPrice/', JSON.stringify({'game_id': gameId})).then(res => {
-        console.log("gg");
         console.log(res.data);
-        console.log("gg");
         data.value = res.data;
       });
-    })
+    }
 
     return {
       data,

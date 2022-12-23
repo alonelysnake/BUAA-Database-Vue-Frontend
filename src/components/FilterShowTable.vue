@@ -18,7 +18,7 @@ const createColumns = ({clickGameName: clickGameName}) => {
   return [
     {
       title: "",//游戏图标
-      key: "icon",//图片
+      key: "cover",//图片
       width: 140,
       render: (value) => {
         return h(
@@ -58,35 +58,35 @@ const createColumns = ({clickGameName: clickGameName}) => {
       },
       //TODO 按照不同的减免比例渲染不同的底色
       render: (value) => {
-        const dc = Math.floor(value.rating / 5) * 5;
+        const dc = Math.floor((100-value.discount_rate) / 5) * 5;
         return '-' + dc + '%';
       }
     },
     {
       title: "优惠价",
-      key: "curPrice",
+      key: "current_price",
       sortOrder: false,
       sorter(rowA, rowB) {
-        return rowA.curPrice - rowB.curPrice
+        return rowA.current_price - rowB.current_price
       },
       render: (value) => {
-        return '￥' + value.curPrice;
+        return '￥' + value.current_price;
       }
     },
     {
       title: "rating",
-      key: "rating",
+      key: "discount_rate",
       render: (value) => {
-        return value.rating + "%";
+        return value.discount_rate + "%";
       }
     },
     {
       title: "起始时间",
-      key: "start"
+      key: "start_time"
     },
     {
       title: "结束时间",
-      key: "end"
+      key: "end_time"
     }
   ];
 };
@@ -96,12 +96,12 @@ const createColumns = ({clickGameName: clickGameName}) => {
 const datas = [
   {
     id: 3,
-    img: "https://cdn.cloudflare.steamstatic.com/steam/apps/1599340/header.jpg?t=1670026493",
+    cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/1599340/header.jpg?t=1670026493",
     name: "Houkai 3rd",
-    rating: 84.75,
-    curPrice: 12.5,//TODO 全部按照人民币显示
-    start: "2020-3-5",
-    end: "2023-2-2"
+    discount_rate: 84.75,
+    current_price: 12.5,
+    start_time: "2020-3-5",
+    end_time: "2023-2-2"
   },
   {
     id: 3,
@@ -130,8 +130,7 @@ export default {
     const columnsRef = ref(
         createColumns({
           clickGameName(value) {
-            //TODO 跳转到游戏详情页，路由为 'gameinfo/游戏id'的样子？
-            console.log(value.id)
+            // 跳转到游戏详情页，路由为 'gameinfo/游戏id'
             router.push("/detail/" + value.id.toString() + "/price");
           }
         })
@@ -168,7 +167,6 @@ export default {
       }
     })
 
-    //TODO 改变data
     const handleFilter = (conds) => {
       console.log("向后端查找满足cond的数据");
       console.log(conds);
@@ -180,10 +178,11 @@ export default {
       * 折扣比例最低值
       * 发售时间
       * */
-      request.post('/getDiscount/',JSON.stringify(conds)).then(res=>{
+      //TODO
+      request.post('/filterGame/', JSON.stringify(conds)).then(res => {
         dataRef.value = res.data;
-        // (dataRef.value)[0].rating=23.57;
         console.log(dataRef.value);
+        conds.loading.value = false;
       });
     }
 

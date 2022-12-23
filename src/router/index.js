@@ -18,6 +18,7 @@ import DetailPage from "@/view/DetailPage";
 import CountryPriceTable from "@/components/CountryPriceTable";
 import Charts from "@/components/Charts";
 import ScreenShot from "@/components/ScreenShot";
+import Comment from "@/components/Comment"
 
 import store from "@/store";
 const routes = [
@@ -96,6 +97,11 @@ const routes = [
                 path: '/detail/:gameid/graph',
                 name: 'Chart',
                 component: Charts
+            },
+            {
+                path: '/detail/:gameid/comment',
+                name: 'Commment',
+                component: Comment,
             },
             {
                 path: '/detail/:gameid/screenshot',
