@@ -560,6 +560,7 @@ def getComment(request):
         if user_id != None and Like.objects.filter(comment_id=comment.id, user_id=user_id).exists():
             flag = 1
         data_i = comment.to_dict()
+        data_i['likes'] = Like.objects.filter(comment_id=comment.id).count()
         data_i['flag'] = flag
         data_i['user_name'] = comment.user.name
         data_i['user_photo'] = comment.user.photo
@@ -598,18 +599,15 @@ def updateComment(request):
     content = request.body.decode()
     content_dict = json.loads(content)
     print(content_dict)
-    id = content_dict.get('id')
+    comment_id = content_dict.get('comment_id')
+    user_id = content_dict.get('user_id')
     update_type = content_dict.get('type')
-    update_content = content_dict.get('content')
-    comment = Comment.objects.get(id=id)
     if update_type == 'like':
-        comment.likes += 1
+        Like.objects.create(comment_id=comment_id, user_id=user_id)
     elif update_type == 'dislike':
-        comment.likes -= 1
-    elif update_type == 'content':
-        comment.content = update_content
-    comment.save()
-    data = {'messsage': '修改评论成功'}
+        item = Like.objects.filter(comment_id=comment_id, user_id=user_id)
+        item.delete()
+    data = {'messsage': '更新评论成功'}
     result = JsonResponse(dict(data))
     return result
 
