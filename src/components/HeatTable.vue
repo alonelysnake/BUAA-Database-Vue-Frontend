@@ -25,111 +25,6 @@ import {Add as AddIcon, Remove as RemoveIcon} from "@vicons/ionicons5";
 import {useRouter} from "vue-router";
 import request from "@/utils/request";
 
-const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) => {
-  return [
-    {
-      title: "排名",
-      key: "no",
-      width: 120,
-      render: (_, index) => {
-        return index + 1;
-      }
-    },
-    {
-      title: "",//游戏图标
-      key: "game_cover",//图片
-      width: 140,
-      render: (value) => {
-        return h(
-            NImage,
-            {
-              width: 140,
-              height: 40,
-              src: value.game_cover
-            }
-        )
-      }
-    },
-    {
-      title: "游戏名",
-      key: "game_name",
-      // sortOrder: false,
-      // sorter: 'default',
-      render: (value) => {
-        return h(
-            NButton,
-            {
-              text: true,
-              type: 'primary',
-              onClick: () => clickGameName(value)
-            },
-            {default: () => value.game_name}
-        )
-      }
-    },
-    {
-      title: "当前热度",
-      key: "players",
-      width: 160,
-      sortOrder: false,
-      sorter(rowA, rowB) {
-        return rowA.cur - rowB.cur
-      }
-    },
-    {
-      title: "最高热度",
-      key: "max_heat",
-      width: 160,
-      sortOrder: false,
-      sorter(rowA, rowB) {
-        return rowA.max - rowB.max
-      }
-    },
-    // 对比按钮
-    {
-      title: "",
-      key: "",
-      width: 60,
-      render: (rowValue) => {
-        const flag = ref(selects.indexOf(rowValue.id)!==-1);
-        return h(
-            NButton,
-            {
-              // 添加/删除按钮
-              onClick: () => {
-                if (flag.value) {
-                  // 取消选择
-                  selects.pop();
-                  if (selects.length < 2) {
-                    compareRef.value.flag = true;
-                  }
-                } else {
-                  // 选择
-                  if (!flag.value) {
-                    selects.push(rowValue.id);
-                  }
-                  if (selects.length > 1) {
-                    compareRef.value.flag = false;
-                  }
-                }
-                flag.value = !flag.value;
-              },
-              renderIcon: () => {
-                if (!flag.value) {
-                  return h(AddIcon);
-                } else {
-                  return h(RemoveIcon);
-                }
-              },
-            },
-        )
-      }
-    },
-  ];
-};
-
-// 选择的游戏id
-const selects = [];
 
 /*
 * cur:当前热度（在线人数）
@@ -170,6 +65,114 @@ export default defineComponent({
       text: ref("选择至少两个进行比较"),
       type: ref("default"),
     })
+
+    const createColumns = ({clickGameName: clickGameName, compareRef: compareRef}) => {
+      return [
+        {
+          title: "排名",
+          key: "no",
+          width: 120,
+          render: (_, index) => {
+            return index + 1;
+          }
+        },
+        {
+          title: "",//游戏图标
+          key: "game_cover",//图片
+          width: 140,
+          render: (value) => {
+            return h(
+                NImage,
+                {
+                  width: 140,
+                  height: 40,
+                  src: value.game_cover
+                }
+            )
+          }
+        },
+        {
+          title: "游戏名",
+          key: "game_name",
+          // sortOrder: false,
+          // sorter: 'default',
+          render: (value) => {
+            return h(
+                NButton,
+                {
+                  text: true,
+                  type: 'primary',
+                  onClick: () => clickGameName(value)
+                },
+                {default: () => value.game_name}
+            )
+          }
+        },
+        {
+          title: "当前热度",
+          key: "players",
+          width: 160,
+          sortOrder: false,
+          sorter(rowA, rowB) {
+            return rowA.cur - rowB.cur
+          }
+        },
+        {
+          title: "最高热度",
+          key: "max_heat",
+          width: 160,
+          sortOrder: false,
+          sorter(rowA, rowB) {
+            return rowA.max - rowB.max
+          }
+        },
+        // 对比按钮
+        {
+          title: "",
+          key: "",
+          width: 60,
+          render: (rowValue) => {
+            const flag = ref(selects.indexOf(rowValue.id)!==-1);
+            console.log(flag.value);
+            console.log(selects);
+            return h(
+                NButton,
+                {
+                  // 添加/删除按钮
+                  onClick: () => {
+                    if (flag.value) {
+                      // 取消选择
+                      selects.pop();
+                      if (selects.length < 2) {
+                        compareRef.value.flag = true;
+                      }
+                    } else {
+                      // 选择
+                      if (!flag.value) {
+                        selects.push(rowValue.id);
+                      }
+                      if (selects.length > 1) {
+                        compareRef.value.flag = false;
+                      }
+                    }
+                    flag.value = !flag.value;
+                  },
+                  renderIcon: () => {
+                    if (!flag.value) {
+                      return h(AddIcon);
+                    } else {
+                      return h(RemoveIcon);
+                    }
+                  },
+                },
+            )
+          }
+        },
+      ];
+    };
+
+    // 选择的游戏id
+    const selects = [];
 
     const router = useRouter();
 
