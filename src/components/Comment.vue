@@ -47,8 +47,8 @@
                   <!--                  <el-dropdown-item @click="reportOtherComment"-->
                   <!--                                    v-if="store.state.loggedIn&&store.state.user.userID !== item.id">举报-->
                   <!--                  </el-dropdown-item>-->
-                  <el-dropdown-item @click="deleteYourComment(i, item.user_id)"
-                                    v-if="store.state.loggedIn&&store.state.user.userID === item.id">删除
+                  <el-dropdown-item @click="deleteYourComment(i, item.id)"
+                                    v-if="store.state.loggedIn&&store.state.user.userID === item.user_id">删除
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
