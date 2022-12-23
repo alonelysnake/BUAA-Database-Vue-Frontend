@@ -30,8 +30,8 @@ export default {
 
 <style scoped>
 .n-card {
-  max-width: 245px;
-  max-height: 300px;
+  max-width: 250px;
+  max-height: 250px;
 }
 
 a {

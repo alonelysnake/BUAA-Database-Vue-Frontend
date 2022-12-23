@@ -6,7 +6,7 @@
   >
     <n-carousel-item v-for="item in items.value" :key="item.id">
       <router-link
-          :to="{name:'Game',params:{gameId:item.game_id}}"
+          :to="{name:'Detail',params:{gameid:item.game_id}}"
       >
         <img
             class="carousel-img"
@@ -41,7 +41,7 @@ export default {
     const load = () => {
       request.post("/getSlide/",JSON.stringify({})).then(res=>{
         items.value = res.data
-        // console.log(items.value)
+        //console.log(items.value)
       })
     }
     load()

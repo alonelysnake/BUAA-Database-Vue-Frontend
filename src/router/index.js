@@ -86,7 +86,7 @@ const routes = [
     {
         path: '/detail/:gameid',
         name: 'Detail',
-        redirect: '/detail/:gameid/price',
+        // redirect: '/detail/:gameid/price',
         component: DetailPage,
         children: [
             {

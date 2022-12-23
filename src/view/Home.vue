@@ -2,7 +2,7 @@
   <div id="bg"></div>
   <div id="carousel">
     <h2 style="float: left;margin-right: 428px">热门游戏</h2>
-    <n-button round style="margin-bottom: 10px">
+    <n-button round style="margin-bottom: 10px" @click="toHeat">
       <template #icon>
         <n-icon :component="DotIcon"></n-icon>
       </template>
@@ -38,7 +38,7 @@ import Carousel from "@/components/Carousel";
 import {
   EllipsisHorizontalOutline as DotIcon
 } from "@vicons/ionicons5";
-
+import router from "@/router";
 
 export default {
   name: "Home",
@@ -47,7 +47,10 @@ export default {
 
   setup() {
     return {
-      DotIcon
+      DotIcon,
+      toHeat() {
+        router.push('/heat')
+      }
     }
   }
 

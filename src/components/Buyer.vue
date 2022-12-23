@@ -199,7 +199,7 @@ export default ({
       showDropdown: showDropdownRef,
       pagination:
           {
-            pageSize: 15,
+            pageSize: 5,
             showQuickJumper:true,
           },
       handleSorterChange (sorter) {
