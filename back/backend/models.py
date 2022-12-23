@@ -3,20 +3,16 @@ from django.db.models.signals import pre_save, post_delete, pre_delete
 from django.dispatch import receiver
 
 # Create your models here.
-class Admin(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=11)
-    password = models.CharField(max_length=15)
-"""
-1. 修改头像
-2. 个人简介 DONE
-3. 性别 DONE
-4. 成交量+评分 DONE
-"""
+
+# class Admin(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     name = models.CharField(max_length=11)
+#     password = models.CharField(max_length=15)
+
 class User(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=11)
-    email = models.EmailField(default='')
+    email = models.EmailField()
     gender = models.CharField(max_length=11, default='')
     password = models.CharField(max_length=128)
     profile = models.CharField(max_length=300, default='')
