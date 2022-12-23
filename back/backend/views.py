@@ -553,7 +553,7 @@ def getComment(request):
     print(content_dict)
     game_id = content_dict.get('game_id')
     user_id = content_dict.get('user_id')
-    comments = list(Comment.objects.filter(game_id=game_id))
+    comments = list(Comment.objects.filter(game_id=game_id).order_by('-time'))
     data = []
     for comment in comments:
         flag = 0
