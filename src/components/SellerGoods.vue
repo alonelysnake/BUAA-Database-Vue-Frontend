@@ -58,7 +58,6 @@ import {
   CloseCircleOutline,
 } from "@vicons/ionicons5";
 import request from "@/utils/request";
-import sleep from "@/utils/sleep";
 
 
 const search = ref('')
