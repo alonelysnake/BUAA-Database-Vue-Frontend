@@ -133,8 +133,6 @@ export default defineComponent({
           width: 60,
           render: (rowValue) => {
             const flag = ref(selects.indexOf(rowValue.id)!==-1);
-            console.log(flag.value);
-            console.log(selects);
             return h(
                 NButton,
                 {
@@ -149,7 +147,7 @@ export default defineComponent({
                     } else {
                       // 选择
                       if (!flag.value) {
-                        selects.push(rowValue.id);
+                        selects.push(rowValue.game_id);
                       }
                       if (selects.length > 1) {
                         compareRef.value.flag = false;
@@ -179,7 +177,7 @@ export default defineComponent({
     const data = ref([]);
     //TODO 后端获取数据
     request.post("/getHeat/",JSON.stringify({})).then(res=>{
-      console.log(res.data);
+      // console.log(res.data);
       data.value = res.data;
     });
 
