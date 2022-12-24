@@ -423,7 +423,7 @@ def getGoods(request):
     seller_id = content_dict.get('seller_id')
     status = content_dict.get('status')
     if game_id != None:
-        goods = list(Goods.objects.filter(game_id=game_id))
+        goods = list(Goods.objects.filter(game_id=game_id, status='已上架'))
     elif buyer_id != None:
         goods = list(Goods.objects.filter(buyer_id=buyer_id))
     elif seller_id != None:
