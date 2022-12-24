@@ -494,6 +494,8 @@ def updateGoods(request):
         goods.steam_id = update_content
     elif update_type == 'decription':
         goods.decription = update_content
+    elif update_type == 'cd_key':
+        goods.cd_key = update_content
     goods.save()
     data = {'messsage': '修改商品信息成功'}
     result = JsonResponse(dict(data))

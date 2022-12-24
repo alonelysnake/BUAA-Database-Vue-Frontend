@@ -145,6 +145,7 @@ export default {
         }
         history.value = historySearchList.value.length !== 0;
         router.push("/detail/" + gameId + '/price')
+        isFocus.value = false
         search.value = ''
       },
 
