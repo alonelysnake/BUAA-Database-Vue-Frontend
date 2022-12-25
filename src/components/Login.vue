@@ -41,7 +41,7 @@
         </n-button>
 
       </n-space>
-
+      <a href="http://127.0.0.1:1234/admin">管理员入口</a>
     </n-space>
 
   </n-space>
