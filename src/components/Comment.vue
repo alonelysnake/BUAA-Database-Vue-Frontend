@@ -17,7 +17,7 @@
     <div v-for="(item, i) in comments" :key="i" class="author-title reply-father">
       <el-card v-if="i>=pageSize*(curPageIndex-1)&&i<pageSize*curPageIndex" shadow="hover" class="comment-card">
         <!-- 头像 -->
-        <el-avatar class="header-img" :size="40" :src="item.avatar"></el-avatar>
+        <el-avatar class="header-img" :size="40" :src="item.user_photo"></el-avatar>
         <!-- 根用户信息 -->
         <div class="author-info">
           <span class="author-name">{{ item.name }}</span>
@@ -176,16 +176,16 @@ const commentTotal = ref(computed(() => {
 }))
 
 const comments = ref([
-  {
-    id: 1234554,//评论id
-    name: 'linkk',//用户名
-    user_id: 19891221,//用户id
-    avatar: 'www.baidu.com.png',//用户头像
-    content: '安徽省空间按时艰苦实践案例',
-    time: '2022年12月16日 18:43',
-    flag: false,//是否被该用户点赞
-    likes: 1,//点赞人数
-  },
+  // {
+  //   id: 1234554,//评论id
+  //   name: 'linkk',//用户名
+  //   user_id: 19891221,//用户id
+  //   avatar: 'www.baidu.com.png',//用户头像
+  //   content: '安徽省空间按时艰苦实践案例',
+  //   time: '2022年12月16日 18:43',
+  //   flag: false,//是否被该用户点赞
+  //   likes: 1,//点赞人数
+  // },
   // {
   //   commentId: "1234554",
   //   name: 'linkk',
@@ -210,7 +210,7 @@ onMounted(() => {
   }
   request.post('/getComment/', JSON.stringify({'game_id': gameId, 'user_id': userId})).then((res) => {
     //TODO 得到所有评论
-    // console.log(res.data);
+    console.log(res.data);
     // console.log(comments);
     comments.value=res.data;
   })

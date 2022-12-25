@@ -99,17 +99,17 @@ export default {
     const districtLabel = ref();//选择的国家name
     const districtOptions = ref([]);
 
-    const timeValue = ref("all");//选择的国家id
-    const timeLabel = ref("所有");//选择的国家name
+    const timeValue = ref("month");//选择的国家id
+    const timeLabel = ref("近一月");//选择的国家name
     const timeOptions = ref([
-      {
-        label: "所有",
-        value: "all",
-      },
-      {
-        label: "近一年",
-        value: "year",
-      },
+      // {
+      //   label: "所有",
+      //   value: "all",
+      // },
+      // {
+      //   label: "近一年",
+      //   value: "year",
+      // },
       {
         label: "近一月",
         value: "month",

@@ -4,7 +4,7 @@
 
     <n-space vertical class="text-right">
 
-      <div style="padding: 3px">用户名：</div>
+      <div style="padding: 3px">邮箱：</div>
 
       <div style="padding: 3px">密码：</div>
 

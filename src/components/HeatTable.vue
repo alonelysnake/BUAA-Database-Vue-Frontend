@@ -114,7 +114,7 @@ export default defineComponent({
           width: 160,
           sortOrder: false,
           sorter(rowA, rowB) {
-            return rowA.cur - rowB.cur
+            return rowA.players - rowB.players
           }
         },
         {
@@ -123,7 +123,7 @@ export default defineComponent({
           width: 160,
           sortOrder: false,
           sorter(rowA, rowB) {
-            return rowA.max - rowB.max
+            return rowA.max_heat - rowB.max_heat
           }
         },
         // 对比按钮
@@ -197,19 +197,19 @@ export default defineComponent({
       showSizePicker: true,
       pageSizes: [
         {
+          label: "10/每页",
+          value: 10
+        },
+        {
           label: "25/每页",
           value: 25
         },
         {
           label: "50/每页",
           value: 50
-        },
-        {
-          label: "100/每页",
-          value: 100
         }
       ],//可选的分页
-      pageSize: 25,//初值
+      pageSize: 10,//初值
       onChange: (page) => {
         paginationReactive.page = page;
       },

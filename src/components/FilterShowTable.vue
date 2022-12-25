@@ -26,7 +26,7 @@ const createColumns = ({clickGameName: clickGameName}) => {
             {
               width: 140,
               height: 40,
-              src: value.img
+              src: value.cover
             }
         )
       }
@@ -120,6 +120,24 @@ const datas = [
   //   curPrice: 18.32,
   //   start: "2022-12-1",
   //   end: "2022-12-29"
+  // },
+  // {
+  //   id: 1,
+  //   cover: "https://img2.baidu.com/it/u=4215021439,1696788421&fm=253&fmt=auto&app=138&f=JPEG?w=649&h=317",
+  //   name: "genshin",
+  //   discount_rate: 63.00,
+  //   current_price: 20.00,
+  //   start_time: "2022-12-1",
+  //   end_time: "2022-12-17"
+  // },
+  // {
+  //   id: 2,
+  //   cover: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fmedia.9game.cn%2Fgamebase%2Fieu-gdc-pre-process%2Fimages%2F20220711%2F2%2F18%2F3490f9ea2e8f29cf548ee50a936c6ffe.jpg&refer=http%3A%2F%2Fmedia.9game.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1674055256&t=f997ce14cfcbcaa7d0138dc762c70ce7",
+  //   name: "dnf",
+  //   discount_rate: 60.00,
+  //   current_price: 100.00,
+  //   start_time: "2022-12-1",
+  //   end_time: "2022-12-17"
   // },
 ];
 
